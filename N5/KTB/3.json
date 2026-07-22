@@ -1,0 +1,272 @@
+[
+  {
+    "japanese": "ここ",
+    "meaning": "Chỗ Này, Đằng Này, Đây (Gần Người Nói)",
+    "reading": "",
+    "type": "pronoun"
+  },
+  {
+    "japanese": "そこ",
+    "meaning": "Chỗ Đó, Đó (Gần Người Nghe)",
+    "reading": "",
+    "type": "pronoun"
+  },
+  {
+    "japanese": "あそこ",
+    "meaning": "Chỗ Kia, Đằng Kia, Kia (Xa Cả Người Nói & Người Nghe)",
+    "reading": "",
+    "type": "pronoun"
+  },
+  {
+    "japanese": "どこ",
+    "meaning": "Chỗ Nào, Đâu",
+    "reading": "",
+    "type": "pronoun"
+  },
+  {
+    "japanese": "こちら",
+    "meaning": "Phía Này, Đằng, Chỗ Này, Đây (Cách Nói Lịch Sự Của ここ)",
+    "reading": "",
+    "type": "pronoun"
+  },
+  {
+    "japanese": "そちら",
+    "meaning": "Phía Đó, Đằng Đó, Chỗ Đó, Đó (Cách Nói Lịch Sự Của そこ)",
+    "reading": "",
+    "type": "pronoun"
+  },
+  {
+    "japanese": "あちら",
+    "meaning": "Phía Kia, Đằng Kia, Chỗ Kia, Kia (Cách Nói Lịch Sự Của あそこ)",
+    "reading": "",
+    "type": "pronoun"
+  },
+  {
+    "japanese": "どちら",
+    "meaning": "Phía Nào, Đằng Nào, Chỗ Nào, Đâu (Cách Nói Lịch Sự Của どこ)",
+    "reading": "",
+    "type": "pronoun"
+  },
+  {
+    "japanese": "教室",
+    "meaning": "Phòng Học",
+    "reading": "きょうしつ",
+    "type": "noun"
+  },
+  {
+    "japanese": "食堂",
+    "meaning": "Nhà Ăn",
+    "reading": "しょくどう",
+    "type": "noun"
+  },
+  {
+    "japanese": "事務所",
+    "meaning": "Văn Phòng",
+    "reading": "じむしょ",
+    "type": "noun"
+  },
+  {
+    "japanese": "会議室",
+    "meaning": "Phòng Họp",
+    "reading": "かいぎしつ",
+    "type": "noun"
+  },
+  {
+    "japanese": "受付",
+    "meaning": "Quầy Lễ Tân",
+    "reading": "うけつけ",
+    "type": "noun"
+  },
+  {
+    "japanese": "ロビー",
+    "meaning": "Sảnh",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "部屋",
+    "meaning": "Căn Phòng",
+    "reading": "へや",
+    "type": "noun"
+  },
+  {
+    "japanese": "トイレ(お手洗い)",
+    "meaning": "Nhà Vệ Sinh",
+    "reading": "(おてあらい)",
+    "type": "noun"
+  },
+  {
+    "japanese": "階段",
+    "meaning": "Cầu Thang",
+    "reading": "かいだん",
+    "type": "noun"
+  },
+  {
+    "japanese": "エレベーター",
+    "meaning": "Thang Máy",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "エスカレーター",
+    "meaning": "Thang Cuốn",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "自動販売機",
+    "meaning": "Máy Bán Hàng Tự Động",
+    "reading": "じどうはんばいき",
+    "type": "noun"
+  },
+  {
+    "japanese": "電話",
+    "meaning": "Điện Thoại",
+    "reading": "でんわ",
+    "type": "noun"
+  },
+  {
+    "japanese": "お国",
+    "meaning": "Nước (Của Bạn/Anh/Chị)",
+    "reading": "おくに",
+    "type": "noun"
+  },
+  {
+    "japanese": "会社",
+    "meaning": "Công Ty",
+    "reading": "かいしゃ",
+    "type": "noun"
+  },
+  {
+    "japanese": "うち",
+    "meaning": "Nhà",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "靴",
+    "meaning": "Giày",
+    "reading": "くつ",
+    "type": "noun"
+  },
+  {
+    "japanese": "ネクタイ",
+    "meaning": "Cà Vạt",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "ワイン",
+    "meaning": "Rượu Vang",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "売り場",
+    "meaning": "Quầy Bán",
+    "reading": "うりば",
+    "type": "noun"
+  },
+  {
+    "japanese": "地下",
+    "meaning": "Tầng Hầm",
+    "reading": "ちか",
+    "type": "noun"
+  },
+  {
+    "japanese": "ー階",
+    "meaning": "Tầng Thứ -",
+    "reading": "ーかい（－がい）",
+    "type": "suffix"
+  },
+  {
+    "japanese": "何階*",
+    "meaning": "Tầng Mấy",
+    "reading": "なんがい*",
+    "type": "noun"
+  },
+  {
+    "japanese": "ー円",
+    "meaning": "- Yên",
+    "reading": "ーえん",
+    "type": "suffix"
+  },
+  {
+    "japanese": "いくら",
+    "meaning": "Bao Nhiêu Tiền",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "百",
+    "meaning": "Trăm",
+    "reading": "ひゃく",
+    "type": "noun"
+  },
+  {
+    "japanese": "千",
+    "meaning": "Nghìn",
+    "reading": "せん",
+    "type": "noun"
+  },
+  {
+    "japanese": "万",
+    "meaning": "Vạn",
+    "reading": "まん",
+    "type": "noun"
+  },
+  {
+    "japanese": "すみません。",
+    "meaning": "Xin Lỗi!",
+    "reading": "",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "どうも。",
+    "meaning": "Cám Ơn!",
+    "reading": "",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "いらっしゃいませ。",
+    "meaning": "Xin Chào Quý Khách, Mời Quý Khách Vào!",
+    "reading": "",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "[～を] 見せて ください。",
+    "meaning": "Cho Tôi Xem [~]!",
+    "reading": "[～を] みせて ください。",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "じゃ",
+    "meaning": "Thế Thì, Vậy Thì",
+    "reading": "",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "[～を] ください。",
+    "meaning": "Cho Tôi [~]!",
+    "reading": "",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "イタリア",
+    "meaning": "Ý",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "スイス",
+    "meaning": "Thụy Sĩ",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "フランス",
+    "meaning": "Pháp",
+    "reading": "",
+    "type": "noun"
+  }
+]

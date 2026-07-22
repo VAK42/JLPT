@@ -1,0 +1,338 @@
+[
+  {
+    "japanese": "ハンサム[な]",
+    "meaning": "Đẹp Trai",
+    "reading": "",
+    "type": "adj"
+  },
+  {
+    "japanese": "きれい[な]",
+    "meaning": "Đẹp, Sạch",
+    "reading": "",
+    "type": "adj"
+  },
+  {
+    "japanese": "静か[な]",
+    "meaning": "Yên Tĩnh",
+    "reading": "",
+    "type": "adj"
+  },
+  {
+    "japanese": "にぎやか[な]",
+    "meaning": "Náo Nhiệt",
+    "reading": "",
+    "type": "adj"
+  },
+  {
+    "japanese": "有名[な]",
+    "meaning": "Nổi Tiếng",
+    "reading": "ゆうめい[な]",
+    "type": "adj"
+  },
+  {
+    "japanese": "親切[な]",
+    "meaning": "Tốt Bụng, Thân Thiện (Ko Dùng Khi Nói Về Người Trong Gia Đình Mình)",
+    "reading": "しんせつ[な]",
+    "type": "adj"
+  },
+  {
+    "japanese": "元気[な]",
+    "meaning": "Khỏe",
+    "reading": "げんき[な]",
+    "type": "adj"
+  },
+  {
+    "japanese": "暇[な]",
+    "meaning": "Rảnh Rỗi",
+    "reading": "ひま[な]",
+    "type": "adj"
+  },
+  {
+    "japanese": "便利[な]",
+    "meaning": "Tiện Lợi",
+    "reading": "べんり[な]",
+    "type": "adj"
+  },
+  {
+    "japanese": "すてき[な]",
+    "meaning": "Đẹp, Hay",
+    "reading": "",
+    "type": "adj"
+  },
+  {
+    "japanese": "大きい",
+    "meaning": "To, Lớn",
+    "reading": "おおきい",
+    "type": "adj"
+  },
+  {
+    "japanese": "小さい*",
+    "meaning": "Nhỏ, Bé",
+    "reading": "ちいさい*",
+    "type": "adj"
+  },
+  {
+    "japanese": "新しい",
+    "meaning": "Mới",
+    "reading": "あたらしい",
+    "type": "adj"
+  },
+  {
+    "japanese": "古い",
+    "meaning": "Cũ",
+    "reading": "ふるい",
+    "type": "adj"
+  },
+  {
+    "japanese": "いい(よい)",
+    "meaning": "Tốt",
+    "reading": "",
+    "type": "adj"
+  },
+  {
+    "japanese": "悪い*",
+    "meaning": "Xấu",
+    "reading": "わるい*",
+    "type": "adj"
+  },
+  {
+    "japanese": "暑い、熱い",
+    "meaning": "Nóng",
+    "reading": "あつい",
+    "type": "adj"
+  },
+  {
+    "japanese": "寒い",
+    "meaning": "Lạnh, Rét (Dùng Cho Thời Tiết)",
+    "reading": "さむい",
+    "type": "adj"
+  },
+  {
+    "japanese": "冷たい",
+    "meaning": "Lạnh, Buốt (Dùng Cho Cảm Giác)",
+    "reading": "つめたい",
+    "type": "adj"
+  },
+  {
+    "japanese": "難しい",
+    "meaning": "Khó",
+    "reading": "むずかしい",
+    "type": "adj"
+  },
+  {
+    "japanese": "易しい",
+    "meaning": "Dễ",
+    "reading": "やさしい",
+    "type": "adj"
+  },
+  {
+    "japanese": "高い",
+    "meaning": "Đắt, Cao",
+    "reading": "たかい",
+    "type": "adj"
+  },
+  {
+    "japanese": "安い",
+    "meaning": "Rẻ",
+    "reading": "やすい",
+    "type": "adj"
+  },
+  {
+    "japanese": "低い*",
+    "meaning": "Thấp",
+    "reading": "ひくい*",
+    "type": "adj"
+  },
+  {
+    "japanese": "おもしろい",
+    "meaning": "Thú Vị, Hay",
+    "reading": "",
+    "type": "adj"
+  },
+  {
+    "japanese": "おいしい",
+    "meaning": "Ngon",
+    "reading": "",
+    "type": "adj"
+  },
+  {
+    "japanese": "忙しい",
+    "meaning": "Bận",
+    "reading": "いそがしい",
+    "type": "adj"
+  },
+  {
+    "japanese": "楽しい",
+    "meaning": "Vui",
+    "reading": "たのしい",
+    "type": "adj"
+  },
+  {
+    "japanese": "白い",
+    "meaning": "Trắng",
+    "reading": "しろい",
+    "type": "adj"
+  },
+  {
+    "japanese": "黒い",
+    "meaning": "Đen",
+    "reading": "くろい",
+    "type": "adj"
+  },
+  {
+    "japanese": "赤い",
+    "meaning": "Đỏ",
+    "reading": "あかい",
+    "type": "adj"
+  },
+  {
+    "japanese": "青い",
+    "meaning": "Xanh Da Trời",
+    "reading": "あおい",
+    "type": "adj"
+  },
+  {
+    "japanese": "桜",
+    "meaning": "Cây/Hoa Anh Đào",
+    "reading": "さくら",
+    "type": "noun"
+  },
+  {
+    "japanese": "山",
+    "meaning": "Núi",
+    "reading": "やま",
+    "type": "noun"
+  },
+  {
+    "japanese": "町",
+    "meaning": "Thị Trấn, Thị Xã, Thành Phố",
+    "reading": "まち",
+    "type": "noun"
+  },
+  {
+    "japanese": "食べ物",
+    "meaning": "Đồ Ăn",
+    "reading": "たべもの",
+    "type": "noun"
+  },
+  {
+    "japanese": "所",
+    "meaning": "Nơi, Chỗ",
+    "reading": "ところ",
+    "type": "noun"
+  },
+  {
+    "japanese": "寮",
+    "meaning": "Ký Túc Xá",
+    "reading": "りょう",
+    "type": "noun"
+  },
+  {
+    "japanese": "レストラン",
+    "meaning": "Nhà Hàng",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "生活",
+    "meaning": "Cuộc Sống, Sinh Hoạt",
+    "reading": "せいかつ",
+    "type": "noun"
+  },
+  {
+    "japanese": "お仕事",
+    "meaning": "Việc, Công Việc (～を します: Làm Việc)",
+    "reading": "おしごと",
+    "type": "noun"
+  },
+  {
+    "japanese": "どう",
+    "meaning": "Thế Nào",
+    "reading": "",
+    "type": "adv"
+  },
+  {
+    "japanese": "どんな～",
+    "meaning": "~ Như Thế Nào",
+    "reading": "",
+    "type": "adj"
+  },
+  {
+    "japanese": "とても",
+    "meaning": "Rất, Lắm",
+    "reading": "",
+    "type": "adv"
+  },
+  {
+    "japanese": "あまり",
+    "meaning": "Không ~ Lắm (Dùng Với Thể Phủ Định)",
+    "reading": "",
+    "type": "adv"
+  },
+  {
+    "japanese": "そして",
+    "meaning": "Và/Thêm Nữa (Dùng Để Nối Hai Câu)",
+    "reading": "",
+    "type": "adv"
+  },
+  {
+    "japanese": "～が、～",
+    "meaning": "～ Nhưng～",
+    "reading": "",
+    "type": "suffix"
+  },
+  {
+    "japanese": "お元気ですか。",
+    "meaning": "Anh/Chị Có Khỏe Không?",
+    "reading": "おげんきですか。",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "そうですね。",
+    "meaning": "Thế À/Để Tôi Xem (Cách Nói Trong Lúc Suy Nghĩ Câu Trả Lời)",
+    "reading": "",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "［～、］もう 一杯いかがですか。",
+    "meaning": "Anh/Chị Dùng Thêm Một Chén/Ly[~] Nữa Nhé?",
+    "reading": "［～、］もう いっぱいいかがですか。",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "［いいえ、］けっこうです。",
+    "meaning": "Không, Đủ Rồi Ạ",
+    "reading": "",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "もう ～です[ね]。",
+    "meaning": "Đã ~ Rồi Nhỉ/Đã ~ Rồi Đúng Ko?",
+    "reading": "",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "そろそろ 失礼します。",
+    "meaning": "Sắp Đến Lúc Tôi Phải Xin Phép Rồi/Đã Đến Lúc Tôi Phải Về",
+    "reading": "そろそろ しつれいします。",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "いいえ。",
+    "meaning": "Ko Có Gì/Ko Sao Cả",
+    "reading": "",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "また いらっしゃってください。",
+    "meaning": "Lần Sau Anh/Chị Lại Đến Chơi Nhé",
+    "reading": "",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "富士山",
+    "meaning": "Núi Phú Sĩ",
+    "reading": "ふじさん",
+    "type": "noun"
+  }
+]

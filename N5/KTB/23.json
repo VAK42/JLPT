@@ -1,0 +1,140 @@
+[
+  {
+    "japanese": "聞きます I［先生に～］",
+    "meaning": "Hỏi [Giáo Viên]",
+    "reading": "ききます I［せんせいに～］",
+    "type": "verb"
+  },
+  {
+    "japanese": "回します I",
+    "meaning": "Vặn",
+    "reading": "まわします I",
+    "type": "verb"
+  },
+  {
+    "japanese": "引きます I",
+    "meaning": "Kéo",
+    "reading": "ひきます I",
+    "type": "verb"
+  },
+  {
+    "japanese": "変えます II",
+    "meaning": "Đổi",
+    "reading": "かえます II",
+    "type": "verb"
+  },
+  {
+    "japanese": "触ります I［ドアに～］",
+    "meaning": "Sờ, Chạm Vào [Cửa]",
+    "reading": "さわります I［ドアに～］",
+    "type": "verb"
+  },
+  {
+    "japanese": "出ます II［お釣りが～］",
+    "meaning": "[Tiền Thừa] Ra",
+    "reading": "でます II［おつりが～］",
+    "type": "verb"
+  },
+  {
+    "japanese": "歩きます I",
+    "meaning": "Đi Bộ",
+    "reading": "あるきます I",
+    "type": "verb"
+  },
+  {
+    "japanese": "渡ります I［橋を～］",
+    "meaning": "Qua [Cầu]",
+    "reading": "わたります I［はしを～］",
+    "type": "verb"
+  },
+  {
+    "japanese": "曲がります I [右へ～]",
+    "meaning": "Rẽ [Phải]",
+    "reading": "まがります I［みぎへ～］",
+    "type": "verb"
+  },
+  {
+    "japanese": "寂しい",
+    "meaning": "Buồn, Cô Đơn",
+    "reading": "さびしい",
+    "type": "adj"
+  },
+  {
+    "japanese": "お湯",
+    "meaning": "Nước Nóng",
+    "reading": "おゆ",
+    "type": "noun"
+  },
+  {
+    "japanese": "音",
+    "meaning": "Âm Thanh",
+    "reading": "おと",
+    "type": "noun"
+  },
+  {
+    "japanese": "サイズ",
+    "meaning": "Kích Cỡ",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "故障",
+    "meaning": "Hỏng Hóc (～します: Bị Hỏng)",
+    "reading": "こしょう",
+    "type": "noun"
+  },
+  {
+    "japanese": "道",
+    "meaning": "Đường Sá",
+    "reading": "みち",
+    "type": "noun"
+  },
+  {
+    "japanese": "交差点",
+    "meaning": "Ngã Tư",
+    "reading": "こうさてん",
+    "type": "noun"
+  },
+  {
+    "japanese": "信号",
+    "meaning": "Đèn Tín Hiệu",
+    "reading": "しんごう",
+    "type": "noun"
+  },
+  {
+    "japanese": "角",
+    "meaning": "Góc",
+    "reading": "かど",
+    "type": "noun"
+  },
+  {
+    "japanese": "橋",
+    "meaning": "Cầu",
+    "reading": "はし",
+    "type": "noun"
+  },
+  {
+    "japanese": "駐車場",
+    "meaning": "Bãi Đỗ Xe",
+    "reading": "ちゅうしゃじょう",
+    "type": "noun"
+  },
+  {
+    "japanese": "建物",
+    "meaning": "Tòa Nhà",
+    "reading": "たてもの",
+    "type": "noun"
+  },
+  {
+    "japanese": "何回も",
+    "meaning": "Nhiều Lần",
+    "reading": "なんかいも",
+    "type": "adv"
+  },
+  {
+    "japanese": "―目",
+    "meaning": "Thứ -, Số - (Biểu Thị Thứ Tự)",
+    "reading": "―め",
+    "type": "suffix"
+  }
+]

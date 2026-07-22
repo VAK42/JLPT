@@ -1,0 +1,308 @@
+[
+  {
+    "japanese": "食べます II",
+    "meaning": "Ăn",
+    "reading": "たべます II",
+    "type": "verb"
+  },
+  {
+    "japanese": "飲みます I",
+    "meaning": "Uống",
+    "reading": "のみます I",
+    "type": "verb"
+  },
+  {
+    "japanese": "吸います I［たばこを～］",
+    "meaning": "Hút [Thuốc Lá]",
+    "reading": "すいます I［たばこを～］",
+    "type": "verb"
+  },
+  {
+    "japanese": "見ます II",
+    "meaning": "Nhìn, Xem",
+    "reading": "みます II",
+    "type": "verb"
+  },
+  {
+    "japanese": "聞きます I",
+    "meaning": "Nghe",
+    "reading": "ききます I",
+    "type": "verb"
+  },
+  {
+    "japanese": "読みます I",
+    "meaning": "Đọc",
+    "reading": "よみます I",
+    "type": "verb"
+  },
+  {
+    "japanese": "書きます I",
+    "meaning": "Viết, Vẽ",
+    "reading": "かきます I",
+    "type": "verb"
+  },
+  {
+    "japanese": "買います I",
+    "meaning": "Mua",
+    "reading": "かいます I",
+    "type": "verb"
+  },
+  {
+    "japanese": "取ります I［写真を～］",
+    "meaning": "Chụp [Ảnh]",
+    "reading": "とります I［しゃしんを～］",
+    "type": "verb"
+  },
+  {
+    "japanese": "します III",
+    "meaning": "Làm, Chơi",
+    "reading": "",
+    "type": "verb"
+  },
+  {
+    "japanese": "会います I［友達に～］",
+    "meaning": "Gặp [Bạn]",
+    "reading": "あいます I［ともだちに～］",
+    "type": "verb"
+  },
+  {
+    "japanese": "ご飯",
+    "meaning": "Bữa Ăn, Cơm",
+    "reading": "ごはん",
+    "type": "noun"
+  },
+  {
+    "japanese": "朝ご飯",
+    "meaning": "Cơm Sáng, Bữa Sáng",
+    "reading": "あさごはん",
+    "type": "noun"
+  },
+  {
+    "japanese": "昼ご飯",
+    "meaning": "Cơm Trưa, Bữa Trưa",
+    "reading": "ひるごはん",
+    "type": "noun"
+  },
+  {
+    "japanese": "晩ご飯",
+    "meaning": "Cơm Tối, Bữa Tối",
+    "reading": "ばんごはん",
+    "type": "noun"
+  },
+  {
+    "japanese": "パン",
+    "meaning": "Bánh Mì",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "卵",
+    "meaning": "Trứng",
+    "reading": "たまご",
+    "type": "noun"
+  },
+  {
+    "japanese": "肉",
+    "meaning": "Thịt",
+    "reading": "にく",
+    "type": "noun"
+  },
+  {
+    "japanese": "魚",
+    "meaning": "Cá",
+    "reading": "さかな",
+    "type": "noun"
+  },
+  {
+    "japanese": "野菜",
+    "meaning": "Rau",
+    "reading": "やさい",
+    "type": "noun"
+  },
+  {
+    "japanese": "果物",
+    "meaning": "Trái Cây",
+    "reading": "くだもの",
+    "type": "noun"
+  },
+  {
+    "japanese": "水",
+    "meaning": "Nước",
+    "reading": "みず",
+    "type": "noun"
+  },
+  {
+    "japanese": "お茶",
+    "meaning": "Trà Xanh",
+    "reading": "おちゃ",
+    "type": "noun"
+  },
+  {
+    "japanese": "紅茶",
+    "meaning": "Trà Đen",
+    "reading": "こうちゃ",
+    "type": "noun"
+  },
+  {
+    "japanese": "牛乳（ミルク）",
+    "meaning": "Sữa Bò (Sữa)",
+    "reading": "ぎゅうにゅう（ミルク）",
+    "type": "noun"
+  },
+  {
+    "japanese": "ジュース",
+    "meaning": "Nước Trái Cây",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "ビール",
+    "meaning": "Bia",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "お酒",
+    "meaning": "Rượu Gạo Nhật",
+    "reading": "おさけ",
+    "type": "noun"
+  },
+  {
+    "japanese": "煙草",
+    "meaning": "Thuốc Lá",
+    "reading": "たばこ",
+    "type": "noun"
+  },
+  {
+    "japanese": "手紙",
+    "meaning": "Thư",
+    "reading": "てがみ",
+    "type": "noun"
+  },
+  {
+    "japanese": "レポート",
+    "meaning": "Báo Cáo",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "写真",
+    "meaning": "Ảnh",
+    "reading": "しゃしん",
+    "type": "noun"
+  },
+  {
+    "japanese": "ビデオ",
+    "meaning": "Video",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "店",
+    "meaning": "Cửa Hàng, Tiệm",
+    "reading": "みせ",
+    "type": "noun"
+  },
+  {
+    "japanese": "庭",
+    "meaning": "Vườn",
+    "reading": "にわ",
+    "type": "noun"
+  },
+  {
+    "japanese": "宿題",
+    "meaning": "Bài Tập Về Nhà (～をします: Làm Bài Tập Về Nhà)",
+    "reading": "しゅくだい",
+    "type": "noun"
+  },
+  {
+    "japanese": "テニス",
+    "meaning": "Quần Vợt (～をします: Đánh Quần Vợt)",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "サッカー",
+    "meaning": "Bóng Đá (～をします: Chơi Bóng Đá)",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "[お]花見",
+    "meaning": "Ngắm Hoa Anh Đào (～をします: Ngắm Hoa Anh Đào)",
+    "reading": "[お]はなみ",
+    "type": "noun"
+  },
+  {
+    "japanese": "何",
+    "meaning": "Cái Gì, Gì",
+    "reading": "なに",
+    "type": "noun"
+  },
+  {
+    "japanese": "いっしょに",
+    "meaning": "Cùng, Cùng Nhau",
+    "reading": "",
+    "type": "adv"
+  },
+  {
+    "japanese": "ちょっと",
+    "meaning": "Một Chút",
+    "reading": "",
+    "type": "adv"
+  },
+  {
+    "japanese": "いつも",
+    "meaning": "Luôn Luôn, Lúc Nào Cũng",
+    "reading": "",
+    "type": "adv"
+  },
+  {
+    "japanese": "時々",
+    "meaning": "Thỉnh Thoảng",
+    "reading": "ときどき",
+    "type": "adv"
+  },
+  {
+    "japanese": "それから",
+    "meaning": "Sau Đó, Tiếp Theo",
+    "reading": "",
+    "type": "adv"
+  },
+  {
+    "japanese": "ええ",
+    "meaning": "Vâng/Được",
+    "reading": "",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "いいですね。",
+    "meaning": "Được Đấy Nhỉ/Hay Quá!",
+    "reading": "",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "わかりました。",
+    "meaning": "Tôi Hiểu Rồi/Vâng Ạ!",
+    "reading": "",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "何ですか。",
+    "meaning": "Có Gì Đấy À/Cái Gì Vậy?",
+    "reading": "なんですか。",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "じゃ、また [明日]。",
+    "meaning": "Hẹn Gặp Lại [Ngày Mai]",
+    "reading": "じゃ、また [あした]。",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "メキシコ",
+    "meaning": "Mexico",
+    "reading": "",
+    "type": "noun"
+  }
+]

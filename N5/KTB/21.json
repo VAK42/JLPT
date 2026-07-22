@@ -1,0 +1,242 @@
+[
+  {
+    "japanese": "思います I",
+    "meaning": "Nghĩ",
+    "reading": "おもいます I",
+    "type": "verb"
+  },
+  {
+    "japanese": "言います I",
+    "meaning": "Nói",
+    "reading": "いいます I",
+    "type": "verb"
+  },
+  {
+    "japanese": "勝ちます I",
+    "meaning": "Thắng",
+    "reading": "かちます I",
+    "type": "verb"
+  },
+  {
+    "japanese": "負けます II",
+    "meaning": "Thua",
+    "reading": "まけます II",
+    "type": "verb"
+  },
+  {
+    "japanese": "あります I［お祭りが～］",
+    "meaning": "[Lễ Hội] Được Tổ Chức, Diễn Ra",
+    "reading": "あります I［おまつりが～］",
+    "type": "verb"
+  },
+  {
+    "japanese": "役に 立ちます I",
+    "meaning": "Hữu Ích",
+    "reading": "やくに たちます I",
+    "type": "verb"
+  },
+  {
+    "japanese": "動きます I",
+    "meaning": "Chuyển Động, Chạy",
+    "reading": "うごきます I",
+    "type": "verb"
+  },
+  {
+    "japanese": "やめます II［会社を～］",
+    "meaning": "Bỏ, Thôi [Việc Công Ty]",
+    "reading": "やめます II［かいしゃを～］",
+    "type": "verb"
+  },
+  {
+    "japanese": "気を つけます II",
+    "meaning": "Chú Ý, Bảo Trọng",
+    "reading": "きを つけます II",
+    "type": "verb"
+  },
+  {
+    "japanese": "留学します III",
+    "meaning": "Du Học",
+    "reading": "りゅうがくします III",
+    "type": "verb"
+  },
+  {
+    "japanese": "むだ[な]",
+    "meaning": "Lãng Phí, Vô Ích",
+    "reading": "むだ[な]",
+    "type": "adj"
+  },
+  {
+    "japanese": "不便[な]",
+    "meaning": "Bất Tiện",
+    "reading": "ふべん[な]",
+    "type": "adj"
+  },
+  {
+    "japanese": "すごい",
+    "meaning": "Ghê Quá/Giỏi Quá (Dùng Để Bày Tỏ Sự Ngạc Nhiên Hoặc Thán Phục)",
+    "reading": "",
+    "type": "adj"
+  },
+  {
+    "japanese": "ほんとう",
+    "meaning": "Sự Thật",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "うそ*",
+    "meaning": "Giả Dối",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "自動車",
+    "meaning": "Ô Tô",
+    "reading": "じどうしゃ",
+    "type": "noun"
+  },
+  {
+    "japanese": "交通",
+    "meaning": "Giao Thông",
+    "reading": "こうつう",
+    "type": "noun"
+  },
+  {
+    "japanese": "物価",
+    "meaning": "Giá Cả",
+    "reading": "ぶっか",
+    "type": "noun"
+  },
+  {
+    "japanese": "放送",
+    "meaning": "Phát Thanh",
+    "reading": "ほうそう",
+    "type": "noun"
+  },
+  {
+    "japanese": "ニュース",
+    "meaning": "Tin Tức",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "アニメ",
+    "meaning": "Anime",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "マンガ",
+    "meaning": "Truyện Tranh",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "デザイン",
+    "meaning": "Thiết Kế",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "夢",
+    "meaning": "Giấc Mơ",
+    "reading": "ゆめ",
+    "type": "noun"
+  },
+  {
+    "japanese": "天才",
+    "meaning": "Thiên Tài",
+    "reading": "てんさい",
+    "type": "noun"
+  },
+  {
+    "japanese": "試合",
+    "meaning": "Trận Đấu (～を します: Có Trận Đấu)",
+    "reading": "しあい",
+    "type": "noun"
+  },
+  {
+    "japanese": "意見",
+    "meaning": "Ý Kiến",
+    "reading": "いけん",
+    "type": "noun"
+  },
+  {
+    "japanese": "話",
+    "meaning": "Câu Chuyện (～を します: Nói Chuyện)",
+    "reading": "はなし",
+    "type": "noun"
+  },
+  {
+    "japanese": "地球",
+    "meaning": "Trái Đất",
+    "reading": "ちきゅう",
+    "type": "noun"
+  },
+  {
+    "japanese": "月",
+    "meaning": "Mặt Trăng",
+    "reading": "つき",
+    "type": "noun"
+  },
+  {
+    "japanese": "最近",
+    "meaning": "Gần Đây",
+    "reading": "さいきん",
+    "type": "adv"
+  },
+  {
+    "japanese": "たぶん",
+    "meaning": "Chắc, Có Thể",
+    "reading": "",
+    "type": "adv"
+  },
+  {
+    "japanese": "きっと",
+    "meaning": "Chắc Chắn, Nhất Định",
+    "reading": "",
+    "type": "adv"
+  },
+  {
+    "japanese": "ほんとうに",
+    "meaning": "Thật Sự",
+    "reading": "",
+    "type": "adv"
+  },
+  {
+    "japanese": "そんなに",
+    "meaning": "(Không) ~ Lắm",
+    "reading": "",
+    "type": "adv"
+  },
+  {
+    "japanese": "～に ついて",
+    "meaning": "Về ~",
+    "reading": "",
+    "type": "suffix"
+  },
+  {
+    "japanese": "久しぶりですね。",
+    "meaning": "Đã Lâu Không Gặp Anh/Chị!",
+    "reading": "ひさしぶりですね。",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "～でも飲みませんか。",
+    "meaning": "Anh/Chị Uống ~ Nhé?",
+    "reading": "～でものみませんか。",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "もちろん",
+    "meaning": "Tất Nhiên, Dĩ Nhiên",
+    "reading": "",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "もう帰らないと．．．。",
+    "meaning": "Tôi Phải Về Bây Giờ Không Thì...",
+    "reading": "もうかえらないと．．．。",
+    "type": "kaiwa"
+  }
+]

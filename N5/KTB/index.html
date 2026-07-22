@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JLPT N5</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .font-normal {
+      font-weight: 400 !important;
+    }
+
+    .font-medium {
+      font-weight: 500 !important;
+    }
+
+    .font-semibold,
+    .font-bold,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    b,
+    strong {
+      font-weight: 600 !important;
+    }
+
+    button,
+    [role="button"],
+    a {
+      cursor: pointer !important;
+    }
+  </style>
+</head>
+
+<body
+  class="bg-white text-green-950 font-sans antialiased min-h-screen flex flex-col selection:bg-green-950 selection:text-white">
+  <header class="sticky top-0 z-40 bg-green-950 text-white shadow-md border-b border-green-900">
+    <div class="w-full px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <button id="btnMobileSidebar" onclick="toggleMobileSidebar()"
+          class="lg:hidden cursor-pointer rounded border border-white/30 p-1.5 hover:bg-white/10 transition">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+        <div
+          class="bg-white text-green-950 p-2 rounded flex items-center justify-center font-semibold text-xl tracking-wider">
+          言葉</div>
+        <div>
+          <h1 class="text-lg font-semibold tracking-tight">JLPT</h1>
+          <p class="text-xs text-green-200">Learn & Quiz</p>
+        </div>
+      </div>
+      <nav class="flex items-center space-x-2">
+        <button id="tabLearn" onclick="switchMode('learn')"
+          class="cursor-pointer rounded px-4 py-1.5 text-sm font-semibold transition flex items-center space-x-2 bg-white text-green-950 shadow-sm">
+          <i data-lucide="book-open" class="w-4 h-4"></i>
+          <span>Learn</span>
+        </button>
+        <button id="tabQuiz" onclick="switchMode('quiz')"
+          class="cursor-pointer rounded px-4 py-1.5 text-sm font-semibold transition flex items-center space-x-2 text-green-100 hover:text-white hover:bg-green-800">
+          <i data-lucide="brain-circuit" class="w-4 h-4"></i>
+          <span>Quiz</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+  <div class="flex-1 w-full flex overflow-hidden">
+    <aside
+      class="w-64 bg-white border-r border-green-950/10 p-4 shrink-0 hidden lg:flex flex-col space-y-4 overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-green-950/10 pb-3">
+        <h2 class="text-base font-semibold text-green-950 flex items-center space-x-2">
+          <i data-lucide="layers" class="w-4 h-4"></i>
+          <span>Lessons</span>
+        </h2>
+        <span id="lessonSidebarTotalCount" class="text-xs font-semibold text-green-950/60">25 Lessons</span>
+      </div>
+      <div id="lessonSidebarContainer" class="space-y-1.5 flex-1 overflow-y-auto pr-1"></div>
+    </aside>
+    <div id="mobileSidebarModal" class="hidden fixed inset-0 z-50 bg-black/50 lg:hidden flex">
+      <div class="bg-white w-72 h-full p-4 flex flex-col space-y-4 shadow-xl overflow-y-auto">
+        <div class="flex items-center justify-between border-b border-green-950/10 pb-3">
+          <h2 class="text-base font-semibold text-green-950 flex items-center space-x-2">
+            <i data-lucide="layers" class="w-4 h-4"></i>
+            <span>Lessons</span>
+          </h2>
+          <button onclick="toggleMobileSidebar()"
+            class="cursor-pointer rounded p-1 text-green-950 hover:bg-green-950/10">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+        <div id="mobileLessonSidebarContainer" class="space-y-1.5 flex-1 overflow-y-auto pr-1"></div>
+      </div>
+    </div>
+    <main class="flex-1 w-full p-4 sm:p-6 lg:p-8 overflow-y-auto">
+      <section id="modeLearn" class="space-y-6">
+        <div class="bg-white border border-green-950/20 p-4 rounded shadow-sm flex flex-wrap items-center justify-between gap-3">
+          <div class="flex flex-wrap items-center gap-3 w-full md:w-auto flex-1">
+            <div class="relative w-full md:w-80">
+              <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-green-950/60"></i>
+              <input type="text" id="learnSearch" oninput="handleSearch()" placeholder="Search" class="w-full pl-9 pr-4 py-2 text-sm border border-green-950/30 rounded focus:outline-none focus:ring-1 focus:ring-green-950 focus:border-green-950">
+            </div>
+            <select id="typeFilterSelect" onchange="handleTypeFilterChange()" class="border border-green-950/30 rounded px-3 py-2 text-sm bg-white focus:outline-none focus:ring-1 focus:ring-green-950 text-green-950 cursor-pointer font-medium">
+              <option value="all">All Types</option>
+            </select>
+          </div>
+          <div class="flex items-center space-x-3">
+            <span id="activeLessonTitleBadge" class="text-xs font-semibold bg-green-950 text-white px-3 py-1.5 rounded">All Lessons</span>
+            <span id="learnCountText" class="text-xs text-green-950/70 font-semibold">Showing 0 Items</span>
+          </div>
+        </div>
+        <div id="kotobaGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-start"></div>
+        <div id="paginationContainer"></div>
+      </section>
+      <section id="modeQuiz" class="hidden space-y-6 max-w-4xl mx-auto">
+        <div
+          class="bg-white border border-green-950/20 p-4 rounded shadow-sm flex flex-wrap items-center justify-between gap-3">
+          <div class="flex flex-wrap items-center gap-2">
+            <div
+              class="flex items-center space-x-1 text-xs font-semibold bg-green-950/10 px-2.5 py-1.5 rounded text-green-950">
+              <span>Answered: <strong id="quizAnsweredCount" class="font-semibold">0</strong></span>
+            </div>
+            <div
+              class="flex items-center space-x-1 text-xs font-semibold bg-green-950 text-white px-2.5 py-1.5 rounded">
+              <span>Correct: <strong id="quizCorrectCount" class="font-semibold">0</strong></span>
+            </div>
+            <div
+              class="flex items-center space-x-1 text-xs font-semibold bg-green-900 text-white px-2.5 py-1.5 rounded">
+              <span>Incorrect: <strong id="quizIncorrectCount" class="font-semibold">0</strong></span>
+            </div>
+            <div
+              class="flex items-center space-x-1 text-xs font-semibold bg-green-950/10 px-2.5 py-1.5 rounded text-green-950">
+              <span>Words Left: <strong id="quizWordsLeftCount" class="font-semibold">0</strong></span>
+            </div>
+            <div
+              class="flex items-center space-x-1 text-xs font-semibold bg-green-950/10 px-2.5 py-1.5 rounded text-green-950">
+              <span>Total Words: <strong id="quizTotalWordsCount" class="font-semibold">0</strong></span>
+            </div>
+          </div>
+          <div class="flex items-center space-x-2">
+            <button id="btnQuizIncorrect" onclick="toggleQuizIncorrectOnly()"
+              class="cursor-pointer rounded border border-green-950 px-3 py-1.5 text-xs font-semibold hover:bg-green-950 hover:text-white transition flex items-center space-x-1">
+              <i data-lucide="brain" class="w-3.5 h-3.5"></i>
+              <span>Quiz Incorrect Only</span>
+            </button>
+            <button id="btnIncorrectList" onclick="openIncorrectModal()"
+              class="cursor-pointer rounded border border-green-950 px-3 py-1.5 text-xs font-semibold hover:bg-green-950 hover:text-white transition flex items-center space-x-1">
+              <i data-lucide="list-x" class="w-3.5 h-3.5"></i>
+              <span>Incorrect Words</span>
+            </button>
+            <button onclick="newQuizQuestion()"
+              class="cursor-pointer rounded border border-green-950 px-3 py-1.5 text-xs font-semibold hover:bg-green-950 hover:text-white transition flex items-center space-x-1">
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+              <span>Change Question</span>
+            </button>
+          </div>
+        </div>
+        <div id="quizActiveContainer" class="space-y-6">
+          <div class="bg-white border-2 border-green-950 p-6 rounded shadow-sm text-center py-8">
+            <h2 id="quizQuestionWord" class="text-6xl sm:text-7xl font-normal tracking-wide text-green-950 font-sans">---</h2>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-white border border-green-950/20 p-5 rounded shadow-sm space-y-3">
+              <h3 class="text-sm font-semibold text-green-950 border-b border-green-950/10 pb-2">Reading</h3>
+              <div id="quizReadingOptions" class="grid grid-cols-1 gap-2.5"></div>
+            </div>
+            <div class="bg-white border border-green-950/20 p-5 rounded shadow-sm space-y-3">
+              <h3 class="text-sm font-semibold text-green-950 border-b border-green-950/10 pb-2">Meaning</h3>
+              <div id="quizMeaningOptions" class="grid grid-cols-1 gap-2.5"></div>
+            </div>
+          </div>
+          <div class="flex flex-col items-center justify-center space-y-3 pt-2">
+            <button id="btnNext" onclick="handleQuizSubmit()" class="cursor-pointer rounded bg-green-950 text-white px-8 py-3.5 text-base font-semibold hover:bg-green-900 focus:outline-none transition flex items-center justify-center space-x-2 w-full sm:w-64 shadow-md">
+              <span>OK</span>
+              <i data-lucide="arrow-right" class="w-5 h-5"></i>
+            </button>
+            <div id="quizFeedbackMsg" class="hidden text-sm font-semibold text-center px-4 py-2 rounded w-full sm:w-96 border"></div>
+          </div>
+        </div>
+        <div id="quizCompletedContainer" class="hidden bg-white border-2 border-green-950 p-8 rounded shadow-sm text-center max-w-xl mx-auto space-y-6">
+          <h2 class="text-3xl font-semibold text-green-950 flex items-center justify-center space-x-2">
+            <i data-lucide="check-circle-2" class="w-8 h-8 text-green-950"></i>
+            <span>Done!</span>
+          </h2>
+          <p id="quizCompletedMsg" class="text-base text-green-950/80 font-normal">You Have Completed All Words In This Lesson!</p>
+          <div class="grid grid-cols-3 gap-3 py-2">
+            <div class="bg-green-950/5 p-3 rounded border border-green-950/10">
+              <span class="text-xs text-green-950/60 block font-semibold">Answered</span>
+              <span id="quizDoneAnswered" class="text-xl font-semibold text-green-950">0</span>
+            </div>
+            <div class="bg-green-950 text-white p-3 rounded">
+              <span class="text-xs text-green-200 block font-semibold">Correct</span>
+              <span id="quizDoneCorrect" class="text-xl font-semibold text-white">0</span>
+            </div>
+            <div class="bg-green-900 text-white p-3 rounded">
+              <span class="text-xs text-green-200 block font-semibold">Incorrect</span>
+              <span id="quizDoneIncorrect" class="text-xl font-semibold text-white">0</span>
+            </div>
+          </div>
+          <div class="flex justify-center pt-2">
+            <button id="btnRestartQuiz" onclick="restartQuiz()" class="cursor-pointer rounded bg-green-950 text-white px-8 py-3.5 text-base font-semibold hover:bg-green-900 transition flex items-center space-x-2 shadow-md">
+              <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
+              <span>Restart Quiz</span>
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <div id="incorrectModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+    <div
+      class="bg-white border-2 border-green-950 rounded p-6 max-w-lg w-full max-h-[80vh] flex flex-col space-y-4 shadow-xl">
+      <div class="flex items-center justify-between border-b border-green-950/10 pb-2">
+        <h3 class="text-base font-semibold text-green-950 flex items-center space-x-2">
+          <i data-lucide="alert-circle" class="w-4 h-4"></i>
+          <span>Incorrect Words List</span>
+        </h3>
+        <div class="flex items-center space-x-2">
+          <button onclick="downloadWrongFile()"
+            class="cursor-pointer rounded border border-green-950 px-2.5 py-1 text-xs font-semibold hover:bg-green-950 hover:text-white transition flex items-center space-x-1">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+            <span>Download</span>
+          </button>
+          <button onclick="closeIncorrectModal()"
+            class="cursor-pointer rounded p-1 text-green-950 hover:bg-green-950/10">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+      <div id="incorrectListContainer" class="flex-1 overflow-y-auto space-y-2 pr-1"></div>
+    </div>
+  </div>
+  <footer class="bg-green-950 text-white py-4 border-t border-green-900 mt-auto">
+    <div class="w-full text-center text-xs text-green-200">JLPT</div>
+  </footer>
+  <script>
+    const kotobaLessons = {"1":[{"japanese":"私","meaning":"Tôi","reading":"わたし","type":"pronoun"},{"japanese":"貴方","meaning":"Anh/Chị/Ông/Bà/Bạn","reading":"あなた","type":"pronoun"},{"japanese":"あの人 (あの方)","meaning":"Người/Anh/Chị/Vị Kia","reading":"あのひと (あのかた)","type":"pronoun"},{"japanese":"～さん","meaning":"Hậu Tố Sau Tên Người Khác (Lịch Sự)","reading":"","type":"suffix"},{"japanese":"～ちゃん","meaning":"Hậu Tố Sau Tên Trẻ Em (Thay Cho ～さん)","reading":"","type":"suffix"},{"japanese":"～人","meaning":"Người ~","reading":"～じん","type":"suffix"},{"japanese":"先生","meaning":"Thầy/Cô","reading":"せんせい","type":"noun"},{"japanese":"教師","meaning":"Giáo Viên","reading":"きょうし","type":"noun"},{"japanese":"学生","meaning":"Học Sinh, Sinh Viên","reading":"がくせい","type":"noun"},{"japanese":"会社員","meaning":"Nhân Viên Công Ty","reading":"かいしゃいん","type":"noun"},{"japanese":"社員","meaning":"Nhân Viên Công Ty ~ (Dùng Kèm Tên Công Ty)","reading":"しゃいん","type":"noun"},{"japanese":"銀行員","meaning":"Nhân Viên Ngân Hàng","reading":"ぎんこういん","type":"noun"},{"japanese":"医者","meaning":"Bác Sĩ","reading":"いしゃ","type":"noun"},{"japanese":"研究者","meaning":"Nhà Nghiên Cứu","reading":"けんきゅうしゃ","type":"noun"},{"japanese":"大学","meaning":"Đại Học","reading":"だいがく","type":"noun"},{"japanese":"病院","meaning":"Bệnh Viện","reading":"びょういん","type":"noun"},{"japanese":"だれ (どなた)","meaning":"Ai (どなた Lịch Sự Hơn)","reading":"","type":"pronoun"},{"japanese":"ー歳","meaning":"- Tuổi","reading":"ーさい","type":"suffix"},{"japanese":"何歳 (おいくつ)","meaning":"Bao Nhiêu Tuổi (おいくつ Lịch Sự Hơn)","reading":"なんさい","type":"noun"},{"japanese":"はい","meaning":"Vâng, Dạ","reading":"","type":"kaiwa"},{"japanese":"いいえ","meaning":"Không","reading":"","type":"kaiwa"},{"japanese":"初めまして。","meaning":"Rất Hân Hạnh Được Gặp Anh/Chị (Lời Chào Với Người Lần Đầu Tiên Gặp, Câu Nói Đầu Tiên Khi Giới Thiệu Về Mình)","reading":"はじめまして。","type":"kaiwa"},{"japanese":"～から 来ました。","meaning":"Tôi Đến Từ ~","reading":"～から きました。","type":"kaiwa"},{"japanese":"どうぞ よろしく お願いします。","meaning":"Rất Vui Được Làm Quen Với Anh/Chị - Rất Mong Được Sự Giúp Đỡ Của Anh/Chị (Luôn Được Dùng Làm Câu Kết Thúc Sau Khi Giới Thiệu Về Mình)","reading":"どうぞ よろしく おねがいします。","type":"kaiwa"},{"japanese":"失礼ですが","meaning":"Excuse Me (Dùng Khi Hỏi Ai Đó Về Thông Tin Cá Nhân Của Họ)","reading":"しつれいですが","type":"kaiwa"},{"japanese":"お名前は？","meaning":"Tên Anh/Chị Là Gì?","reading":"おなまえは？","type":"kaiwa"},{"japanese":"こちらは ～さんです。","meaning":"Đây Là Anh/Chị/Ông/Bà ~","reading":"","type":"kaiwa"},{"japanese":"アメリカ","meaning":"Mỹ","reading":"","type":"noun"},{"japanese":"イギリス","meaning":"Anh","reading":"","type":"noun"},{"japanese":"インド","meaning":"Ấn Độ","reading":"","type":"noun"},{"japanese":"インドネシア","meaning":"Indonesia","reading":"","type":"noun"},{"japanese":"韓国","meaning":"Hàn Quốc","reading":"かんこく","type":"noun"},{"japanese":"タイ","meaning":"Thái Lan","reading":"","type":"noun"},{"japanese":"中国","meaning":"Trung Quốc","reading":"ちゅうごく","type":"noun"},{"japanese":"ドイツ","meaning":"Đức","reading":"","type":"noun"},{"japanese":"日本","meaning":"Nhật Bản","reading":"にほん","type":"noun"},{"japanese":"ブラジル","meaning":"Brasil","reading":"","type":"noun"}],"2":[{"japanese":"これ","meaning":"Cái Này, Đây (Vật Ở Gần Người Nói)","reading":"","type":"pronoun"},{"japanese":"それ","meaning":"Cái Đó, Đó (Vật Ở Gần Người Nghe)","reading":"","type":"pronoun"},{"japanese":"あれ","meaning":"Cái Kia, Kia (Vật Ở Xa Cả Người Nói & Người Nghe)","reading":"","type":"pronoun"},{"japanese":"この～","meaning":"~ Này (Gần Người Nói)","reading":"","type":"pronoun"},{"japanese":"その～*","meaning":"~ Đó (Gần Người Nghe)","reading":"","type":"pronoun"},{"japanese":"あの～*","meaning":"~ Kia (Xa Cả Người Nói & Người Nghe)","reading":"","type":"pronoun"},{"japanese":"本","meaning":"Sách","reading":"ほん","type":"noun"},{"japanese":"辞書","meaning":"Từ Điển","reading":"じしょ","type":"noun"},{"japanese":"雑誌","meaning":"Tạp Chí","reading":"ざっし","type":"noun"},{"japanese":"新聞","meaning":"Báo","reading":"しんぶん","type":"noun"},{"japanese":"ノート","meaning":"Vở, Tập","reading":"","type":"noun"},{"japanese":"手帳","meaning":"Sổ Tay","reading":"てちょう","type":"noun"},{"japanese":"名刺","meaning":"Danh Thiếp","reading":"めいし","type":"noun"},{"japanese":"カード","meaning":"Card","reading":"","type":"noun"},{"japanese":"鉛筆","meaning":"Bút Chì","reading":"えんぴつ","type":"noun"},{"japanese":"ボールペン","meaning":"Bút Bi","reading":"","type":"noun"},{"japanese":"シャープペンシル","meaning":"Bút Chì Kim","reading":"","type":"noun"},{"japanese":"かぎ","meaning":"Chìa Khóa","reading":"","type":"noun"},{"japanese":"時計","meaning":"Đồng Hồ","reading":"とけい","type":"noun"},{"japanese":"傘","meaning":"Ô Dù","reading":"かさ","type":"noun"},{"japanese":"かばん","meaning":"Cặp Sách","reading":"","type":"noun"},{"japanese":"ＣＤ","meaning":"CD","reading":"","type":"noun"},{"japanese":"テレビ","meaning":"TV","reading":"","type":"noun"},{"japanese":"ラジオ","meaning":"Radio","reading":"","type":"noun"},{"japanese":"カメラ","meaning":"Máy Ảnh","reading":"","type":"noun"},{"japanese":"コンピューター","meaning":"Máy Vi Tính","reading":"","type":"noun"},{"japanese":"車","meaning":"Ô Tô","reading":"くるま","type":"noun"},{"japanese":"机","meaning":"Bàn","reading":"つくえ","type":"noun"},{"japanese":"いす","meaning":"Ghế","reading":"","type":"noun"},{"japanese":"チョコレート","meaning":"Chocolate","reading":"","type":"noun"},{"japanese":"コーヒー","meaning":"Cà Phê","reading":"","type":"noun"},{"japanese":"[お]土産","meaning":"Quà (Mua Khi Đi Xa Về, Mang Đi Khi Thăm Nhà Người Nào Đó)","reading":"[お]みやげ","type":"noun"},{"japanese":"英語","meaning":"Tiếng Anh","reading":"えいご","type":"noun"},{"japanese":"日本語","meaning":"Tiếng Nhật","reading":"にほんご","type":"noun"},{"japanese":"～語","meaning":"Tiếng ~","reading":"～ご","type":"suffix"},{"japanese":"何","meaning":"Gì, Cái Gì","reading":"なん","type":"noun"},{"japanese":"そう","meaning":"Vậy","reading":"","type":"kaiwa"},{"japanese":"あのう","meaning":"À, Ờ... (Dùng Để Biểu Thị Sự Ngại Ngùng, Do Dự)","reading":"","type":"kaiwa"},{"japanese":"えっ","meaning":"Hả? (Dùng Khi Nghe 1 Điều Gì Ko Mong Muốn)","reading":"","type":"kaiwa"},{"japanese":"どうぞ。","meaning":"Xin Mời! (Dùng Khi Mời Ai Đó Cái Gì)","reading":"","type":"kaiwa"},{"japanese":"[どうも] ありがとう [ございます]。","meaning":"Xin Cám Ơn!","reading":"","type":"kaiwa"},{"japanese":"そうですか。","meaning":"Thế À!","reading":"","type":"kaiwa"},{"japanese":"違います","meaning":"Không Phải, Không Đúng, Sai Rồi!","reading":"ちがいます","type":"kaiwa"},{"japanese":"あ","meaning":"Ôi! (Dùng Khi Nhận Ra Điều Gì)","reading":"","type":"kaiwa"},{"japanese":"これからお世話になります。","meaning":"Từ Nay Tôi Rất Mong Được Sự Giúp Đỡ Của Anh/Chị","reading":"これからおせわになります。","type":"kaiwa"},{"japanese":"こちらこそどうぞよろしく［お願いします］。","meaning":"Chính Tôi Mới Là Người Mong Được Sự Giúp Đỡ Của Anh/Chị (Đáp Lại Câu [どうぞ] よろしく［おねがいします］。)","reading":"こちらこそどうぞよろしく［おねがいします］。","type":"kaiwa"}],"3":[{"japanese":"ここ","meaning":"Chỗ Này, Đằng Này, Đây (Gần Người Nói)","reading":"","type":"pronoun"},{"japanese":"そこ","meaning":"Chỗ Đó, Đó (Gần Người Nghe)","reading":"","type":"pronoun"},{"japanese":"あそこ","meaning":"Chỗ Kia, Đằng Kia, Kia (Xa Cả Người Nói & Người Nghe)","reading":"","type":"pronoun"},{"japanese":"どこ","meaning":"Chỗ Nào, Đâu","reading":"","type":"pronoun"},{"japanese":"こちら","meaning":"Phía Này, Đằng, Chỗ Này, Đây (Cách Nói Lịch Sự Của ここ)","reading":"","type":"pronoun"},{"japanese":"そちら","meaning":"Phía Đó, Đằng Đó, Chỗ Đó, Đó (Cách Nói Lịch Sự Của そこ)","reading":"","type":"pronoun"},{"japanese":"あちら","meaning":"Phía Kia, Đằng Kia, Chỗ Kia, Kia (Cách Nói Lịch Sự Của あそこ)","reading":"","type":"pronoun"},{"japanese":"どちら","meaning":"Phía Nào, Đằng Nào, Chỗ Nào, Đâu (Cách Nói Lịch Sự Của どこ)","reading":"","type":"pronoun"},{"japanese":"教室","meaning":"Phòng Học","reading":"きょうしつ","type":"noun"},{"japanese":"食堂","meaning":"Nhà Ăn","reading":"しょくどう","type":"noun"},{"japanese":"事務所","meaning":"Văn Phòng","reading":"じむしょ","type":"noun"},{"japanese":"会議室","meaning":"Phòng Họp","reading":"かいぎしつ","type":"noun"},{"japanese":"受付","meaning":"Quầy Lễ Tân","reading":"うけつけ","type":"noun"},{"japanese":"ロビー","meaning":"Sảnh","reading":"","type":"noun"},{"japanese":"部屋","meaning":"Căn Phòng","reading":"へや","type":"noun"},{"japanese":"トイレ(お手洗い)","meaning":"Nhà Vệ Sinh","reading":"(おてあらい)","type":"noun"},{"japanese":"階段","meaning":"Cầu Thang","reading":"かいだん","type":"noun"},{"japanese":"エレベーター","meaning":"Thang Máy","reading":"","type":"noun"},{"japanese":"エスカレーター","meaning":"Thang Cuốn","reading":"","type":"noun"},{"japanese":"自動販売機","meaning":"Máy Bán Hàng Tự Động","reading":"じどうはんばいき","type":"noun"},{"japanese":"電話","meaning":"Điện Thoại","reading":"でんわ","type":"noun"},{"japanese":"お国","meaning":"Nước (Của Bạn/Anh/Chị)","reading":"おくに","type":"noun"},{"japanese":"会社","meaning":"Công Ty","reading":"かいしゃ","type":"noun"},{"japanese":"うち","meaning":"Nhà","reading":"","type":"noun"},{"japanese":"靴","meaning":"Giày","reading":"くつ","type":"noun"},{"japanese":"ネクタイ","meaning":"Cà Vạt","reading":"","type":"noun"},{"japanese":"ワイン","meaning":"Rượu Vang","reading":"","type":"noun"},{"japanese":"売り場","meaning":"Quầy Bán","reading":"うりば","type":"noun"},{"japanese":"地下","meaning":"Tầng Hầm","reading":"ちか","type":"noun"},{"japanese":"ー階","meaning":"Tầng Thứ -","reading":"ーかい（－がい）","type":"suffix"},{"japanese":"何階*","meaning":"Tầng Mấy","reading":"なんがい*","type":"noun"},{"japanese":"ー円","meaning":"- Yên","reading":"ーえん","type":"suffix"},{"japanese":"いくら","meaning":"Bao Nhiêu Tiền","reading":"","type":"noun"},{"japanese":"百","meaning":"Trăm","reading":"ひゃく","type":"noun"},{"japanese":"千","meaning":"Nghìn","reading":"せん","type":"noun"},{"japanese":"万","meaning":"Vạn","reading":"まん","type":"noun"},{"japanese":"すみません。","meaning":"Xin Lỗi!","reading":"","type":"kaiwa"},{"japanese":"どうも。","meaning":"Cám Ơn!","reading":"","type":"kaiwa"},{"japanese":"いらっしゃいませ。","meaning":"Xin Chào Quý Khách, Mời Quý Khách Vào!","reading":"","type":"kaiwa"},{"japanese":"[～を] 見せて ください。","meaning":"Cho Tôi Xem [~]!","reading":"[～を] みせて ください。","type":"kaiwa"},{"japanese":"じゃ","meaning":"Thế Thì, Vậy Thì","reading":"","type":"kaiwa"},{"japanese":"[～を] ください。","meaning":"Cho Tôi [~]!","reading":"","type":"kaiwa"},{"japanese":"イタリア","meaning":"Ý","reading":"","type":"noun"},{"japanese":"スイス","meaning":"Thụy Sĩ","reading":"","type":"noun"},{"japanese":"フランス","meaning":"Pháp","reading":"","type":"noun"}],"4":[{"japanese":"起きます II","meaning":"Thức Dậy","reading":"おきます II","type":"verb"},{"japanese":"寝ます II","meaning":"Ngủ","reading":"ねます II","type":"verb"},{"japanese":"働きます I","meaning":"Làm Việc","reading":"はたらきます I","type":"verb"},{"japanese":"休みます I","meaning":"Nghỉ, Nghỉ Ngơi","reading":"やすみます I","type":"verb"},{"japanese":"勉強します III","meaning":"Học","reading":"べんきょうします III","type":"verb"},{"japanese":"終わります I","meaning":"Kết Thúc","reading":"おわります I","type":"verb"},{"japanese":"デパート","meaning":"Bách Hóa","reading":"","type":"noun"},{"japanese":"銀行","meaning":"Ngân Hàng","reading":"ぎんこう","type":"noun"},{"japanese":"郵便局","meaning":"Bưu Điện","reading":"ゆうびんきょく","type":"noun"},{"japanese":"図書館","meaning":"Thư Viện","reading":"としょかん","type":"noun"},{"japanese":"美術館","meaning":"Bảo Tàng Mỹ Thuật","reading":"びじゅつかん","type":"noun"},{"japanese":"今","meaning":"Bây Giờ","reading":"いま","type":"noun"},{"japanese":"ー時","meaning":"- Giờ","reading":"ーじ","type":"suffix"},{"japanese":"ー分","meaning":"- Phút","reading":"ーふん（ーぷん）","type":"suffix"},{"japanese":"半","meaning":"Rưỡi, Nửa","reading":"はん","type":"noun"},{"japanese":"何時","meaning":"Mấy Giờ","reading":"なんじ","type":"noun"},{"japanese":"何分*","meaning":"Mấy Phút","reading":"なんぶん*","type":"noun"},{"japanese":"午前","meaning":"AM","reading":"ごぜん","type":"noun"},{"japanese":"午後","meaning":"PM","reading":"ごご","type":"noun"},{"japanese":"朝","meaning":"Sáng","reading":"あさ","type":"noun"},{"japanese":"昼","meaning":"Trưa","reading":"ひる","type":"noun"},{"japanese":"晩（夜）","meaning":"Tối","reading":"ばん（よる）","type":"noun"},{"japanese":"一昨日","meaning":"Hôm Kia","reading":"おととい","type":"noun"},{"japanese":"昨日","meaning":"Hôm Qua","reading":"きのう","type":"noun"},{"japanese":"今日","meaning":"Hôm Nay","reading":"きょう","type":"noun"},{"japanese":"明日","meaning":"Ngày Mai","reading":"あした","type":"noun"},{"japanese":"明後日","meaning":"Ngày Kia","reading":"あさって","type":"noun"},{"japanese":"今朝","meaning":"Sáng Nay","reading":"けさ","type":"noun"},{"japanese":"今晩","meaning":"Tối Nay","reading":"こんばん","type":"noun"},{"japanese":"休み","meaning":"Nghỉ, Nghỉ Phép, Ngày Nghỉ","reading":"やすみ","type":"noun"},{"japanese":"昼休み","meaning":"Nghỉ Trưa","reading":"ひるやすみ","type":"noun"},{"japanese":"試験","meaning":"Kỳ Thi, Kiểm Tra","reading":"しけん","type":"noun"},{"japanese":"会議","meaning":"Cuộc Họp, Hội Nghị (～をします: Tổ Chức Cuộc Họp, Hội Nghị)","reading":"かいぎ","type":"noun"},{"japanese":"映画","meaning":"Phim","reading":"えいが","type":"noun"},{"japanese":"毎朝","meaning":"Mỗi Sáng","reading":"まいあさ","type":"noun"},{"japanese":"毎晩","meaning":"Mỗi Tối","reading":"まいばん","type":"noun"},{"japanese":"毎日","meaning":"Hàng Ngày, Mỗi Ngày","reading":"まいにち","type":"noun"},{"japanese":"月曜日","meaning":"Thứ Hai","reading":"げつようび","type":"noun"},{"japanese":"火曜日","meaning":"Thứ Ba","reading":"かようび","type":"noun"},{"japanese":"水曜日","meaning":"Thứ Tư","reading":"すいようび","type":"noun"},{"japanese":"木曜日","meaning":"Thứ Năm","reading":"もくようび","type":"noun"},{"japanese":"金曜日","meaning":"Thứ Sáu","reading":"きんようび","type":"noun"},{"japanese":"土曜日","meaning":"Thứ Bảy","reading":"どようび","type":"noun"},{"japanese":"日曜日","meaning":"Chủ Nhật","reading":"にちようび","type":"noun"},{"japanese":"何曜日","meaning":"Thứ Mấy","reading":"なんようび","type":"noun"},{"japanese":"～から","meaning":"~ Từ","reading":"","type":"suffix"},{"japanese":"～まで","meaning":"~ Đến","reading":"","type":"suffix"},{"japanese":"～と～","meaning":"~ Và (Dùng Để Nối Danh Từ)","reading":"","type":"suffix"},{"japanese":"大変ですね。","meaning":"Anh/Chị Vất Vả Quá! (Dùng Để Bày Tỏ Sự Thông Cảm)","reading":"たいへんですね。","type":"kaiwa"},{"japanese":"番号","meaning":"Số","reading":"ばんごう","type":"noun"},{"japanese":"何番","meaning":"Số Bao Nhiêu","reading":"なんばん","type":"noun"},{"japanese":"そちら","meaning":"Ông/Bà, Phía Ông/Phía Bà","reading":"","type":"pronoun"}],"5":[{"japanese":"行きます I","meaning":"Đi","reading":"いきます I","type":"verb"},{"japanese":"来ます III","meaning":"Đến","reading":"きます III","type":"verb"},{"japanese":"帰ります I","meaning":"Về","reading":"かえります I","type":"verb"},{"japanese":"学校","meaning":"Trường Học","reading":"がっこう","type":"noun"},{"japanese":"スーパー","meaning":"Siêu Thị","reading":"","type":"noun"},{"japanese":"駅","meaning":"Nhà Ga","reading":"えき","type":"noun"},{"japanese":"飛行機","meaning":"Máy Bay","reading":"ひこうき","type":"noun"},{"japanese":"船","meaning":"Thuyền, Tàu Thủy","reading":"ふね","type":"noun"},{"japanese":"電車","meaning":"Tàu Điện","reading":"でんしゃ","type":"noun"},{"japanese":"地下鉄","meaning":"Tàu Điện Ngầm","reading":"ちかてつ","type":"noun"},{"japanese":"新幹線","meaning":"Tàu Shinkansen","reading":"しんかんせん","type":"noun"},{"japanese":"バス","meaning":"Xe Buýt","reading":"","type":"noun"},{"japanese":"タクシー","meaning":"Taxi","reading":"","type":"noun"},{"japanese":"自転車","meaning":"Xe Đạp","reading":"じてんしゃ","type":"noun"},{"japanese":"歩いて","meaning":"Đi Bộ","reading":"あるいて","type":"verb"},{"japanese":"人","meaning":"Người","reading":"ひと","type":"noun"},{"japanese":"友達","meaning":"Bạn Bè","reading":"ともだち","type":"noun"},{"japanese":"彼*","meaning":"Anh Ấy","reading":"かれ*","type":"pronoun"},{"japanese":"彼女","meaning":"Chị Ấy","reading":"かのじょ","type":"pronoun"},{"japanese":"家族","meaning":"Gia Đình","reading":"かぞく","type":"noun"},{"japanese":"一人で","meaning":"Một Mình","reading":"ひとりで","type":"adv"},{"japanese":"先週","meaning":"Tuần Trước","reading":"せんしゅう","type":"noun"},{"japanese":"今週","meaning":"Tuần Này","reading":"こんしゅう","type":"noun"},{"japanese":"来週","meaning":"Tuần Sau","reading":"らいしゅう","type":"noun"},{"japanese":"先月","meaning":"Tháng Trước","reading":"せんげつ","type":"noun"},{"japanese":"今月*","meaning":"Tháng Này","reading":"こんげつ*","type":"noun"},{"japanese":"来月","meaning":"Tháng Sau","reading":"らいげつ","type":"noun"},{"japanese":"去年","meaning":"Năm Ngoái","reading":"きょねん","type":"noun"},{"japanese":"今年*","meaning":"Năm Nay","reading":"ことし*","type":"noun"},{"japanese":"来年","meaning":"Sang Năm","reading":"らいねん","type":"noun"},{"japanese":"ー年*","meaning":"Năm -","reading":"ーねん*","type":"suffix"},{"japanese":"何年*","meaning":"Mấy Năm","reading":"なんねん*","type":"noun"},{"japanese":"ー月","meaning":"Tháng -","reading":"ーがつ","type":"suffix"},{"japanese":"何月*","meaning":"Tháng Mấy","reading":"なんがつ*","type":"noun"},{"japanese":"１日","meaning":"Ngày 1","reading":"ついたち","type":"noun"},{"japanese":"２日*","meaning":"Ngày 2, 2 Ngày","reading":"ふつか*","type":"noun"},{"japanese":"３日","meaning":"Ngày 3, 3 Ngày","reading":"みっか","type":"noun"},{"japanese":"４日*","meaning":"Ngày 4, 4 Ngày","reading":"よっか*","type":"noun"},{"japanese":"５日*","meaning":"Ngày 5, 5 Ngày","reading":"いつか*","type":"noun"},{"japanese":"６日","meaning":"Ngày 6, 6 Ngày","reading":"むいか","type":"noun"},{"japanese":"７日*","meaning":"Ngày 7, 7 Ngày","reading":"なのか*","type":"noun"},{"japanese":"８日*","meaning":"Ngày 8, 8 Ngày","reading":"ようか*","type":"noun"},{"japanese":"９日","meaning":"Ngày 9, 9 Ngày","reading":"ここのか","type":"noun"},{"japanese":"１０日","meaning":"Ngày 10, 10 Ngày","reading":"とおか","type":"noun"},{"japanese":"１４日","meaning":"Ngày 14, 14 Ngày","reading":"じゅうよっか","type":"noun"},{"japanese":"２０日*","meaning":"Ngày 20, 20 Ngày","reading":"はつか*","type":"noun"},{"japanese":"２４日*","meaning":"Ngày 24, 24 Ngày","reading":"にじゅうよっか*","type":"noun"},{"japanese":"ー日","meaning":"Ngày - , - Ngày","reading":"ーにち","type":"suffix"},{"japanese":"何日*","meaning":"Ngày Bao Nhiêu, Bao Nhiêu Ngày","reading":"なんにち*","type":"noun"},{"japanese":"いつ","meaning":"Bao Giờ, Khi Nào","reading":"","type":"pronoun"},{"japanese":"誕生日","meaning":"Sinh Nhật","reading":"たんじょうび","type":"noun"},{"japanese":"そうですね。","meaning":"Ừ, Nhỉ!","reading":"","type":"kaiwa"},{"japanese":"[どうも] ありがとう ございました。","meaning":"Xin Cám Ơn Anh/Chị Rất Nhiều!","reading":"","type":"kaiwa"},{"japanese":"どう いたしまして。","meaning":"Không Có Gì Đâu!","reading":"","type":"kaiwa"},{"japanese":"ー番線","meaning":"Sân Ga Số -","reading":"ーばんせん","type":"suffix"},{"japanese":"次の","meaning":"Tiếp Theo","reading":"つぎの","type":"adj"},{"japanese":"普通","meaning":"Tàu Thường (Dừng Cả Ở Các Ga Lẻ)","reading":"ふつう","type":"noun"},{"japanese":"急行*","meaning":"Tàu Tốc Hành","reading":"きゅうこう*","type":"noun"},{"japanese":"特急*","meaning":"Tàu Tốc Hành Đặc Biệt","reading":"とっきゅう*","type":"noun"}],"6":[{"japanese":"食べます II","meaning":"Ăn","reading":"たべます II","type":"verb"},{"japanese":"飲みます I","meaning":"Uống","reading":"のみます I","type":"verb"},{"japanese":"吸います I［たばこを～］","meaning":"Hút [Thuốc Lá]","reading":"すいます I［たばこを～］","type":"verb"},{"japanese":"見ます II","meaning":"Nhìn, Xem","reading":"みます II","type":"verb"},{"japanese":"聞きます I","meaning":"Nghe","reading":"ききます I","type":"verb"},{"japanese":"読みます I","meaning":"Đọc","reading":"よみます I","type":"verb"},{"japanese":"書きます I","meaning":"Viết, Vẽ","reading":"かきます I","type":"verb"},{"japanese":"買います I","meaning":"Mua","reading":"かいます I","type":"verb"},{"japanese":"取ります I［写真を～］","meaning":"Chụp [Ảnh]","reading":"とります I［しゃしんを～］","type":"verb"},{"japanese":"します III","meaning":"Làm, Chơi","reading":"","type":"verb"},{"japanese":"会います I［友達に～］","meaning":"Gặp [Bạn]","reading":"あいます I［ともだちに～］","type":"verb"},{"japanese":"ご飯","meaning":"Bữa Ăn, Cơm","reading":"ごはん","type":"noun"},{"japanese":"朝ご飯","meaning":"Cơm Sáng, Bữa Sáng","reading":"あさごはん","type":"noun"},{"japanese":"昼ご飯","meaning":"Cơm Trưa, Bữa Trưa","reading":"ひるごはん","type":"noun"},{"japanese":"晩ご飯","meaning":"Cơm Tối, Bữa Tối","reading":"ばんごはん","type":"noun"},{"japanese":"パン","meaning":"Bánh Mì","reading":"","type":"noun"},{"japanese":"卵","meaning":"Trứng","reading":"たまご","type":"noun"},{"japanese":"肉","meaning":"Thịt","reading":"にく","type":"noun"},{"japanese":"魚","meaning":"Cá","reading":"さかな","type":"noun"},{"japanese":"野菜","meaning":"Rau","reading":"やさい","type":"noun"},{"japanese":"果物","meaning":"Trái Cây","reading":"くだもの","type":"noun"},{"japanese":"水","meaning":"Nước","reading":"みず","type":"noun"},{"japanese":"お茶","meaning":"Trà Xanh","reading":"おちゃ","type":"noun"},{"japanese":"紅茶","meaning":"Trà Đen","reading":"こうちゃ","type":"noun"},{"japanese":"牛乳（ミルク）","meaning":"Sữa Bò (Sữa)","reading":"ぎゅうにゅう（ミルク）","type":"noun"},{"japanese":"ジュース","meaning":"Nước Trái Cây","reading":"","type":"noun"},{"japanese":"ビール","meaning":"Bia","reading":"","type":"noun"},{"japanese":"お酒","meaning":"Rượu Gạo Nhật","reading":"おさけ","type":"noun"},{"japanese":"煙草","meaning":"Thuốc Lá","reading":"たばこ","type":"noun"},{"japanese":"手紙","meaning":"Thư","reading":"てがみ","type":"noun"},{"japanese":"レポート","meaning":"Báo Cáo","reading":"","type":"noun"},{"japanese":"写真","meaning":"Ảnh","reading":"しゃしん","type":"noun"},{"japanese":"ビデオ","meaning":"Video","reading":"","type":"noun"},{"japanese":"店","meaning":"Cửa Hàng, Tiệm","reading":"みせ","type":"noun"},{"japanese":"庭","meaning":"Vườn","reading":"にわ","type":"noun"},{"japanese":"宿題","meaning":"Bài Tập Về Nhà (～をします: Làm Bài Tập Về Nhà)","reading":"しゅくだい","type":"noun"},{"japanese":"テニス","meaning":"Quần Vợt (～をします: Đánh Quần Vợt)","reading":"","type":"noun"},{"japanese":"サッカー","meaning":"Bóng Đá (～をします: Chơi Bóng Đá)","reading":"","type":"noun"},{"japanese":"[お]花見","meaning":"Ngắm Hoa Anh Đào (～をします: Ngắm Hoa Anh Đào)","reading":"[お]はなみ","type":"noun"},{"japanese":"何","meaning":"Cái Gì, Gì","reading":"なに","type":"noun"},{"japanese":"いっしょに","meaning":"Cùng, Cùng Nhau","reading":"","type":"adv"},{"japanese":"ちょっと","meaning":"Một Chút","reading":"","type":"adv"},{"japanese":"いつも","meaning":"Luôn Luôn, Lúc Nào Cũng","reading":"","type":"adv"},{"japanese":"時々","meaning":"Thỉnh Thoảng","reading":"ときどき","type":"adv"},{"japanese":"それから","meaning":"Sau Đó, Tiếp Theo","reading":"","type":"adv"},{"japanese":"ええ","meaning":"Vâng/Được","reading":"","type":"kaiwa"},{"japanese":"いいですね。","meaning":"Được Đấy Nhỉ/Hay Quá!","reading":"","type":"kaiwa"},{"japanese":"わかりました。","meaning":"Tôi Hiểu Rồi/Vâng Ạ!","reading":"","type":"kaiwa"},{"japanese":"何ですか。","meaning":"Có Gì Đấy À/Cái Gì Vậy?","reading":"なんですか。","type":"kaiwa"},{"japanese":"じゃ、また [明日]。","meaning":"Hẹn Gặp Lại [Ngày Mai]","reading":"じゃ、また [あした]。","type":"kaiwa"},{"japanese":"メキシコ","meaning":"Mexico","reading":"","type":"noun"}],"7":[{"japanese":"切ります I","meaning":"Cắt","reading":"きります I","type":"verb"},{"japanese":"送ります I","meaning":"Gửi","reading":"おくります I","type":"verb"},{"japanese":"あげます II","meaning":"Cho, Tặng","reading":"","type":"verb"},{"japanese":"もらいます I","meaning":"Nhận","reading":"","type":"verb"},{"japanese":"貸します I","meaning":"Cho Mượn, Cho Vay","reading":"かします I","type":"verb"},{"japanese":"借ります II","meaning":"Mượn, Vay","reading":"かります II","type":"verb"},{"japanese":"教えます II","meaning":"Dạy","reading":"おしえます II","type":"verb"},{"japanese":"習います I","meaning":"Học, Tập","reading":"ならいます I","type":"verb"},{"japanese":"かけます II［電話を～］","meaning":"Gọi [Điện Thoại]","reading":"[でんわを～]","type":"verb"},{"japanese":"手","meaning":"Tay","reading":"て","type":"noun"},{"japanese":"はし","meaning":"Đũa","reading":"","type":"noun"},{"japanese":"スプーン","meaning":"Thìa","reading":"","type":"noun"},{"japanese":"ナイフ","meaning":"Dao","reading":"","type":"noun"},{"japanese":"フォーク","meaning":"Dĩa, Nĩa","reading":"","type":"noun"},{"japanese":"はさみ","meaning":"Kéo","reading":"","type":"noun"},{"japanese":"パソコン","meaning":"Máy Tính Cá Nhân","reading":"","type":"noun"},{"japanese":"ケータイ","meaning":"Điện Thoại Di Động","reading":"","type":"noun"},{"japanese":"メール","meaning":"Email","reading":"","type":"noun"},{"japanese":"年賀状","meaning":"Thiệp Chúc Mừng Năm Mới","reading":"ねんがじょう","type":"noun"},{"japanese":"パンチ","meaning":"Cái Đục Lỗ","reading":"","type":"noun"},{"japanese":"ホッチキス","meaning":"Cái Dập Ghim","reading":"","type":"noun"},{"japanese":"セロテープ","meaning":"Băng Dính","reading":"","type":"noun"},{"japanese":"消しゴム","meaning":"Cái Tẩy, Cục Tẩy","reading":"けしゴム","type":"noun"},{"japanese":"紙","meaning":"Giấy","reading":"かみ","type":"noun"},{"japanese":"花","meaning":"Hoa","reading":"はな","type":"noun"},{"japanese":"シャツ","meaning":"Áo Sơ Mi","reading":"","type":"noun"},{"japanese":"プレゼント","meaning":"Quà Tặng","reading":"","type":"noun"},{"japanese":"にもつ","meaning":"Đồ Đạc, Hành Lý","reading":"","type":"noun"},{"japanese":"お金","meaning":"Tiền","reading":"おかね","type":"noun"},{"japanese":"切符","meaning":"Vé","reading":"きっぷ","type":"noun"},{"japanese":"クリスマス","meaning":"Giáng Sinh","reading":"","type":"noun"},{"japanese":"父","meaning":"Bố (Dùng Khi Nói Về Bố Mình)","reading":"ちち","type":"noun"},{"japanese":"母","meaning":"Mẹ (Dùng Khi Nói Về Mẹ Mình)","reading":"はは","type":"noun"},{"japanese":"お父さん*","meaning":"Bố (Dùng Khi Nói Về Bố Người Khác & Dùng Khi Xưng Hô Với Bố Mình)","reading":"おとうさん*","type":"noun"},{"japanese":"お母さん","meaning":"Mẹ (Dùng Khi Nói Về Mẹ Người Khác & Dùng Khi Xưng Hô Với Mẹ Mình)","reading":"おかあさん","type":"noun"},{"japanese":"もう","meaning":"Đã, Rồi","reading":"","type":"adv"},{"japanese":"まだ","meaning":"Chưa","reading":"","type":"adv"},{"japanese":"これから","meaning":"Từ Bây Giờ, Sau Đây","reading":"","type":"adv"},{"japanese":"［～、］すてきですね。","meaning":"[~] Hay Nhỉ/Đẹp Nhỉ!","reading":"","type":"kaiwa"},{"japanese":"いらっしゃい。","meaning":"Rất Hoan Nghênh Anh/Chị Đã Đến Chơi - Chào Mừng Anh/Chị Đã Đến Chơi!","reading":"","type":"kaiwa"},{"japanese":"どうぞお上がりください。","meaning":"Mời Anh/Chị Vào!","reading":"どうぞおあがりください。","type":"kaiwa"},{"japanese":"失礼します。","meaning":"Xin Phép Tôi Vào/Xin Phép! (Dùng Khi Bước Vào Nhà Của Người Khác)","reading":"しつれいします。","type":"kaiwa"},{"japanese":"［～は］いかがですか。","meaning":"Anh/Chị Dùng [~] Nhé? (Dùng Khi Mời Ai Đó Cái Gì)","reading":"","type":"kaiwa"},{"japanese":"いただきます。","meaning":"Mời Anh/Chị Dùng (Cách Nói Dùng Trước Khi Ăn Hoặc Uống)","reading":"","type":"kaiwa"},{"japanese":"ごちそうさま［でした］*。","meaning":"Xin Cám Ơn Anh/Chị Đã Đãi Tôi Bữa Ăn Ngon! (Câu Nói Dùng Sau Khi Ăn Xong)","reading":"","type":"kaiwa"},{"japanese":"スペイン","meaning":"Tây Ban Nha","reading":"","type":"noun"}],"8":[{"japanese":"ハンサム[な]","meaning":"Đẹp Trai","reading":"","type":"adj"},{"japanese":"きれい[な]","meaning":"Đẹp, Sạch","reading":"","type":"adj"},{"japanese":"静か[な]","meaning":"Yên Tĩnh","reading":"","type":"adj"},{"japanese":"にぎやか[な]","meaning":"Náo Nhiệt","reading":"","type":"adj"},{"japanese":"有名[な]","meaning":"Nổi Tiếng","reading":"ゆうめい[な]","type":"adj"},{"japanese":"親切[な]","meaning":"Tốt Bụng, Thân Thiện (Ko Dùng Khi Nói Về Người Trong Gia Đình Mình)","reading":"しんせつ[な]","type":"adj"},{"japanese":"元気[な]","meaning":"Khỏe","reading":"げんき[な]","type":"adj"},{"japanese":"暇[な]","meaning":"Rảnh Rỗi","reading":"ひま[な]","type":"adj"},{"japanese":"便利[な]","meaning":"Tiện Lợi","reading":"べんり[な]","type":"adj"},{"japanese":"すてき[な]","meaning":"Đẹp, Hay","reading":"","type":"adj"},{"japanese":"大きい","meaning":"To, Lớn","reading":"おおきい","type":"adj"},{"japanese":"小さい*","meaning":"Nhỏ, Bé","reading":"ちいさい*","type":"adj"},{"japanese":"新しい","meaning":"Mới","reading":"あたらしい","type":"adj"},{"japanese":"古い","meaning":"Cũ","reading":"ふるい","type":"adj"},{"japanese":"いい(よい)","meaning":"Tốt","reading":"","type":"adj"},{"japanese":"悪い*","meaning":"Xấu","reading":"わるい*","type":"adj"},{"japanese":"暑い、熱い","meaning":"Nóng","reading":"あつい","type":"adj"},{"japanese":"寒い","meaning":"Lạnh, Rét (Dùng Cho Thời Tiết)","reading":"さむい","type":"adj"},{"japanese":"冷たい","meaning":"Lạnh, Buốt (Dùng Cho Cảm Giác)","reading":"つめたい","type":"adj"},{"japanese":"難しい","meaning":"Khó","reading":"むずかしい","type":"adj"},{"japanese":"易しい","meaning":"Dễ","reading":"やさしい","type":"adj"},{"japanese":"高い","meaning":"Đắt, Cao","reading":"たかい","type":"adj"},{"japanese":"安い","meaning":"Rẻ","reading":"やすい","type":"adj"},{"japanese":"低い*","meaning":"Thấp","reading":"ひくい*","type":"adj"},{"japanese":"おもしろい","meaning":"Thú Vị, Hay","reading":"","type":"adj"},{"japanese":"おいしい","meaning":"Ngon","reading":"","type":"adj"},{"japanese":"忙しい","meaning":"Bận","reading":"いそがしい","type":"adj"},{"japanese":"楽しい","meaning":"Vui","reading":"たのしい","type":"adj"},{"japanese":"白い","meaning":"Trắng","reading":"しろい","type":"adj"},{"japanese":"黒い","meaning":"Đen","reading":"くろい","type":"adj"},{"japanese":"赤い","meaning":"Đỏ","reading":"あかい","type":"adj"},{"japanese":"青い","meaning":"Xanh Da Trời","reading":"あおい","type":"adj"},{"japanese":"桜","meaning":"Cây/Hoa Anh Đào","reading":"さくら","type":"noun"},{"japanese":"山","meaning":"Núi","reading":"やま","type":"noun"},{"japanese":"町","meaning":"Thị Trấn, Thị Xã, Thành Phố","reading":"まち","type":"noun"},{"japanese":"食べ物","meaning":"Đồ Ăn","reading":"たべもの","type":"noun"},{"japanese":"所","meaning":"Nơi, Chỗ","reading":"ところ","type":"noun"},{"japanese":"寮","meaning":"Ký Túc Xá","reading":"りょう","type":"noun"},{"japanese":"レストラン","meaning":"Nhà Hàng","reading":"","type":"noun"},{"japanese":"生活","meaning":"Cuộc Sống, Sinh Hoạt","reading":"せいかつ","type":"noun"},{"japanese":"お仕事","meaning":"Việc, Công Việc (～を します: Làm Việc)","reading":"おしごと","type":"noun"},{"japanese":"どう","meaning":"Thế Nào","reading":"","type":"adv"},{"japanese":"どんな～","meaning":"~ Như Thế Nào","reading":"","type":"adj"},{"japanese":"とても","meaning":"Rất, Lắm","reading":"","type":"adv"},{"japanese":"あまり","meaning":"Không ~ Lắm (Dùng Với Thể Phủ Định)","reading":"","type":"adv"},{"japanese":"そして","meaning":"Và/Thêm Nữa (Dùng Để Nối Hai Câu)","reading":"","type":"adv"},{"japanese":"～が、～","meaning":"～ Nhưng～","reading":"","type":"suffix"},{"japanese":"お元気ですか。","meaning":"Anh/Chị Có Khỏe Không?","reading":"おげんきですか。","type":"kaiwa"},{"japanese":"そうですね。","meaning":"Thế À/Để Tôi Xem (Cách Nói Trong Lúc Suy Nghĩ Câu Trả Lời)","reading":"","type":"kaiwa"},{"japanese":"［～、］もう 一杯いかがですか。","meaning":"Anh/Chị Dùng Thêm Một Chén/Ly[~] Nữa Nhé?","reading":"［～、］もう いっぱいいかがですか。","type":"kaiwa"},{"japanese":"［いいえ、］けっこうです。","meaning":"Không, Đủ Rồi Ạ","reading":"","type":"kaiwa"},{"japanese":"もう ～です[ね]。","meaning":"Đã ~ Rồi Nhỉ/Đã ~ Rồi Đúng Ko?","reading":"","type":"kaiwa"},{"japanese":"そろそろ 失礼します。","meaning":"Sắp Đến Lúc Tôi Phải Xin Phép Rồi/Đã Đến Lúc Tôi Phải Về","reading":"そろそろ しつれいします。","type":"kaiwa"},{"japanese":"いいえ。","meaning":"Ko Có Gì/Ko Sao Cả","reading":"","type":"kaiwa"},{"japanese":"また いらっしゃってください。","meaning":"Lần Sau Anh/Chị Lại Đến Chơi Nhé","reading":"","type":"kaiwa"},{"japanese":"富士山","meaning":"Núi Phú Sĩ","reading":"ふじさん","type":"noun"}],"9":[{"japanese":"わかります I","meaning":"Hiểu, Nắm Được","reading":"","type":"verb"},{"japanese":"あります I","meaning":"Có (Sở Hữu)","reading":"","type":"verb"},{"japanese":"好き[な]","meaning":"Thích","reading":"すき[な]","type":"adj"},{"japanese":"嫌い[な]","meaning":"Ghét, Không Thích","reading":"きらい[な]","type":"adj"},{"japanese":"上手[な]","meaning":"Giỏi, Khéo","reading":"じょうず[な]","type":"adj"},{"japanese":"下手[な]","meaning":"Kém","reading":"へた[な]","type":"adj"},{"japanese":"飲み物","meaning":"Đồ Uống","reading":"のみもの","type":"noun"},{"japanese":"料理","meaning":"Món Ăn, Việc Nấu Ăn (～を します: Nấu Ăn)","reading":"りょうり","type":"noun"},{"japanese":"スポーツ","meaning":"Thể Thao (～を します: Chơi Thể Thao)","reading":"","type":"noun"},{"japanese":"野球","meaning":"Bóng Chày (～を します: Chơi Bóng Chày)","reading":"やきゅう","type":"noun"},{"japanese":"ダンス","meaning":"Nhảy, Khiêu Vũ (～を します: Nhảy, Khiêu Vũ)","reading":"","type":"noun"},{"japanese":"旅行","meaning":"Du Lịch, Chuyến Du Lịch (～[を] します: Đi Du Lịch)","reading":"りょこう","type":"noun"},{"japanese":"音楽","meaning":"Âm Nhạc","reading":"おんがく","type":"noun"},{"japanese":"歌","meaning":"Bài Hát","reading":"うた","type":"noun"},{"japanese":"クラシック","meaning":"Nhạc Cổ Điển","reading":"","type":"noun"},{"japanese":"ジャズ","meaning":"Nhạc Jazz","reading":"","type":"noun"},{"japanese":"コンサート","meaning":"Buổi Hòa Nhạc","reading":"","type":"noun"},{"japanese":"カラオケ","meaning":"Karaoke","reading":"","type":"noun"},{"japanese":"歌舞伎","meaning":"Kabuki (Thể Loại Ca Kịch Truyền Thống Của Nhật Bản)","reading":"かぶき","type":"noun"},{"japanese":"絵","meaning":"Tranh, Hội Họa","reading":"え","type":"noun"},{"japanese":"字*","meaning":"Chữ","reading":"じ*","type":"noun"},{"japanese":"漢字","meaning":"Chữ Hán","reading":"かんじ","type":"noun"},{"japanese":"ひらがな","meaning":"Chữ Hiragana","reading":"","type":"noun"},{"japanese":"かたかな","meaning":"Chữ Katakana","reading":"","type":"noun"},{"japanese":"ローマ字*","meaning":"Chữ La Mã","reading":"ローマじ*","type":"noun"},{"japanese":"細かい お金","meaning":"Tiền Lẻ","reading":"こまかい おかね","type":"noun"},{"japanese":"チケット","meaning":"Vé","reading":"","type":"noun"},{"japanese":"時間","meaning":"Thời Gian","reading":"じかん","type":"noun"},{"japanese":"用事","meaning":"Việc Bận, Công Chuyện","reading":"ようじ","type":"noun"},{"japanese":"約束","meaning":"Cuộc Hẹn, Lời Hứa (～[を] します: Hứa, Hẹn)","reading":"やくそく","type":"noun"},{"japanese":"アルバイト","meaning":"Việc Làm Thêm (～を します: Làm Thêm)","reading":"","type":"noun"},{"japanese":"ご主人","meaning":"Chồng (Dùng Khi Nói Về Chồng Người Khác)","reading":"ごしゅじん","type":"noun"},{"japanese":"夫／主人","meaning":"Chồng (Dùng Khi Nói Về Chồng Mình)","reading":"おっと／しゅじん","type":"noun"},{"japanese":"奥さん","meaning":"Vợ (Dùng Khi Nói Về Vợ Người Khác)","reading":"おくさん","type":"noun"},{"japanese":"妻／家内","meaning":"Vợ (Dùng Khi Nói Về Vợ Mình)","reading":"つま／かない","type":"noun"},{"japanese":"子ども","meaning":"Con Cái","reading":"こども","type":"noun"},{"japanese":"よく","meaning":"Tốt, Rõ (Chỉ Mức Độ)","reading":"","type":"adv"},{"japanese":"だいたい","meaning":"Đại Khái, Đại Thể","reading":"","type":"adv"},{"japanese":"たくさん","meaning":"Nhiều","reading":"","type":"adv"},{"japanese":"少し","meaning":"Ít, Một Ít","reading":"すこし","type":"adv"},{"japanese":"全然","meaning":"Hoàn Toàn ~ Ko (Dùng Với Thể Phủ Định)","reading":"ぜんぜん","type":"adv"},{"japanese":"早く、速く","meaning":"Sớm, Nhanh","reading":"はやく","type":"adv"},{"japanese":"～から","meaning":"Vì ~","reading":"","type":"suffix"},{"japanese":"どうして","meaning":"Tại Sao","reading":"","type":"pronoun"},{"japanese":"貸してください。","meaning":"Hãy Cho Tôi Mượn!","reading":"かしてください","type":"kaiwa"},{"japanese":"いいですよ。","meaning":"Được Chứ/Được Ạ!","reading":"","type":"kaiwa"},{"japanese":"残念ですが","meaning":"Tôi Xin Lỗi, Nhưng Đáng Tiếc Là","reading":"ざんねんですが","type":"kaiwa"},{"japanese":"ああ","meaning":"Ah/Ôi","reading":"","type":"kaiwa"},{"japanese":"いっしょに いかがですか。","meaning":"Anh/Chị Cùng ~ Với Tôi (Chúng Tôi) Ko?","reading":"","type":"kaiwa"},{"japanese":"[～は]ちょっと･･････。","meaning":"[~ Thì] Có Lẽ Ko Được Rồi (Cách Từ Chối Khéo Khi Nhận Được 1 Lời Mời Nào Đó)","reading":"","type":"kaiwa"},{"japanese":"だめですか。","meaning":"Ko Được À?","reading":"","type":"kaiwa"},{"japanese":"また 今度 お願いします。","meaning":"Hẹn Anh/Chị Lần Sau Vậy (Cách Từ Chối Khéo 1 Lời Mời Mà Ko Muốn Làm Phật Lòng Người Đưa Ra Lời Mời)","reading":"また こんど おねがいします。","type":"kaiwa"}],"10":[{"japanese":"あります I","meaning":"Ở (Tồn Tại, Dùng Cho Đồ Vật)","reading":"","type":"verb"},{"japanese":"います II","meaning":"Ở (Tồn Tại, Dùng Cho Người & Động Vật)","reading":"","type":"verb"},{"japanese":"いろいろな","meaning":"Nhiều, Đa Dạng","reading":"","type":"adj"},{"japanese":"男の 人","meaning":"Người Đàn Ông","reading":"おとこの ひと","type":"noun"},{"japanese":"女の 人","meaning":"Người Phụ Nữ","reading":"おんなの ひと","type":"noun"},{"japanese":"男の 子","meaning":"Cậu Con Trai","reading":"おとこの こ","type":"noun"},{"japanese":"女の 子","meaning":"Cô Con Gái","reading":"おんなの こ","type":"noun"},{"japanese":"犬","meaning":"Chó","reading":"いぬ","type":"noun"},{"japanese":"猫","meaning":"Mèo","reading":"ねこ","type":"noun"},{"japanese":"パンダ","meaning":"Gấu Trúc","reading":"","type":"noun"},{"japanese":"象","meaning":"Voi","reading":"ぞう","type":"noun"},{"japanese":"木","meaning":"Cây, Gỗ","reading":"き","type":"noun"},{"japanese":"物","meaning":"Vật, Đồ Vật","reading":"もの","type":"noun"},{"japanese":"電池","meaning":"Pin","reading":"でんち","type":"noun"},{"japanese":"箱","meaning":"Hộp","reading":"はこ","type":"noun"},{"japanese":"スイッチ","meaning":"Công Tắc","reading":"","type":"noun"},{"japanese":"冷蔵庫","meaning":"Tủ Lạnh","reading":"れいぞうこ","type":"noun"},{"japanese":"テーブル","meaning":"Bàn","reading":"","type":"noun"},{"japanese":"ベッド","meaning":"Giường","reading":"","type":"noun"},{"japanese":"棚","meaning":"Giá Sách, Kệ Sách","reading":"たな","type":"noun"},{"japanese":"ドア","meaning":"Cửa","reading":"","type":"noun"},{"japanese":"窓","meaning":"Cửa Sổ","reading":"まど","type":"noun"},{"japanese":"ポスト","meaning":"Hộp Thư, Hòm Thư","reading":"","type":"noun"},{"japanese":"ビル","meaning":"Tòa Nhà","reading":"","type":"noun"},{"japanese":"ATM","meaning":"Máy Rút Tiền Tự Động ATM","reading":"","type":"noun"},{"japanese":"コンビニ","meaning":"Cửa Hàng Tiện Lợi","reading":"","type":"noun"},{"japanese":"公園","meaning":"Công Viên","reading":"こうえん","type":"noun"},{"japanese":"喫茶店","meaning":"Quán Giải Khát, Quán Cà Phê","reading":"きっさてん","type":"noun"},{"japanese":"～屋","meaning":"Hiệu ~, Cửa Hàng ~","reading":"～や","type":"suffix"},{"japanese":"乗り場","meaning":"Điểm Đón Taxi, Tàu,..","reading":"のりば","type":"noun"},{"japanese":"県","meaning":"Tỉnh","reading":"けん","type":"noun"},{"japanese":"上","meaning":"Trên","reading":"うえ","type":"noun"},{"japanese":"下","meaning":"Dưới","reading":"した","type":"noun"},{"japanese":"前","meaning":"Trước","reading":"まえ","type":"noun"},{"japanese":"うしろ","meaning":"Sau","reading":"","type":"noun"},{"japanese":"右","meaning":"Phải","reading":"みぎ","type":"noun"},{"japanese":"左","meaning":"Trái","reading":"ひだり","type":"noun"},{"japanese":"中","meaning":"Trong, Giữa","reading":"なか","type":"noun"},{"japanese":"外*","meaning":"Ngoài","reading":"そと*","type":"noun"},{"japanese":"隣","meaning":"Bên Cạnh","reading":"となり","type":"noun"},{"japanese":"近く","meaning":"Gần","reading":"ちかく","type":"noun"},{"japanese":"間","meaning":"Giữa, Ở Giữa","reading":"あいだ","type":"noun"},{"japanese":"～や ～[など]","meaning":"~ Và ~ ...","reading":"","type":"suffix"},{"japanese":"どうもすみません。","meaning":"Cám Ơn!","reading":"","type":"kaiwa"},{"japanese":"ナンプラー","meaning":"Nước Mắm Nampla","reading":"","type":"noun"},{"japanese":"コーナー","meaning":"Góc, Khu Vực","reading":"","type":"noun"},{"japanese":"いちばん 下","meaning":"Ở Dưới Cùng","reading":"いちばん した","type":"noun"}],"11":[{"japanese":"います II［子供が～］","meaning":"Có [Con]","reading":"います II［こどもが～］","type":"verb"},{"japanese":"います II［日本に～］","meaning":"Ở [Nhật]","reading":"います II［にほんに～］","type":"verb"},{"japanese":"かかります I","meaning":"Mất, Tốn (Thời Gian, Tiền Bạc)","reading":"","type":"verb"},{"japanese":"休みます I［会社を～］","meaning":"Nghỉ [Làm Việc]","reading":"やすみます I［かいしゃを～］","type":"verb"},{"japanese":"１つ","meaning":"Một Cái","reading":"ひとつ","type":"noun"},{"japanese":"２つ","meaning":"Hai Cái","reading":"ふたつ","type":"noun"},{"japanese":"３つ","meaning":"Ba Cái","reading":"みっつ","type":"noun"},{"japanese":"４つ","meaning":"Bốn Cái","reading":"よっつ","type":"noun"},{"japanese":"５つ","meaning":"Năm Cái","reading":"いつつ","type":"noun"},{"japanese":"６つ","meaning":"Sáu Cái","reading":"むっつ","type":"noun"},{"japanese":"７つ","meaning":"Bảy Cái","reading":"ななつ","type":"noun"},{"japanese":"８つ","meaning":"Tám Cái","reading":"やっつ","type":"noun"},{"japanese":"９つ","meaning":"Chín Cái","reading":"ここのつ","type":"noun"},{"japanese":"１０つ","meaning":"Mười Cái","reading":"とお","type":"noun"},{"japanese":"いくつ","meaning":"Bao Nhiêu Cái","reading":"","type":"noun"},{"japanese":"１人","meaning":"Một Người","reading":"ひとり","type":"noun"},{"japanese":"２人","meaning":"Hai Người","reading":"ふたり","type":"noun"},{"japanese":"ー人","meaning":"- Người","reading":"ーにん","type":"suffix"},{"japanese":"ー台","meaning":"- Cái, Chiếc (Dùng Để Đếm Máy Móc, Xe Cộ,..)","reading":"ーだい","type":"suffix"},{"japanese":"ー枚","meaning":"- Tờ, Tấm (Dùng Để Đếm Những Vật Mỏng Như Tờ Giấy, Tem,..)","reading":"ーまい","type":"suffix"},{"japanese":"ー回","meaning":"- Lần","reading":"ーかい","type":"suffix"},{"japanese":"りんご","meaning":"Táo","reading":"","type":"noun"},{"japanese":"みかん","meaning":"Quýt","reading":"","type":"noun"},{"japanese":"サンドイッチ","meaning":"Sandwich","reading":"","type":"noun"},{"japanese":"カレー［ライス］","meaning":"Món [Cơm] Cà Ri","reading":"","type":"noun"},{"japanese":"アイスクリム","meaning":"Kem","reading":"","type":"noun"},{"japanese":"切手","meaning":"Tem","reading":"きって","type":"noun"},{"japanese":"はがき","meaning":"Bưu Thiếp","reading":"","type":"noun"},{"japanese":"封筒","meaning":"Phong Bì","reading":"ふうとう","type":"noun"},{"japanese":"両親","meaning":"Bố Mẹ","reading":"りょうしん","type":"noun"},{"japanese":"兄弟","meaning":"Anh Chị Em","reading":"きょうだい","type":"noun"},{"japanese":"兄","meaning":"Anh Trai (Mình)","reading":"あに","type":"noun"},{"japanese":"お兄さん*","meaning":"Anh Trai (Của Người Khác)","reading":"おにいさん*","type":"noun"},{"japanese":"姉","meaning":"Chị Gái (Mình)","reading":"あね","type":"noun"},{"japanese":"お姉さん*","meaning":"Chị Gái (Của Người Khác)","reading":"おねえさん*","type":"noun"},{"japanese":"弟","meaning":"Em Trai (Mình)","reading":"おとうと","type":"noun"},{"japanese":"弟さん*","meaning":"Em Trai (Của Người Khác)","reading":"おとうとさん*","type":"noun"},{"japanese":"妹","meaning":"Em Gái (Mình)","reading":"いもうと","type":"noun"},{"japanese":"妹さん*","meaning":"Em Gái (Của Người Khác)","reading":"いもうとさん*","type":"noun"},{"japanese":"外国","meaning":"Nước Ngoài","reading":"がいこく","type":"noun"},{"japanese":"留学生","meaning":"Du Học Sinh, Sinh Viên Nước Ngoài","reading":"りゅうがくせい","type":"noun"},{"japanese":"クラス","meaning":"Lớp Học","reading":"","type":"noun"},{"japanese":"ー時間","meaning":"- Tiếng","reading":"ーじかん","type":"suffix"},{"japanese":"ー週間","meaning":"- Tuần","reading":"ーしゅうかん","type":"suffix"},{"japanese":"ーか月","meaning":"- Tháng","reading":"ーかげつ","type":"suffix"},{"japanese":"ー年","meaning":"- Năm","reading":"ーねん","type":"suffix"},{"japanese":"～ぐらい","meaning":"Khoảng ~","reading":"","type":"suffix"},{"japanese":"どのくらい","meaning":"Bao Lâu","reading":"","type":"adv"},{"japanese":"全部で","meaning":"Tổng Cộng","reading":"ぜんぶで","type":"adv"},{"japanese":"みんな","meaning":"Tất Cả","reading":"","type":"noun"},{"japanese":"～だけ","meaning":"Chỉ ~","reading":"","type":"suffix"},{"japanese":"かしこまりました。","meaning":"Tôi Đã Rõ Rồi Ạ (Thưa Ông/Bà)!","reading":"","type":"kaiwa"},{"japanese":"いいお天気ですね。","meaning":"Trời Đẹp Nhỉ!","reading":"いいおてんきですね。","type":"kaiwa"},{"japanese":"お出かけですか。","meaning":"Anh/Chị Đi Ra Ngoài Đấy À?","reading":"おでかけですか。","type":"kaiwa"},{"japanese":"ちょっと ～まで。","meaning":"Tôi Đi ~ Một Chút!","reading":"","type":"kaiwa"},{"japanese":"行ってらっしゃい。","meaning":"Anh/Chị Đi Nhé! (Nguyên Nghĩa: Anh/Chị Đi Rồi Lại Về Nhé!)","reading":"いってらっしゃい","type":"kaiwa"},{"japanese":"行ってきます。","meaning":"Tôi Đi Đây! (Nguyên Nghĩa: Tôi Đi Rồi Sẽ Về!)","reading":"いってきます。","type":"kaiwa"},{"japanese":"船便","meaning":"(Gửi) Bằng Đường Biển","reading":"ふなびん","type":"noun"},{"japanese":"航空便（エアメール）","meaning":"(Gửi) Bằng Đường Hàng Ko","reading":"こうくうびん（エアメール）","type":"noun"},{"japanese":"お願いします。","meaning":"Nhờ Anh/Chị!","reading":"おねがいします。","type":"kaiwa"},{"japanese":"オーストラリア","meaning":"Úc","reading":"","type":"noun"}],"12":[{"japanese":"簡単[な]","meaning":"Đơn Giản, Dễ","reading":"かんたん[な]","type":"adj"},{"japanese":"近い","meaning":"Gần","reading":"ちかい","type":"adj"},{"japanese":"遠い*","meaning":"Xa","reading":"とおい*","type":"adj"},{"japanese":"速い、早い","meaning":"Nhanh, Sớm","reading":"はやい","type":"adj"},{"japanese":"遅い*","meaning":"Chậm, Muộn","reading":"おそい*","type":"adj"},{"japanese":"多い［人が～］","meaning":"Nhiều [Người]","reading":"おおい［ひとが～］","type":"adj"},{"japanese":"少ない*［人が～］","meaning":"Ít [Người]","reading":"すくない*［ひとが～］","type":"adj"},{"japanese":"暖かい、温かい","meaning":"Ấm","reading":"あたたかい","type":"adj"},{"japanese":"涼しい","meaning":"Mát","reading":"すずしい","type":"adj"},{"japanese":"甘い","meaning":"Ngọt","reading":"あまい","type":"adj"},{"japanese":"辛い","meaning":"Cay","reading":"からい","type":"adj"},{"japanese":"重い","meaning":"Nặng","reading":"おもい","type":"adj"},{"japanese":"軽い*","meaning":"Nhẹ","reading":"かるい*","type":"adj"},{"japanese":"いい［コーヒーが～］","meaning":"Thích, Chọn, Dùng [Cà Phê]","reading":"","type":"adj"},{"japanese":"季節","meaning":"Mùa","reading":"きせつ","type":"noun"},{"japanese":"春","meaning":"Mùa Xuân","reading":"はる","type":"noun"},{"japanese":"夏","meaning":"Mùa Hè","reading":"なつ","type":"noun"},{"japanese":"秋","meaning":"Mùa Thu","reading":"あき","type":"noun"},{"japanese":"冬","meaning":"Mùa Đông","reading":"ふゆ","type":"noun"},{"japanese":"天気","meaning":"Thời Tiết","reading":"てんき","type":"noun"},{"japanese":"雨","meaning":"Mưa","reading":"あめ","type":"noun"},{"japanese":"雪","meaning":"Tuyết","reading":"ゆき","type":"noun"},{"japanese":"曇り","meaning":"Có Mây","reading":"くもり","type":"noun"},{"japanese":"ホテル","meaning":"Khách Sạn","reading":"","type":"noun"},{"japanese":"空港","meaning":"Sân Bay","reading":"くうこう","type":"noun"},{"japanese":"海","meaning":"Biển, Đại Dương","reading":"うみ","type":"noun"},{"japanese":"世界","meaning":"Thế Giới","reading":"せかい","type":"noun"},{"japanese":"パーティー","meaning":"Tiệc (～を します: Tổ Chức Tiệc, Mở Tiệc)","reading":"","type":"noun"},{"japanese":"お祭り","meaning":"Lễ Hội","reading":"おまつり","type":"noun"},{"japanese":"すき焼き*","meaning":"Sukiyaki (Món Lẩu Thịt Bò, Rau)","reading":"すきやき*","type":"noun"},{"japanese":"刺身","meaning":"Sashimi (Món Gỏi Cá Sống)","reading":"さしみ","type":"noun"},{"japanese":"おすし","meaning":"Sushi (Món Cơm Trộn Giấm Có Cá Tươi Ở Trên)","reading":"","type":"noun"},{"japanese":"てんぷら","meaning":"Tempura (Món Hải Sản & Rau Chiên Tẩm Bột)","reading":"","type":"noun"},{"japanese":"豚肉*","meaning":"Thịt Heo","reading":"ぶたにく*","type":"noun"},{"japanese":"とり肉","meaning":"Thịt Gà","reading":"とりにく","type":"noun"},{"japanese":"牛肉","meaning":"Thịt Bò","reading":"ぎゅうにく","type":"noun"},{"japanese":"レモン","meaning":"Chanh","reading":"","type":"noun"},{"japanese":"生け花","meaning":"Nghệ Thuật Cắm Hoa (～を します: Cắm Hoa)","reading":"","type":"noun"},{"japanese":"紅葉","meaning":"Cây Lá Đỏ, Lá Đỏ","reading":"もみじ","type":"noun"},{"japanese":"どちら","meaning":"Cái Nào (Trong 2 Cái)","reading":"","type":"pronoun"},{"japanese":"どちらも","meaning":"Cả Hai","reading":"","type":"pronoun"},{"japanese":"いちばん","meaning":"Nhất","reading":"","type":"adv"},{"japanese":"ずっと","meaning":"Hơn","reading":"","type":"adv"},{"japanese":"初めて","meaning":"Lần Đầu Tiên","reading":"はじめて","type":"adv"},{"japanese":"ただいま。","meaning":"Tôi Đã Về Đây! (Dùng Để Nói Khi Về Đến Nhà)","reading":"","type":"kaiwa"},{"japanese":"お帰りなさい。","meaning":"Anh/Chị Đã Về Đấy À! (Dùng Để Nói Với Ai Đó Mới Về Đến Nhà)","reading":"おかえりなさい。","type":"kaiwa"},{"japanese":"わあ、すごい 人ですね。","meaning":"Ôi! (Người) Đông Quá Nhỉ!","reading":"わあ、すごい ひとですね。","type":"kaiwa"},{"japanese":"疲れました。","meaning":"Tôi Mệt Rồi!","reading":"つかれました。","type":"kaiwa"},{"japanese":"シンガポール","meaning":"Singapore","reading":"","type":"noun"}],"13":[{"japanese":"遊びます I","meaning":"Chơi","reading":"あそびます I","type":"verb"},{"japanese":"泳ぎます I","meaning":"Bơi","reading":"およぎます I","type":"verb"},{"japanese":"迎えます II","meaning":"Đón","reading":"むかえます II","type":"verb"},{"japanese":"疲れます II","meaning":"Mệt","reading":"つかれます II","type":"verb"},{"japanese":"結婚します III","meaning":"Kết Hôn","reading":"けっこんします III","type":"verb"},{"japanese":"買い物します III","meaning":"Mua Sắm","reading":"かいものします III","type":"verb"},{"japanese":"食事します III","meaning":"Ăn Cơm","reading":"しょくじします III","type":"verb"},{"japanese":"散歩します III［公園を～］","meaning":"Đi Dạo [Ở Công Viên]","reading":"さんぽします III［こうえんを～］","type":"verb"},{"japanese":"大変[な]","meaning":"Vất Vả, Khó Khăn","reading":"たいへん[な]","type":"adj"},{"japanese":"欲しい","meaning":"Muốn Có","reading":"ほしい","type":"adj"},{"japanese":"広い","meaning":"Rộng","reading":"ひろい","type":"adj"},{"japanese":"狭い","meaning":"Chật, Hẹp","reading":"せまい","type":"adj"},{"japanese":"プール","meaning":"Bể Bơi","reading":"","type":"noun"},{"japanese":"川","meaning":"Sông","reading":"かわ","type":"noun"},{"japanese":"美術","meaning":"Mỹ Thuật","reading":"びじゅつ","type":"noun"},{"japanese":"釣り","meaning":"Việc Câu Cá (～を します: Câu Cá)","reading":"つり","type":"noun"},{"japanese":"スキー","meaning":"Việc Trượt Tuyết (～を します: Trượt Tuyết)","reading":"","type":"noun"},{"japanese":"週末","meaning":"Cuối Tuần","reading":"しゅうまつ","type":"noun"},{"japanese":"お正月","meaning":"Tết","reading":"おしょうがつ","type":"noun"},{"japanese":"～ごろ","meaning":"Khoảng ~ (Dùng Cho Thời Gian)","reading":"","type":"suffix"},{"japanese":"何か","meaning":"Cái Gì Đó","reading":"なにか","type":"pronoun"},{"japanese":"どこか","meaning":"Đâu Đó, Chỗ Nào Đó","reading":"","type":"pronoun"},{"japanese":"のどが かわきます","meaning":"Khát (Khi Nói Trạng Thái Đang Khát Thì Dùng のどが かわきました)","reading":"","type":"verb"},{"japanese":"おなかが すきます","meaning":"Đói (Khi Nói Trạng Thái Đang Đói Thì Dùng おなかが すきました)","reading":"","type":"verb"},{"japanese":"そう しましょう。","meaning":"Nhất Trí/Hãy Làm Vậy Đi! (Nói Khi Đồng Ý Với Đề Xuất Của Ai)","reading":"","type":"kaiwa"},{"japanese":"ご注文は？","meaning":"Anh/Chị Dùng Món Gì Ạ?","reading":"ごちゅうもんは？","type":"kaiwa"},{"japanese":"定食","meaning":"Cơm Suất, Cơm Phần","reading":"ていしょく","type":"noun"},{"japanese":"牛どん","meaning":"Món Cơm Với Thịt Bò Ở Trên","reading":"ぎゅうどん","type":"noun"},{"japanese":"［少々］お待ち ください。","meaning":"Xin Anh/Chị Vui Lòng Đợi [Một Chút]!","reading":"［しょうしょう］おまち ください。","type":"kaiwa"},{"japanese":"～で ございます。","meaning":"(Cách Nói Lịch Sự Của です)","reading":"","type":"kaiwa"},{"japanese":"別々に","meaning":"Riêng, Riêng Ra","reading":"べつべつに","type":"adv"}],"14":[{"japanese":"つけます II","meaning":"Bật","reading":"","type":"verb"},{"japanese":"消します I","meaning":"Tắt","reading":"けします I","type":"verb"},{"japanese":"開けます II","meaning":"Mở","reading":"あけます II","type":"verb"},{"japanese":"閉めます II","meaning":"Đóng (Cửa, Cửa Sổ)","reading":"しめます II","type":"verb"},{"japanese":"急ぎます I","meaning":"Vội, Gấp","reading":"いそぎます I","type":"verb"},{"japanese":"待ちます I","meaning":"Đợi, Chờ","reading":"まちます I","type":"verb"},{"japanese":"持ちます I","meaning":"Mang, Cầm","reading":"もちます I","type":"verb"},{"japanese":"取ります I","meaning":"Lấy, Chuyển","reading":"とります I","type":"verb"},{"japanese":"手伝います I","meaning":"Giúp (Làm Việc Gì)","reading":"てつだいます I","type":"verb"},{"japanese":"呼びます I","meaning":"Gọi","reading":"よびます I","type":"verb"},{"japanese":"話します I","meaning":"Nói, Nói Chuyện","reading":"はなします I","type":"verb"},{"japanese":"使います I","meaning":"Dùng, Sử Dụng","reading":"つかいます I","type":"verb"},{"japanese":"止めます II","meaning":"Dừng, Đỗ","reading":"とめます II","type":"verb"},{"japanese":"見せます II","meaning":"Cho Xem, Trình","reading":"みせます II","type":"verb"},{"japanese":"教えます II［住所を〜］","meaning":"Nói, Cho Biết [Địa Chỉ]","reading":"おしえます II［じゅうしょを～］","type":"verb"},{"japanese":"座ります I","meaning":"Ngồi","reading":"すわります I","type":"verb"},{"japanese":"立ちます I*","meaning":"Đứng","reading":"たちます I*","type":"verb"},{"japanese":"入ります I［喫茶店に～］","meaning":"Vào [Quán Giải Khát]","reading":"はいります I［きっさてんに～］","type":"verb"},{"japanese":"出ます II*［喫茶店を～］","meaning":"Ra, Ra Khỏi [Quán Giải Khát]","reading":"でます II*［きっさてんを～］","type":"verb"},{"japanese":"降ります I［雨が～］","meaning":"Mưa","reading":"ふります I［あめが～］","type":"verb"},{"japanese":"コポーします III","meaning":"Photocopy","reading":"","type":"verb"},{"japanese":"電気","meaning":"Điện, Đèn Điện","reading":"でんき","type":"noun"},{"japanese":"エアコン","meaning":"Máy Điều Hòa","reading":"","type":"noun"},{"japanese":"パスポート","meaning":"Hộ Chiếu","reading":"","type":"noun"},{"japanese":"名前","meaning":"Tên","reading":"なまえ","type":"noun"},{"japanese":"住所","meaning":"Địa Chỉ","reading":"じゅうしょ","type":"noun"},{"japanese":"地図","meaning":"Bản Đồ","reading":"ちず","type":"noun"},{"japanese":"塩","meaning":"Muối","reading":"しお","type":"noun"},{"japanese":"砂糖","meaning":"Đường","reading":"さとう","type":"noun"},{"japanese":"問題","meaning":"Câu Hỏi, Vấn Đề","reading":"もんだい","type":"noun"},{"japanese":"答え","meaning":"Câu Trả Lời","reading":"こたえ","type":"noun"},{"japanese":"読み方","meaning":"Cách Đọc","reading":"よみかた","type":"noun"},{"japanese":"～方","meaning":"Cách ~","reading":"～かた","type":"suffix"},{"japanese":"まっすぐ","meaning":"Thẳng","reading":"","type":"adv"},{"japanese":"ゆっくり","meaning":"Chậm, Thong Thả, Thoải Mái","reading":"","type":"adv"},{"japanese":"すぐ","meaning":"Ngay Lập Tức","reading":"","type":"adv"},{"japanese":"また","meaning":"Lại","reading":"","type":"adv"},{"japanese":"あとで","meaning":"Sau","reading":"","type":"adv"},{"japanese":"もう 少し","meaning":"Thêm Một Chút Nữa","reading":"もう すこし","type":"adv"},{"japanese":"もう ～","meaning":"Thêm ~","reading":"","type":"adv"},{"japanese":"さあ","meaning":"Thôi/Nào (Dùng Để Thúc Giục Hoặc Khuyến Khích Ai Đó Làm Gì)","reading":"","type":"kaiwa"},{"japanese":"あれ？","meaning":"Ô! (Câu Cảm Thán Khi Phát Hiện Hoặc Thấy Cái Gì Đó Lạ/Bất Ngờ)","reading":"","type":"kaiwa"},{"japanese":"信号を 右へ 曲がって ください。","meaning":"Anh/Chị Hãy Rẽ Phải Ở Chỗ Đèn Tín Hiệu!","reading":"しんごうを みぎへ まがって ください。","type":"kaiwa"},{"japanese":"これで お願いします。","meaning":"Gửi Anh Tiền Này!","reading":"これで おねがいします。","type":"kaiwa"},{"japanese":"お釣り","meaning":"Tiền Thừa, Tiền Thối Lại","reading":"おつり","type":"noun"}],"15":[{"japanese":"置きます I","meaning":"Đặt, Để","reading":"おきます I","type":"verb"},{"japanese":"作ります、造ります I","meaning":"Làm, Chế Tạo, Sản Xuất","reading":"つくります I","type":"verb"},{"japanese":"売ります I","meaning":"Bán","reading":"うります I","type":"verb"},{"japanese":"知ります I","meaning":"Biết","reading":"しります I","type":"verb"},{"japanese":"住みます I","meaning":"Sống, Ở","reading":"すみます I","type":"verb"},{"japanese":"研究します III","meaning":"Nghiên Cứu","reading":"けんきゅうします III","type":"verb"},{"japanese":"資料","meaning":"Tài Liệu, Tư Liệu","reading":"しりょう","type":"noun"},{"japanese":"カタログ","meaning":"Ca-Ta-Lô","reading":"","type":"noun"},{"japanese":"時刻表","meaning":"Bảng Giờ Chạy Tàu","reading":"じこくひょう","type":"noun"},{"japanese":"服","meaning":"Quần Áo","reading":"ふく","type":"noun"},{"japanese":"製品","meaning":"Sản Phẩm","reading":"せいひん","type":"noun"},{"japanese":"ソフト","meaning":"Phần Mềm","reading":"","type":"noun"},{"japanese":"電子辞書","meaning":"Kim Từ Điển","reading":"でんしじしょ","type":"noun"},{"japanese":"経済","meaning":"Kinh Tế","reading":"けいざい","type":"noun"},{"japanese":"市役所","meaning":"Tòa Thị Chính","reading":"しやくしょ","type":"noun"},{"japanese":"高校","meaning":"Trường Trung Học Phổ Thông","reading":"こうこう","type":"noun"},{"japanese":"歯医者","meaning":"Nha Sĩ","reading":"はいしゃ","type":"noun"},{"japanese":"独身","meaning":"Độc Thân","reading":"どくしん","type":"noun"},{"japanese":"すみません","meaning":"Xin Lỗi","reading":"","type":"kaiwa"},{"japanese":"皆さん","meaning":"Các Anh Chị, Các Ông Bà, Các Bạn, Quý Vị","reading":"みなさん","type":"noun"},{"japanese":"思い出します I","meaning":"Nhớ Lại, Hồi Tưởng Lại","reading":"おもいだします I","type":"verb"},{"japanese":"いらっしゃいます I","meaning":"(Kính Ngữ Của います)","reading":"","type":"verb"}],"16":[{"japanese":"乗ります I［電車に～］","meaning":"Đi, Lên [Tàu]","reading":"のります I［でんしゃに～］","type":"verb"},{"japanese":"降ります II［電車に～］","meaning":"Xuống [Tàu]","reading":"おります II［でんしゃに～］","type":"verb"},{"japanese":"乗り換えます II","meaning":"Chuyển, Đổi [Tàu]","reading":"のりかえます II","type":"verb"},{"japanese":"浴びます II［シャワーを～］","meaning":"Tắm [Vòi Hoa Sen]","reading":"あびます II［シャワーを～］","type":"verb"},{"japanese":"入れます II","meaning":"Cho Vào, Bỏ Vào","reading":"いれます II","type":"verb"},{"japanese":"出します I","meaning":"Lấy Ra, Đưa Ra, Gửi","reading":"だします I","type":"verb"},{"japanese":"下ろします I［お金を～］","meaning":"Rút [Tiền]","reading":"おろします I［おかねを～］","type":"verb"},{"japanese":"入ります I［大学に～］","meaning":"Vào [Đại Học]","reading":"はいります I［だいがくに～］","type":"verb"},{"japanese":"出ます II［大学を～］","meaning":"Ra, Tốt Nghiệp [Đại Học]","reading":"でます II［だいがくを～］","type":"verb"},{"japanese":"押します I","meaning":"Bấm, Ấn","reading":"おします I","type":"verb"},{"japanese":"飲みます I","meaning":"Uống","reading":"のみます I","type":"verb"},{"japanese":"始めます II","meaning":"Bắt Đầu","reading":"はじめます II","type":"verb"},{"japanese":"見学します III","meaning":"Tham Quan Kiến Tập","reading":"けんがくします III","type":"verb"},{"japanese":"電話します III","meaning":"Gọi Điện Thoại","reading":"でんわします III","type":"verb"},{"japanese":"若い","meaning":"Trẻ","reading":"わかい","type":"adj"},{"japanese":"長い","meaning":"Dài","reading":"ながい","type":"adj"},{"japanese":"短い","meaning":"Ngắn","reading":"みじかい","type":"adj"},{"japanese":"明るい","meaning":"Sáng","reading":"あかるい","type":"adj"},{"japanese":"暗い","meaning":"Tối","reading":"くらい","type":"adj"},{"japanese":"体*","meaning":"Người, Cơ Thể","reading":"からだ*","type":"noun"},{"japanese":"頭","meaning":"Đầu","reading":"あたま","type":"noun"},{"japanese":"髪","meaning":"Tóc","reading":"かみ","type":"noun"},{"japanese":"顔*","meaning":"Mặt","reading":"かお*","type":"noun"},{"japanese":"目","meaning":"Mắt","reading":"め","type":"noun"},{"japanese":"耳*","meaning":"Tai","reading":"みみ*","type":"noun"},{"japanese":"鼻*","meaning":"Mũi","reading":"はな*","type":"noun"},{"japanese":"口＊","meaning":"Miệng","reading":"くち*","type":"noun"},{"japanese":"歯*","meaning":"Răng","reading":"は*","type":"noun"},{"japanese":"おなか*","meaning":"Bụng","reading":"","type":"noun"},{"japanese":"足*","meaning":"Chân","reading":"あし*","type":"noun"},{"japanese":"背","meaning":"Chiều Cao (Cơ Thể)","reading":"せ","type":"noun"},{"japanese":"サービス","meaning":"Dịch Vụ","reading":"","type":"noun"},{"japanese":"ジョギング","meaning":"Việc Chạy Bộ (～を します: Chạy Bộ)","reading":"","type":"noun"},{"japanese":"シャワー","meaning":"Vòi Hoa Sen","reading":"","type":"noun"},{"japanese":"緑","meaning":"Màu Xanh Lá Cây","reading":"みどり","type":"noun"},{"japanese":"お寺","meaning":"Chùa","reading":"おてら","type":"noun"},{"japanese":"神社","meaning":"Đền Thờ Đạo Thần","reading":"じんじゃ","type":"noun"},{"japanese":"ー番","meaning":"Số -","reading":"ーばん","type":"suffix"},{"japanese":"どうやって","meaning":"Làm Thế Nào ~","reading":"","type":"pronoun"},{"japanese":"どの ～","meaning":"~ Nào (Dùng Đối Với Trường Hợp Từ Ba Thứ Trở Lên)","reading":"","type":"pronoun"},{"japanese":"どれ","meaning":"Cái Nào (Dùng Trong Trường Hợp Ba Cái Hoặc Nhiều Hơn)","reading":"","type":"pronoun"},{"japanese":"すごいですね。","meaning":"Thật Là Tuyệt Vời/Kinh Quá Nhỉ!","reading":"","type":"kaiwa"},{"japanese":"［いいえ、］まだまだです。","meaning":"(Không), Tôi Còn Phải Cố Gắng Nhiều Lắm! (Cách Nói Khiêm Nhường Khi Được Ai Đó Khen)","reading":"","type":"kaiwa"},{"japanese":"お引き出してですか。","meaning":"Anh/Chị Rút Tiền Ạ?","reading":"おひきだしですか。","type":"kaiwa"},{"japanese":"まず","meaning":"Trước Hết, Đầu Tiên","reading":"","type":"adv"},{"japanese":"次に","meaning":"Tiếp Theo, Sau Đó","reading":"つぎに","type":"adv"},{"japanese":"キャッシュカード","meaning":"Thẻ Rút Tiền Mặt, Thẻ ATM","reading":"","type":"noun"},{"japanese":"暗証番号","meaning":"Mã Số Bí Mật (Mật Khẩu)","reading":"あんしょうばんごう","type":"noun"},{"japanese":"金額","meaning":"Số Tiền, Khoản Tiền","reading":"きんがく","type":"noun"},{"japanese":"確認","meaning":"Xác Nhận, Kiểm Tra Lại (～を します: Xác Nhận)","reading":"かくにん","type":"noun"},{"japanese":"ボタン","meaning":"Nút","reading":"","type":"noun"},{"japanese":"雪祭り","meaning":"Lễ Hội Tuyết","reading":"ゆきまつり","type":"noun"}],"17":[{"japanese":"覚えます II","meaning":"Nhớ","reading":"おぼえます II","type":"verb"},{"japanese":"忘れます II","meaning":"Quên","reading":"わすれます II","type":"verb"},{"japanese":"なくします I","meaning":"Làm Mất, Đánh Mất","reading":"なくします I","type":"verb"},{"japanese":"払います I","meaning":"Trả Tiền","reading":"はらいます I","type":"verb"},{"japanese":"返します I","meaning":"Trả Lại","reading":"かえします I","type":"verb"},{"japanese":"出かけます II","meaning":"Ra Ngoài","reading":"でかけます II","type":"verb"},{"japanese":"脱ぎます I","meaning":"Cởi (Quần Áo, Giày,..)","reading":"ぬぎます I","type":"verb"},{"japanese":"持っていきます I","meaning":"Mang Đi, Mang Theo","reading":"もっていきます I","type":"verb"},{"japanese":"持って来ます III","meaning":"Mang Đến","reading":"もってきます III","type":"verb"},{"japanese":"心配します III","meaning":"Lo Lắng","reading":"しんぱいします III","type":"verb"},{"japanese":"残業します III","meaning":"Làm Thêm Giờ","reading":"ざんぎょうします III","type":"verb"},{"japanese":"出張します III","meaning":"Đi Công Tác","reading":"しゅっちょうします III","type":"verb"},{"japanese":"飲みます I［薬を～］","meaning":"Uống [Thuốc]","reading":"のみます I［くすりを～］","type":"verb"},{"japanese":"入ります I［おふろに～］","meaning":"Tắm Bồn","reading":"はいります I［おふろに～］","type":"verb"},{"japanese":"大切な","meaning":"Quan Trọng, Quý Giá","reading":"たいせつな","type":"adj"},{"japanese":"大丈夫な","meaning":"Không Sao, Không Có Vấn Đề Gì","reading":"だいじょうぶな","type":"adj"},{"japanese":"危ない","meaning":"Nguy Hiểm","reading":"あぶない","type":"adj"},{"japanese":"禁煙","meaning":"Cấm Hút Thuốc","reading":"きんえん","type":"noun"},{"japanese":"［健康］保険証","meaning":"Thẻ Bảo Hiểm [Y Tế]","reading":"［けんこう］ほけんしょう","type":"noun"},{"japanese":"熱","meaning":"Sốt","reading":"ねつ","type":"noun"},{"japanese":"病気","meaning":"Ốm, Bệnh","reading":"びょうき","type":"noun"},{"japanese":"薬","meaning":"Thuốc","reading":"くすり","type":"noun"},{"japanese":"おふろ","meaning":"Bồn Tắm","reading":"","type":"noun"},{"japanese":"上着","meaning":"Áo Khoác","reading":"うわぎ","type":"noun"},{"japanese":"下着","meaning":"Quần Áo Lót","reading":"したぎ","type":"noun"},{"japanese":"～までに","meaning":"Trước ~, Cho Đến Trước ~ (Chỉ Giới Hạn Thời Gian)","reading":"","type":"suffix"},{"japanese":"ですから","meaning":"Vì Thế, Vì Vậy, Do Đó","reading":"","type":"adv"},{"japanese":"どう しましたか。","meaning":"Có Vấn Đề Gì?/ Anh/Chị Bị Làm Sao? (Cách Bác Sĩ Hỏi Bệnh Nhân)","reading":"","type":"kaiwa"},{"japanese":"のど","meaning":"Họng","reading":"","type":"noun"},{"japanese":"［～が］痛いです","meaning":"Tôi Bị Đau [~].","reading":"［～が］いたいです","type":"kaiwa"},{"japanese":"かぜ","meaning":"Cảm, Cúm","reading":"","type":"noun"},{"japanese":"それから","meaning":"Và Sau Đó","reading":"","type":"adv"},{"japanese":"お大事に。","meaning":"Anh/Chị Nhớ Giữ Gìn Sức Khỏe! (Câu Nói Với Người Bị Ốm Hoặc Bị Bệnh)","reading":"おだいじに。","type":"kaiwa"}],"18":[{"japanese":"できます II","meaning":"Có Thể","reading":"","type":"verb"},{"japanese":"洗います I","meaning":"Rửa","reading":"あらいます I","type":"verb"},{"japanese":"弾きます I","meaning":"Chơi (Nhạc Cụ, Piano,..)","reading":"ひきます I","type":"verb"},{"japanese":"歌います I","meaning":"Hát","reading":"うたいます I","type":"verb"},{"japanese":"集めます II","meaning":"Sưu Tầm, Thu Thập","reading":"あつめます II","type":"verb"},{"japanese":"捨てます II","meaning":"Vứt, Bỏ","reading":"すてます II","type":"verb"},{"japanese":"換えます II","meaning":"Đổi, Trao Đổi","reading":"かえます II","type":"verb"},{"japanese":"運転します III","meaning":"Lái","reading":"うんてんします III","type":"verb"},{"japanese":"予約します III","meaning":"Đặt Chỗ, Đặt Trước","reading":"よやくします III","type":"verb"},{"japanese":"ピアノ","meaning":"Đàn Piano","reading":"","type":"noun"},{"japanese":"ーメートル","meaning":"- Mét","reading":"","type":"suffix"},{"japanese":"現金","meaning":"Tiền Mặt","reading":"げんきん","type":"noun"},{"japanese":"趣味","meaning":"Sở Thích","reading":"しゅみ","type":"noun"},{"japanese":"日記","meaning":"Nhật Ký","reading":"にっき","type":"noun"},{"japanese":"お祈り","meaning":"Việc Cầu Nguyện (～を します: Cầu Nguyện)","reading":"おいのり","type":"noun"},{"japanese":"課長","meaning":"Tổ Trưởng","reading":"かちょう","type":"noun"},{"japanese":"部長","meaning":"Trưởng Phòng","reading":"ぶちょう","type":"noun"},{"japanese":"社長*","meaning":"Giám Đốc","reading":"しゃちょう*","type":"noun"},{"japanese":"動物","meaning":"Động Vật","reading":"どうぶつ","type":"noun"},{"japanese":"馬","meaning":"Ngựa","reading":"うま","type":"noun"},{"japanese":"インターネット","meaning":"Internet","reading":"","type":"noun"},{"japanese":"特に","meaning":"Đặc Biệt Là","reading":"とくに","type":"adv"},{"japanese":"へえ","meaning":"Thế Á! (Dùng Để Biểu Thị Sự Ngạc Nhiên)","reading":"","type":"kaiwa"},{"japanese":"それは おもしろいですね。","meaning":"(Điều Đấy/Cái Đấy) Hay Thật Nhỉ!","reading":"","type":"kaiwa"},{"japanese":"なかなか","meaning":"Khó Mà, Mãi Mà (Dùng Với Thể Phủ Định)","reading":"","type":"adv"},{"japanese":"ほんとうですか。","meaning":"Thật Không Ạ?","reading":"","type":"kaiwa"},{"japanese":"ぜひ","meaning":"Nhất Định","reading":"","type":"adv"}],"19":[{"japanese":"登ります、上ります I","meaning":"Leo (Núi), Lên","reading":"のぼります I","type":"verb"},{"japanese":"泊まります I［ホテルに～］","meaning":"Trọ [Ở Khách Sạn]","reading":"とまります I［ホテルに～］","type":"verb"},{"japanese":"掃除します III","meaning":"Dọn Vệ Sinh (Căn Phòng)","reading":"そうじします III","type":"verb"},{"japanese":"洗濯します III","meaning":"Giặt (Áo Quần)","reading":"せんたくします III","type":"verb"},{"japanese":"なります I","meaning":"Trở Thành, Trở Nên","reading":"","type":"verb"},{"japanese":"眠い","meaning":"Buồn Ngủ","reading":"ねむい","type":"adj"},{"japanese":"強い","meaning":"Mạnh","reading":"つよい","type":"adj"},{"japanese":"弱い*","meaning":"Yếu","reading":"よわい*","type":"adj"},{"japanese":"練習","meaning":"Luyện Tập (～［を］します: Luyện Tập)","reading":"れんしゅう","type":"noun"},{"japanese":"ゴルフ","meaning":"Gôn (～を します: Chơi Gôn)","reading":"","type":"noun"},{"japanese":"相撲","meaning":"Môn Vật Sumo (～を します: Đấu Vật Sumo)","reading":"すもう","type":"noun"},{"japanese":"お茶","meaning":"Trà Đạo","reading":"おちゃ","type":"noun"},{"japanese":"日","meaning":"Ngày","reading":"ひ","type":"noun"},{"japanese":"調子","meaning":"Tình Trạng, Trạng Thái","reading":"ちょうし","type":"noun"},{"japanese":"一度","meaning":"1 Lần","reading":"いちど","type":"adv"},{"japanese":"一度も","meaning":"Chưa Lần Nào, Chưa Bao Giờ (Dùng Với Thể Phủ Định)","reading":"いちども","type":"adv"},{"japanese":"だんだん","meaning":"Dần Dần","reading":"","type":"adv"},{"japanese":"もうすぐ","meaning":"Sắp, Sắp Sửa","reading":"","type":"adv"},{"japanese":"おかげさまで","meaning":"Cám Ơn Anh/Chị, Nhờ Anh/Chị Mà ~. (Dùng Để Bày Tỏ Sự Cám Ơn Khi Nhận Được Sự Giúp Đỡ Của Ai Đó)","reading":"","type":"kaiwa"},{"japanese":"でも","meaning":"Nhưng","reading":"","type":"adv"},{"japanese":"乾杯","meaning":"Cạn Chén/Nâng Cốc!","reading":"かんぱい","type":"kaiwa"},{"japanese":"ダイエット","meaning":"Việc Ăn Kiêng, Chế Độ Giảm Cân (～を します: Ăn Kiêng)","reading":"","type":"noun"},{"japanese":"無理な","meaning":"Ko Thể, Quá Sức","reading":"むりな","type":"adj"},{"japanese":"体に いい","meaning":"Tốt Cho Sức Khỏe","reading":"からだに いい","type":"adj"}],"20":[{"japanese":"要ります I［ビザが～］","meaning":"Cần [Visa]","reading":"いります I［ビザが～］","type":"verb"},{"japanese":"調べます II","meaning":"Tìm Hiểu, Điều Tra","reading":"しらべます II","type":"verb"},{"japanese":"修理します III","meaning":"Sửa Chữa, Tu Sửa","reading":"しゅうりします III","type":"verb"},{"japanese":"僕","meaning":"Tôi, Tớ (Cách Xưng Thân Mật Của わたし Được Dùng Bởi Nam Giới)","reading":"ぼく","type":"pronoun"},{"japanese":"君*","meaning":"Cậu, Bạn (Cách Nói Thân Mật Của あなた Được Dùng Cho Người Ngang Hàng Hoặc Ít Tuổi Hơn)","reading":"きみ*","type":"pronoun"},{"japanese":"～君","meaning":"Anh ~, Cậu ~ (Cách Nói Thân Mật Của ～さん Được Dùng Cho Người Ngang Hàng Hoặc Ít Tuổi Hơn; Thường Được Dùng Sau Tên Bé Trai)","reading":"～くん","type":"suffix"},{"japanese":"うん","meaning":"Ừ (Cách Nói Thân Mật Của はい)","reading":"","type":"kaiwa"},{"japanese":"ううん","meaning":"Không (Cách Nói Thân Mật Của いいえ)","reading":"","type":"kaiwa"},{"japanese":"ことば","meaning":"Từ, Tiếng","reading":"","type":"noun"},{"japanese":"着物","meaning":"Kimono (Trang Phục Truyền Thống Của Nhật Bản)","reading":"きもの","type":"noun"},{"japanese":"ビザ","meaning":"Visa","reading":"","type":"noun"},{"japanese":"初め","meaning":"Ban Đầu, Đầu Tiên","reading":"はじめ","type":"noun"},{"japanese":"終わり","meaning":"Kết Thúc, Hết Phim","reading":"おわり","type":"noun"},{"japanese":"こっち*","meaning":"Phía Này, Chỗ Này (Cách Nói Thân Mật Của こちら)","reading":"","type":"pronoun"},{"japanese":"そっち","meaning":"Phía Đó, Chỗ Đó (Cách Nói Thân Mật Của そちら)","reading":"","type":"pronoun"},{"japanese":"あっち*","meaning":"Phía Kia, Chỗ Kia (Cách Nói Thân Mật Của あちら)","reading":"","type":"pronoun"},{"japanese":"どっち","meaning":"Cái Nào (Giữa Hai Cái), Phía Nào, Đâu (Cách Nói Thân Mật Của どちら)","reading":"","type":"pronoun"},{"japanese":"みんなで","meaning":"Mọi Người Cùng","reading":"","type":"adv"},{"japanese":"～けど","meaning":"~, Nhưng (Cách Nói Thân Mật Của が)","reading":"","type":"suffix"},{"japanese":"おなかが いっぱいです","meaning":"(Tôi) No Rồi","reading":"","type":"kaiwa"},{"japanese":"よかったら","meaning":"Nếu Anh/Chị Thích Thì","reading":"","type":"kaiwa"},{"japanese":"いろいろ","meaning":"Nhiều Thứ","reading":"","type":"adv"}],"21":[{"japanese":"思います I","meaning":"Nghĩ","reading":"おもいます I","type":"verb"},{"japanese":"言います I","meaning":"Nói","reading":"いいます I","type":"verb"},{"japanese":"勝ちます I","meaning":"Thắng","reading":"かちます I","type":"verb"},{"japanese":"負けます II","meaning":"Thua","reading":"まけます II","type":"verb"},{"japanese":"あります I［お祭りが～］","meaning":"[Lễ Hội] Được Tổ Chức, Diễn Ra","reading":"あります I［おまつりが～］","type":"verb"},{"japanese":"役に 立ちます I","meaning":"Hữu Ích","reading":"やくに たちます I","type":"verb"},{"japanese":"動きます I","meaning":"Chuyển Động, Chạy","reading":"うごきます I","type":"verb"},{"japanese":"やめます II［会社を～］","meaning":"Bỏ, Thôi [Việc Công Ty]","reading":"やめます II［かいしゃを～］","type":"verb"},{"japanese":"気を つけます II","meaning":"Chú Ý, Bảo Trọng","reading":"きを つけます II","type":"verb"},{"japanese":"留学します III","meaning":"Du Học","reading":"りゅうがくします III","type":"verb"},{"japanese":"むだ[な]","meaning":"Lãng Phí, Vô Ích","reading":"むだ[な]","type":"adj"},{"japanese":"不便[な]","meaning":"Bất Tiện","reading":"ふべん[な]","type":"adj"},{"japanese":"すごい","meaning":"Ghê Quá/Giỏi Quá (Dùng Để Bày Tỏ Sự Ngạc Nhiên Hoặc Thán Phục)","reading":"","type":"adj"},{"japanese":"ほんとう","meaning":"Sự Thật","reading":"","type":"noun"},{"japanese":"うそ*","meaning":"Giả Dối","reading":"","type":"noun"},{"japanese":"自動車","meaning":"Ô Tô","reading":"じどうしゃ","type":"noun"},{"japanese":"交通","meaning":"Giao Thông","reading":"こうつう","type":"noun"},{"japanese":"物価","meaning":"Giá Cả","reading":"ぶっか","type":"noun"},{"japanese":"放送","meaning":"Phát Thanh","reading":"ほうそう","type":"noun"},{"japanese":"ニュース","meaning":"Tin Tức","reading":"","type":"noun"},{"japanese":"アニメ","meaning":"Anime","reading":"","type":"noun"},{"japanese":"マンガ","meaning":"Truyện Tranh","reading":"","type":"noun"},{"japanese":"デザイン","meaning":"Thiết Kế","reading":"","type":"noun"},{"japanese":"夢","meaning":"Giấc Mơ","reading":"ゆめ","type":"noun"},{"japanese":"天才","meaning":"Thiên Tài","reading":"てんさい","type":"noun"},{"japanese":"試合","meaning":"Trận Đấu (～を します: Có Trận Đấu)","reading":"しあい","type":"noun"},{"japanese":"意見","meaning":"Ý Kiến","reading":"いけん","type":"noun"},{"japanese":"話","meaning":"Câu Chuyện (～を します: Nói Chuyện)","reading":"はなし","type":"noun"},{"japanese":"地球","meaning":"Trái Đất","reading":"ちきゅう","type":"noun"},{"japanese":"月","meaning":"Mặt Trăng","reading":"つき","type":"noun"},{"japanese":"最近","meaning":"Gần Đây","reading":"さいきん","type":"adv"},{"japanese":"たぶん","meaning":"Chắc, Có Thể","reading":"","type":"adv"},{"japanese":"きっと","meaning":"Chắc Chắn, Nhất Định","reading":"","type":"adv"},{"japanese":"ほんとうに","meaning":"Thật Sự","reading":"","type":"adv"},{"japanese":"そんなに","meaning":"(Không) ~ Lắm","reading":"","type":"adv"},{"japanese":"～に ついて","meaning":"Về ~","reading":"","type":"suffix"},{"japanese":"久しぶりですね。","meaning":"Đã Lâu Không Gặp Anh/Chị!","reading":"ひさしぶりですね。","type":"kaiwa"},{"japanese":"～でも飲みませんか。","meaning":"Anh/Chị Uống ~ Nhé?","reading":"～でものみませんか。","type":"kaiwa"},{"japanese":"もちろん","meaning":"Tất Nhiên, Dĩ Nhiên","reading":"","type":"kaiwa"},{"japanese":"もう帰らないと．．．。","meaning":"Tôi Phải Về Bây Giờ Không Thì...","reading":"もうかえらないと．．．。","type":"kaiwa"}],"22":[{"japanese":"着ます II","meaning":"Mặc (Áo Sơ Mi,..)","reading":"きます II","type":"verb"},{"japanese":"はきます I","meaning":"Đi, Mặc (Giày, Quần Âu,..)","reading":"はきます I","type":"verb"},{"japanese":"かぶります I","meaning":"Đội (Mũ,..)","reading":"かぶります I","type":"verb"},{"japanese":"かけます II［眼鏡を～］","meaning":"Đeo [Kính]","reading":"かけます II［めがねを～］","type":"verb"},{"japanese":"します III［ネクタイを～］","meaning":"Đeo [Cà Vạt]","reading":"します III［ネクタイを～］","type":"verb"},{"japanese":"生まれます II","meaning":"Sinh Ra","reading":"うまれます II","type":"verb"},{"japanese":"わたしたち","meaning":"Chúng Tôi, Chúng Ta","reading":"","type":"pronoun"},{"japanese":"コート","meaning":"Áo Khoác","reading":"","type":"noun"},{"japanese":"セーター","meaning":"Áo Len","reading":"","type":"noun"},{"japanese":"スーツ*","meaning":"Com-Lê, Vét","reading":"","type":"noun"},{"japanese":"帽子","meaning":"Mũ","reading":"ぼうし","type":"noun"},{"japanese":"眼鏡","meaning":"Kính","reading":"めがね","type":"noun"},{"japanese":"ケーキ","meaning":"Bánh Ngọt","reading":"","type":"noun"},{"japanese":"[お]弁当","meaning":"Cơm Hộp","reading":"[お]べんとう","type":"noun"},{"japanese":"ロボット","meaning":"Rô Bốt","reading":"","type":"noun"},{"japanese":"ユーモア","meaning":"Hài Hước","reading":"","type":"noun"},{"japanese":"都合","meaning":"Thích Hợp","reading":"つごう","type":"noun"},{"japanese":"よく","meaning":"Thường, Hay","reading":"","type":"adv"},{"japanese":"えーと","meaning":"Ừ, À","reading":"","type":"kaiwa"},{"japanese":"おめでとう [ございます]。","meaning":"Chúc Mừng! (Dùng Để Nói Trong Dịp Sinh Nhật, Lễ Cưới, Năm Mới,..)","reading":"","type":"kaiwa"},{"japanese":"お探しですか。","meaning":"Anh/Chị Tìm ~ À?","reading":"おさがしですか。","type":"kaiwa"},{"japanese":"では","meaning":"Thế/Vậy (Nhé)","reading":"","type":"adv"},{"japanese":"こちら","meaning":"Đây, Cái Này (Cách Nói Lịch Sự Của これ)","reading":"","type":"pronoun"},{"japanese":"家賃","meaning":"Tiền Thuê Nhà","reading":"やちん","type":"noun"},{"japanese":"ダイニングキッチン","meaning":"Bếp Kèm Phòng Ăn","reading":"","type":"noun"},{"japanese":"和室","meaning":"Phòng Kiểu Nhật","reading":"わしつ","type":"noun"},{"japanese":"押し入れ","meaning":"Chỗ Để Chăn Gối, Đệm Trong 1 Căn Phòng Kiểu Nhật","reading":"おしいれ","type":"noun"},{"japanese":"布団","meaning":"Chăn, Đệm Kiểu Nhật","reading":"ふとん","type":"noun"}],"23":[{"japanese":"聞きます I［先生に～］","meaning":"Hỏi [Giáo Viên]","reading":"ききます I［せんせいに～］","type":"verb"},{"japanese":"回します I","meaning":"Vặn","reading":"まわします I","type":"verb"},{"japanese":"引きます I","meaning":"Kéo","reading":"ひきます I","type":"verb"},{"japanese":"変えます II","meaning":"Đổi","reading":"かえます II","type":"verb"},{"japanese":"触ります I［ドアに～］","meaning":"Sờ, Chạm Vào [Cửa]","reading":"さわります I［ドアに～］","type":"verb"},{"japanese":"出ます II［お釣りが～］","meaning":"[Tiền Thừa] Ra","reading":"でます II［おつりが～］","type":"verb"},{"japanese":"歩きます I","meaning":"Đi Bộ","reading":"あるきます I","type":"verb"},{"japanese":"渡ります I［橋を～］","meaning":"Qua [Cầu]","reading":"わたります I［はしを～］","type":"verb"},{"japanese":"曲がります I [右へ～]","meaning":"Rẽ [Phải]","reading":"まがります I［みぎへ～］","type":"verb"},{"japanese":"寂しい","meaning":"Buồn, Cô Đơn","reading":"さびしい","type":"adj"},{"japanese":"お湯","meaning":"Nước Nóng","reading":"おゆ","type":"noun"},{"japanese":"音","meaning":"Âm Thanh","reading":"おと","type":"noun"},{"japanese":"サイズ","meaning":"Kích Cỡ","reading":"","type":"noun"},{"japanese":"故障","meaning":"Hỏng Hóc (～します: Bị Hỏng)","reading":"こしょう","type":"noun"},{"japanese":"道","meaning":"Đường Sá","reading":"みち","type":"noun"},{"japanese":"交差点","meaning":"Ngã Tư","reading":"こうさてん","type":"noun"},{"japanese":"信号","meaning":"Đèn Tín Hiệu","reading":"しんごう","type":"noun"},{"japanese":"角","meaning":"Góc","reading":"かど","type":"noun"},{"japanese":"橋","meaning":"Cầu","reading":"はし","type":"noun"},{"japanese":"駐車場","meaning":"Bãi Đỗ Xe","reading":"ちゅうしゃじょう","type":"noun"},{"japanese":"建物","meaning":"Tòa Nhà","reading":"たてもの","type":"noun"},{"japanese":"何回も","meaning":"Nhiều Lần","reading":"なんかいも","type":"adv"},{"japanese":"―目","meaning":"Thứ -, Số - (Biểu Thị Thứ Tự)","reading":"―め","type":"suffix"}],"24":[{"japanese":"くれます II","meaning":"Cho, Tặng (Tôi)","reading":"","type":"verb"},{"japanese":"直します I","meaning":"Sửa Chữa","reading":"なおします I","type":"verb"},{"japanese":"連れて行きます I","meaning":"Dẫn (1 Ai Đó) Đi","reading":"つれていきます I","type":"verb"},{"japanese":"連れて来ます III*","meaning":"Dẫn (1 Ai Đó) Đến","reading":"つれてきます III*","type":"verb"},{"japanese":"送ります I［人を～］","meaning":"Tiễn [1 Ai Đó]","reading":"おくります I［ひとを～］","type":"verb"},{"japanese":"紹介します III","meaning":"Giới Thiệu","reading":"しょうかいします III","type":"verb"},{"japanese":"案内します III","meaning":"Hướng Dẫn, Giới Thiệu, Dẫn Đường","reading":"あんないします III","type":"verb"},{"japanese":"説明します III","meaning":"Giải Thích, Trình Bày","reading":"せつめいします III","type":"verb"},{"japanese":"おじいさん／おじいちゃん","meaning":"Ông Nội, Ông Ngoại, Ông (Cụ/Lão)","reading":"","type":"noun"},{"japanese":"おばあさん／おばあちゃん","meaning":"Bà Nội, Bà Ngoại, Bà (Cụ/Lão)","reading":"","type":"noun"},{"japanese":"準備","meaning":"Chuẩn Bị (～[を] します: Chuẩn Bị)","reading":"じゅんび","type":"noun"},{"japanese":"引っ越し","meaning":"Chuyển Nhà (～[を] します: Chuyển Nhà)","reading":"ひっこし","type":"noun"},{"japanese":"[お]菓子","meaning":"Bánh Kẹo","reading":"[お]かし","type":"noun"},{"japanese":"ホームステイ","meaning":"Homestay","reading":"","type":"noun"},{"japanese":"全部","meaning":"Toàn Bộ, Tất Cả","reading":"ぜんぶ","type":"adv"},{"japanese":"自分で","meaning":"Tự Mình","reading":"じぶんで","type":"adv"},{"japanese":"ほかに","meaning":"Ngoài Ra, Bên Cạnh Đó","reading":"","type":"adv"}],"25":[{"japanese":"考えます II","meaning":"Nghĩ, Suy Nghĩ","reading":"かんがえます II","type":"verb"},{"japanese":"着きます I","meaning":"Đến","reading":"つきます I","type":"verb"},{"japanese":"取ります I［年を～］","meaning":"Có, Thêm [Tuổi]","reading":"とります I［としを～］","type":"verb"},{"japanese":"足ります II","meaning":"Đủ","reading":"たります II","type":"verb"},{"japanese":"田舎","meaning":"Quê, Nông Thôn","reading":"いなか","type":"noun"},{"japanese":"チャンス","meaning":"Cơ Hội","reading":"","type":"noun"},{"japanese":"億","meaning":"1 Trăm Triệu","reading":"おく","type":"noun"},{"japanese":"もし［～たら］","meaning":"Nếu","reading":"","type":"adv"},{"japanese":"意味","meaning":"Ý Nghĩa","reading":"いみ","type":"noun"},{"japanese":"もしもし","meaning":"Alo","reading":"","type":"kaiwa"},{"japanese":"転勤","meaning":"Việc Chuyển Địa Điểm Làm Việc (～します: Chuyển Địa Điểm Làm Việc)","reading":"てんきん","type":"noun"},{"japanese":"こと","meaning":"Việc, Chuyện (～の こと: Việc, Chuyện Về ~)","reading":"","type":"noun"},{"japanese":"暇","meaning":"Thời Gian Rảnh","reading":"ひま","type":"noun"},{"japanese":"いろいろお世話になりました。","meaning":"Cám Ơn Anh/Chị Đã Giúp Đỡ Tôi (Nhiều)!","reading":"いろいろおせわになりました。","type":"kaiwa"},{"japanese":"頑張ります","meaning":"Cố, Cố Gắng","reading":"がんばります","type":"verb"},{"japanese":"どうぞお元気で。","meaning":"Chúc Anh/Chị Mạnh Khỏe! Anh/Chị Hãy Bảo Trọng! (Câu Nói Trước Khi Chia Tay Với Ai Đó Mà Có Lẽ Lâu Nữa Mới Gặp Lại)","reading":"どうぞおげんきで。","type":"kaiwa"},{"japanese":"ベトナム","meaning":"Việt Nam","reading":"","type":"noun"}]};
+    let selectedLesson = 0;
+    let searchQuery = '';
+    let selectedTypeFilter = 'all';
+    let currentPage = 1;
+    const itemsPerPage = 12;
+    let activePool = [];
+    let remainingVocabPool = [];
+    let currentQuizQuestion = null;
+    let selectedReadingIdx = null;
+    let selectedMeaningIdx = null;
+    let isQuizAnswered = false;
+    let quizAnsweredCount = 0;
+    let quizCorrectCount = 0;
+    let incorrectWordsList = [];
+    let isQuizIncorrectOnly = false;
+    document.addEventListener('DOMContentLoaded', () => {
+      loadIncorrectFromStorage();
+      renderSidebar();
+      selectLesson(0);
+      lucide.createIcons();
+    });
+    function loadIncorrectFromStorage() {
+      try {
+        const data = localStorage.getItem('incorrect');
+        if (data) incorrectWordsList = JSON.parse(data);
+      } catch (e) { }
+    }
+    function saveIncorrectToStorage() {
+      try {
+        localStorage.setItem('incorrect', JSON.stringify(incorrectWordsList));
+      } catch (e) { }
+    }
+    function toggleMobileSidebar() {
+      const modal = document.getElementById('mobileSidebarModal');
+      modal.classList.toggle('hidden');
+    }
+    function renderSidebar() {
+      const deskContainer = document.getElementById('lessonSidebarContainer');
+      const mobContainer = document.getElementById('mobileLessonSidebarContainer');
+      let html = '';
+      const totalAllItems = Object.values(kotobaLessons).reduce((acc, curr) => acc + curr.length, 0);
+      const allActiveCls = selectedLesson === 0 ? 'bg-green-950 text-white font-semibold shadow-sm' : 'border border-green-950/20 text-green-950 hover:bg-green-950/5 font-medium';
+      html += '<button onclick="selectLesson(0)" class="w-full text-left px-3 py-2 text-xs rounded transition flex items-center justify-between cursor-pointer ' + allActiveCls + '"><span>All Lessons</span><span class="opacity-80">' + totalAllItems + '</span></button>';
+      for (let i = 1; i <= 25; i++) {
+        const count = kotobaLessons[i] ? kotobaLessons[i].length : 0;
+        const activeCls = selectedLesson === i ? 'bg-green-950 text-white font-semibold shadow-sm' : 'border border-green-950/20 text-green-950 hover:bg-green-950/5 font-medium';
+        html += '<button onclick="selectLesson(' + i + ')" class="w-full text-left px-3 py-2 text-xs rounded transition flex items-center justify-between cursor-pointer ' + activeCls + '"><span>Lesson ' + i + '</span><span class="opacity-80">' + count + '</span></button>';
+      }
+      deskContainer.innerHTML = html;
+      mobContainer.innerHTML = html;
+      document.getElementById('lessonSidebarTotalCount').innerText = '25 Lessons';
+    }
+    function updateTypeFilterOptions() {
+      const select = document.getElementById('typeFilterSelect');
+      if (!select) return;
+      const typeSet = new Set();
+      activePool.forEach(item => {
+        if (item.type && item.type.trim()) {
+          typeSet.add(item.type.trim());
+        }
+      });
+      const types = Array.from(typeSet).sort();
+      let html = '<option value="all">All Types</option>';
+      types.forEach(t => {
+        const selectedAttr = selectedTypeFilter.toLowerCase() === t.toLowerCase() ? ' selected' : '';
+        const capLabel = t.charAt(0).toUpperCase() + t.slice(1);
+        html += '<option value="' + t + '"' + selectedAttr + '>' + capLabel + '</option>';
+      });
+      select.innerHTML = html;
+    }
+    function handleTypeFilterChange() {
+      const select = document.getElementById('typeFilterSelect');
+      if (select) selectedTypeFilter = select.value;
+      currentPage = 1;
+      renderLearnMode();
+    }
+    function selectLesson(lessonNum) {
+      selectedLesson = lessonNum;
+      renderSidebar();
+      const badge = document.getElementById('activeLessonTitleBadge');
+      if (lessonNum === 0) {
+        badge.innerText = 'All Lessons';
+      } else {
+        badge.innerText = 'Lesson ' + lessonNum;
+      }
+      activePool = [];
+      if (lessonNum === 0) {
+        for (let i = 1; i <= 25; i++) {
+          if (kotobaLessons[i]) {
+            kotobaLessons[i].forEach(item => {
+              activePool.push({ ...item, lesson: i });
+            });
+          }
+        }
+      } else if (kotobaLessons[lessonNum]) {
+        kotobaLessons[lessonNum].forEach(item => {
+          activePool.push({ ...item, lesson: lessonNum });
+        });
+      }
+      updateTypeFilterOptions();
+      quizAnsweredCount = 0;
+      quizCorrectCount = 0;
+      remainingVocabPool = [...activePool];
+      currentPage = 1;
+      renderLearnMode();
+      if (document.getElementById('modeQuiz').classList.contains('hidden') === false) {
+        newQuizQuestion();
+      }
+      const mobModal = document.getElementById('mobileSidebarModal');
+      if (!mobModal.classList.contains('hidden')) {
+        mobModal.classList.add('hidden');
+      }
+    }
+    function switchMode(mode) {
+      const tabLearn = document.getElementById('tabLearn');
+      const tabQuiz = document.getElementById('tabQuiz');
+      const modeLearn = document.getElementById('modeLearn');
+      const modeQuiz = document.getElementById('modeQuiz');
+      if (mode === 'learn') {
+        tabLearn.className = "cursor-pointer rounded px-4 py-1.5 text-sm font-semibold transition flex items-center space-x-2 bg-white text-green-950 shadow-sm";
+        tabQuiz.className = "cursor-pointer rounded px-4 py-1.5 text-sm font-semibold transition flex items-center space-x-2 text-green-100 hover:text-white hover:bg-green-800";
+        modeLearn.classList.remove('hidden');
+        modeQuiz.classList.add('hidden');
+      } else {
+        tabQuiz.className = "cursor-pointer rounded px-4 py-1.5 text-sm font-semibold transition flex items-center space-x-2 bg-white text-green-950 shadow-sm";
+        tabLearn.className = "cursor-pointer rounded px-4 py-1.5 text-sm font-semibold transition flex items-center space-x-2 text-green-100 hover:text-white hover:bg-green-800";
+        modeQuiz.classList.remove('hidden');
+        modeLearn.classList.add('hidden');
+        if (!currentQuizQuestion) { newQuizQuestion(); }
+      }
+      lucide.createIcons();
+    }
+    function handleSearch() {
+      searchQuery = document.getElementById('learnSearch').value.trim().toLowerCase();
+      currentPage = 1;
+      renderLearnMode();
+    }
+    function changePage(page) {
+      currentPage = page;
+      renderLearnMode();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function renderLearnMode() {
+      const gridContainer = document.getElementById('kotobaGrid');
+      const paginationContainer = document.getElementById('paginationContainer');
+      const filtered = activePool.filter(item => {
+        const matchesSearch = !searchQuery ||
+          (item.japanese && item.japanese.toLowerCase().includes(searchQuery)) ||
+          (item.reading && item.reading.toLowerCase().includes(searchQuery)) ||
+          (item.meaning && item.meaning.toLowerCase().includes(searchQuery));
+        const matchesType = selectedTypeFilter === 'all' || (item.type && item.type.toLowerCase() === selectedTypeFilter.toLowerCase());
+        return matchesSearch && matchesType;
+      });
+      const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
+      if (currentPage > totalPages) currentPage = totalPages;
+      if (currentPage < 1) currentPage = 1;
+      document.getElementById('learnCountText').innerText = 'Showing ' + filtered.length + ' Items';
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const pageData = filtered.slice(startIndex, startIndex + itemsPerPage);
+      if (pageData.length === 0) {
+        gridContainer.innerHTML = '<div class="col-span-full py-12 text-center text-green-950/60 border border-dashed border-green-950/20 rounded"><p class="text-sm font-semibold">No Matching Words Found</p></div>';
+        paginationContainer.innerHTML = '';
+        return;
+      }
+      gridContainer.innerHTML = pageData.map(item => {
+        const readingHtml = item.reading ? '<div class="text-lg sm:text-xl font-normal text-green-900">読み: ' + item.reading + '</div>' : '';
+        const lessonTagHtml = selectedLesson === 0 ? '<span class="text-xs text-green-950/50 font-semibold">Lesson ' + item.lesson + '</span>' : '';
+        return '<div class="bg-white border border-green-950/30 rounded p-5 shadow-sm hover:border-green-950 transition flex flex-col space-y-3">' +
+          '<div class="border-b border-green-950/10 pb-3">' +
+          '<h3 class="text-3xl sm:text-4xl font-normal text-green-950 font-sans tracking-tight">' + item.japanese + '</h3>' +
+          '</div>' +
+          '<div class="space-y-1.5 flex-1">' +
+          readingHtml +
+          '<div class="text-base sm:text-lg text-green-950/90 font-normal">意味: ' + item.meaning + '</div>' +
+          '</div>' +
+          (lessonTagHtml ? '<div class="pt-2 border-t border-green-950/10 text-right">' + lessonTagHtml + '</div>' : '') +
+          '</div>';
+      }).join('');
+      if (totalPages > 1) {
+        let navHtml = '<div class="mt-12 flex justify-center items-center gap-2">';
+        navHtml += '<button onclick="changePage(1)" ' + (currentPage === 1 ? 'disabled' : '') + ' class="px-3 py-2 border border-green-950 text-green-950 hover:bg-green-950 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer rounded" aria-label="First Page"><i data-lucide="chevrons-left" class="w-4 h-4"></i></button>';
+        navHtml += '<button onclick="changePage(' + (currentPage - 1) + ')" ' + (currentPage === 1 ? 'disabled' : '') + ' class="px-3 py-2 border border-green-950 text-green-950 hover:bg-green-950 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer rounded" aria-label="Previous Page"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>';
+        let startP = Math.max(1, currentPage - 1);
+        let endP = Math.min(totalPages, currentPage + 1);
+        if (currentPage === 1) endP = Math.min(totalPages, 3);
+        if (currentPage === totalPages) startP = Math.max(1, totalPages - 2);
+        for (let p = startP; p <= endP; p++) {
+          if (p === currentPage) {
+            navHtml += '<button class="px-4 py-2 font-medium transition-colors border bg-green-950 text-white border-green-950 cursor-pointer rounded">' + p + '</button>';
+          } else {
+            navHtml += '<button onclick="changePage(' + p + ')" class="px-4 py-2 font-medium transition-colors border bg-white text-green-950 border-green-950 hover:bg-green-950 hover:text-white cursor-pointer rounded">' + p + '</button>';
+          }
+        }
+        navHtml += '<button onclick="changePage(' + (currentPage + 1) + ')" ' + (currentPage === totalPages ? 'disabled' : '') + ' class="px-3 py-2 border border-green-950 text-green-950 hover:bg-green-950 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer rounded" aria-label="Next Page"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>';
+        navHtml += '<button onclick="changePage(' + totalPages + ')" ' + (currentPage === totalPages ? 'disabled' : '') + ' class="px-3 py-2 border border-green-950 text-green-950 hover:bg-green-950 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer rounded" aria-label="Last Page"><i data-lucide="chevrons-right" class="w-4 h-4"></i></button>';
+        navHtml += '</div>';
+        paginationContainer.innerHTML = navHtml;
+      } else {
+        paginationContainer.innerHTML = '';
+      }
+      lucide.createIcons();
+    }
+    function getSmartDistractorOptions(targetItem) {
+      const candidates = activePool.filter(v => v.japanese !== targetItem.japanese);
+      const scored = candidates.map(cand => {
+        let score = 0;
+        if (cand.type && targetItem.type && cand.type === targetItem.type) score += 50;
+        if (cand.japanese.length === targetItem.japanese.length) score += 30;
+        const candReading = cand.reading || cand.japanese;
+        const targetReading = targetItem.reading || targetItem.japanese;
+        if (Math.abs(candReading.length - targetReading.length) <= 1) score += 15;
+        if (candReading === targetReading) score -= 100;
+        if (cand.meaning === targetItem.meaning) score -= 100;
+        score += Math.random() * 10;
+        return { cand, score };
+      });
+      scored.sort((a, b) => b.score - a.score);
+      const readingDistractors = [];
+      const usedReadings = new Set([targetItem.reading || targetItem.japanese]);
+      for (let item of scored) {
+        const text = item.cand.reading || item.cand.japanese;
+        if (!usedReadings.has(text)) {
+          usedReadings.add(text);
+          readingDistractors.push(text);
+          if (readingDistractors.length === 3) break;
+        }
+      }
+      const meaningDistractors = [];
+      const usedMeanings = new Set([targetItem.meaning]);
+      for (let item of scored) {
+        if (!usedMeanings.has(item.cand.meaning)) {
+          usedMeanings.add(item.cand.meaning);
+          meaningDistractors.push(item.cand.meaning);
+          if (meaningDistractors.length === 3) break;
+        }
+      }
+      const targetReadingText = targetItem.reading || targetItem.japanese;
+      return {
+        readingChoices: shuffleArray([{ text: targetReadingText, isCorrect: true }, ...readingDistractors.map(r => ({ text: r, isCorrect: false }))]),
+        meaningChoices: shuffleArray([{ text: targetItem.meaning, isCorrect: true }, ...meaningDistractors.map(m => ({ text: m, isCorrect: false }))])
+      };
+    }
+    function shuffleArray(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+    function toggleQuizIncorrectOnly() {
+      if (!isQuizIncorrectOnly && incorrectWordsList.length === 0) {
+        alert('No Incorrect Words Saved!');
+        return;
+      }
+      isQuizIncorrectOnly = !isQuizIncorrectOnly;
+      const btn = document.getElementById('btnQuizIncorrect');
+      if (isQuizIncorrectOnly) {
+        btn.className = "cursor-pointer rounded border border-green-950 bg-green-950 text-white px-3 py-1.5 text-xs font-semibold transition flex items-center space-x-1 shadow-sm";
+        remainingVocabPool = [...incorrectWordsList];
+      } else {
+        btn.className = "cursor-pointer rounded border border-green-950 px-3 py-1.5 text-xs font-semibold hover:bg-green-950 hover:text-white transition flex items-center space-x-1";
+        remainingVocabPool = [...activePool];
+      }
+      newQuizQuestion();
+    }
+    function showQuizCompletedScreen() {
+      const activeBox = document.getElementById('quizActiveContainer');
+      const doneBox = document.getElementById('quizCompletedContainer');
+      const sourcePool = isQuizIncorrectOnly ? incorrectWordsList : activePool;
+      const lessonTitle = selectedLesson === 0 ? 'All Lessons' : 'Lesson ' + selectedLesson;
+      document.getElementById('quizCompletedMsg').innerText = 'You Have Completed All ' + sourcePool.length + ' Words In ' + lessonTitle + '!';
+      document.getElementById('quizDoneAnswered').innerText = quizAnsweredCount;
+      document.getElementById('quizDoneCorrect').innerText = quizCorrectCount;
+      document.getElementById('quizDoneIncorrect').innerText = Math.max(0, quizAnsweredCount - quizCorrectCount);
+      activeBox.classList.add('hidden');
+      doneBox.classList.remove('hidden');
+      updateQuizHeaderStats();
+      lucide.createIcons();
+    }
+    function restartQuiz() {
+      const sourcePool = isQuizIncorrectOnly ? incorrectWordsList : activePool;
+      remainingVocabPool = [...sourcePool];
+      quizAnsweredCount = 0;
+      quizCorrectCount = 0;
+      document.getElementById('quizCompletedContainer').classList.add('hidden');
+      document.getElementById('quizActiveContainer').classList.remove('hidden');
+      newQuizQuestion();
+    }
+    function newQuizQuestion() {
+      if (isQuizIncorrectOnly && incorrectWordsList.length === 0) {
+        isQuizIncorrectOnly = false;
+        const btn = document.getElementById('btnQuizIncorrect');
+        if (btn) btn.className = "cursor-pointer rounded border border-green-950 px-3 py-1.5 text-xs font-semibold hover:bg-green-950 hover:text-white transition flex items-center space-x-1";
+        remainingVocabPool = [...activePool];
+      }
+      const sourcePool = isQuizIncorrectOnly ? incorrectWordsList : activePool;
+      if (sourcePool.length === 0) return;
+      if (remainingVocabPool.length === 0) {
+        showQuizCompletedScreen();
+        return;
+      }
+      document.getElementById('quizCompletedContainer').classList.add('hidden');
+      document.getElementById('quizActiveContainer').classList.remove('hidden');
+      const randIdx = Math.floor(Math.random() * remainingVocabPool.length);
+      const target = remainingVocabPool.splice(randIdx, 1)[0];
+      const { readingChoices, meaningChoices } = getSmartDistractorOptions(target);
+      currentQuizQuestion = { target, readingChoices, meaningChoices };
+      selectedReadingIdx = null;
+      selectedMeaningIdx = null;
+      isQuizAnswered = false;
+      document.getElementById('quizQuestionWord').innerText = target.japanese;
+      document.getElementById('quizFeedbackMsg').className = 'hidden text-sm font-semibold text-center px-4 py-2 rounded w-full sm:w-96 border';
+      updateQuizHeaderStats();
+      renderQuizOptions();
+      lucide.createIcons();
+    }
+    function updateQuizHeaderStats() {
+      const sourcePool = isQuizIncorrectOnly ? incorrectWordsList : activePool;
+      document.getElementById('quizAnsweredCount').innerText = quizAnsweredCount;
+      document.getElementById('quizCorrectCount').innerText = quizCorrectCount;
+      document.getElementById('quizIncorrectCount').innerText = incorrectWordsList.length;
+      document.getElementById('quizWordsLeftCount').innerText = remainingVocabPool.length;
+      document.getElementById('quizTotalWordsCount').innerText = sourcePool.length;
+    }
+    function renderQuizOptions() {
+      if (!currentQuizQuestion) return;
+      const readingBox = document.getElementById('quizReadingOptions');
+      const meaningBox = document.getElementById('quizMeaningOptions');
+      readingBox.innerHTML = currentQuizQuestion.readingChoices.map((opt, idx) => {
+        let btnStyle = 'border-green-950/30 text-green-950 hover:bg-green-950/5';
+        if (selectedReadingIdx === idx) { btnStyle = 'border-green-950 bg-green-950 text-white shadow-sm'; }
+        if (isQuizAnswered) {
+          if (opt.isCorrect) { btnStyle = 'border-green-950 bg-green-950 text-white font-semibold'; }
+          else if (selectedReadingIdx === idx && !opt.isCorrect) { btnStyle = 'border-green-900 bg-green-900 text-white font-semibold opacity-80'; }
+          else { btnStyle = 'border-gray-200 text-gray-400 opacity-60'; }
+        }
+        return '<button onclick="selectReading(' + idx + ')" ' + (isQuizAnswered ? 'disabled' : '') + ' class="cursor-pointer rounded border p-3 text-left font-semibold text-sm transition flex items-center justify-between ' + btnStyle + '"><span>' + opt.text + '</span>' + (selectedReadingIdx === idx ? '<i data-lucide="check-circle" class="w-4 h-4"></i>' : '') + '</button>';
+      }).join('');
+      meaningBox.innerHTML = currentQuizQuestion.meaningChoices.map((opt, idx) => {
+        let btnStyle = 'border-green-950/30 text-green-950 hover:bg-green-950/5';
+        if (selectedMeaningIdx === idx) { btnStyle = 'border-green-950 bg-green-950 text-white shadow-sm'; }
+        if (isQuizAnswered) {
+          if (opt.isCorrect) { btnStyle = 'border-green-950 bg-green-950 text-white font-semibold'; }
+          else if (selectedMeaningIdx === idx && !opt.isCorrect) { btnStyle = 'border-green-900 bg-green-900 text-white font-semibold opacity-80'; }
+          else { btnStyle = 'border-gray-200 text-gray-400 opacity-60'; }
+        }
+        return '<button onclick="selectMeaning(' + idx + ')" ' + (isQuizAnswered ? 'disabled' : '') + ' class="cursor-pointer rounded border p-3 text-left font-semibold text-sm transition flex items-center justify-between ' + btnStyle + '"><span>' + opt.text + '</span>' + (selectedMeaningIdx === idx ? '<i data-lucide="check-circle" class="w-4 h-4"></i>' : '') + '</button>';
+      }).join('');
+      lucide.createIcons();
+    }
+    function selectReading(idx) {
+      if (isQuizAnswered) return;
+      selectedReadingIdx = idx;
+      renderQuizOptions();
+    }
+    function selectMeaning(idx) {
+      if (isQuizAnswered) return;
+      selectedMeaningIdx = idx;
+      renderQuizOptions();
+    }
+    function handleQuizSubmit() {
+      if (!currentQuizQuestion || isQuizAnswered) return;
+      const feedback = document.getElementById('quizFeedbackMsg');
+      if (selectedReadingIdx === null || selectedMeaningIdx === null) {
+        feedback.innerText = 'Select 1 Reading & 1 Meaning';
+        feedback.className = 'text-sm font-semibold text-center px-4 py-2 rounded w-full sm:w-96 border border-green-950 bg-green-950/10 text-green-950 block';
+        return;
+      }
+      isQuizAnswered = true;
+      quizAnsweredCount++;
+      const isReadingCorrect = currentQuizQuestion.readingChoices[selectedReadingIdx].isCorrect;
+      const isMeaningCorrect = currentQuizQuestion.meaningChoices[selectedMeaningIdx].isCorrect;
+      const isBothCorrect = isReadingCorrect && isMeaningCorrect;
+      if (isBothCorrect) {
+        quizCorrectCount++;
+        feedback.innerText = 'Correct';
+        feedback.className = 'text-sm font-semibold text-center px-4 py-2 rounded w-full sm:w-96 border border-green-950 bg-green-950 text-white block';
+        const targetWord = currentQuizQuestion.target.japanese;
+        const existingIdx = incorrectWordsList.findIndex(item => (item.japanese || item.word) === targetWord);
+        if (existingIdx !== -1) {
+          incorrectWordsList.splice(existingIdx, 1);
+          saveIncorrectToStorage();
+        }
+        const remIdx = remainingVocabPool.findIndex(item => (item.japanese || item.word) === targetWord);
+        if (remIdx !== -1) {
+          remainingVocabPool.splice(remIdx, 1);
+        }
+      } else {
+        const targetWord = currentQuizQuestion.target.japanese;
+        if (!incorrectWordsList.some(item => (item.japanese || item.word) === targetWord)) {
+          incorrectWordsList.push({
+            japanese: currentQuizQuestion.target.japanese,
+            reading: currentQuizQuestion.target.reading || '',
+            meaning: currentQuizQuestion.target.meaning || '',
+            type: currentQuizQuestion.target.type || ''
+          });
+          saveIncorrectToStorage();
+        }
+        feedback.innerText = 'Incorrect';
+        feedback.className = 'text-sm font-semibold text-center px-4 py-2 rounded w-full sm:w-96 border border-green-900 bg-green-900 text-white block';
+      }
+      updateQuizHeaderStats();
+      renderQuizOptions();
+      setTimeout(() => {
+        newQuizQuestion();
+      }, 1000);
+    }
+    function downloadWrongFile() {
+      if (incorrectWordsList.length === 0) return;
+      const content = incorrectWordsList.map(item => (item.japanese || item.word) + ' ' + (item.reading ? '[' + item.reading + '] ' : '') + '\n意味: ' + item.meaning).join('\n---\n');
+      const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'ok';
+      link.click();
+    }
+    function openIncorrectModal() {
+      const modal = document.getElementById('incorrectModal');
+      const container = document.getElementById('incorrectListContainer');
+      if (incorrectWordsList.length === 0) {
+        container.innerHTML = '<p class="text-sm font-semibold text-green-950/60 text-center py-4">No Incorrect Words Yet</p>';
+      } else {
+        container.innerHTML = incorrectWordsList.map(item => {
+          const wordText = item.japanese || item.word || '';
+          const readText = item.reading || '';
+          return '<div class="bg-green-950/5 border border-green-950/10 p-3 rounded space-y-1">' +
+            '<div class="flex items-center justify-between"><span class="font-semibold text-xl text-green-950">' + wordText + '</span>' + (readText ? '<span class="text-base font-semibold text-green-900">' + readText + '</span>' : '') + '</div>' +
+            '<div class="text-xs text-green-950/80">意味: ' + item.meaning + '</div>' +
+            '</div>';
+        }).join('');
+      }
+      modal.classList.remove('hidden');
+      lucide.createIcons();
+    }
+    function closeIncorrectModal() {
+      document.getElementById('incorrectModal').classList.add('hidden');
+    }
+  </script>
+</body>
+
+</html>

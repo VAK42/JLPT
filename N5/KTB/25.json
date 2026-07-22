@@ -1,0 +1,104 @@
+[
+  {
+    "japanese": "考えます II",
+    "meaning": "Nghĩ, Suy Nghĩ",
+    "reading": "かんがえます II",
+    "type": "verb"
+  },
+  {
+    "japanese": "着きます I",
+    "meaning": "Đến",
+    "reading": "つきます I",
+    "type": "verb"
+  },
+  {
+    "japanese": "取ります I［年を～］",
+    "meaning": "Có, Thêm [Tuổi]",
+    "reading": "とります I［としを～］",
+    "type": "verb"
+  },
+  {
+    "japanese": "足ります II",
+    "meaning": "Đủ",
+    "reading": "たります II",
+    "type": "verb"
+  },
+  {
+    "japanese": "田舎",
+    "meaning": "Quê, Nông Thôn",
+    "reading": "いなか",
+    "type": "noun"
+  },
+  {
+    "japanese": "チャンス",
+    "meaning": "Cơ Hội",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "億",
+    "meaning": "1 Trăm Triệu",
+    "reading": "おく",
+    "type": "noun"
+  },
+  {
+    "japanese": "もし［～たら］",
+    "meaning": "Nếu",
+    "reading": "",
+    "type": "adv"
+  },
+  {
+    "japanese": "意味",
+    "meaning": "Ý Nghĩa",
+    "reading": "いみ",
+    "type": "noun"
+  },
+  {
+    "japanese": "もしもし",
+    "meaning": "Alo",
+    "reading": "",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "転勤",
+    "meaning": "Việc Chuyển Địa Điểm Làm Việc (～します: Chuyển Địa Điểm Làm Việc)",
+    "reading": "てんきん",
+    "type": "noun"
+  },
+  {
+    "japanese": "こと",
+    "meaning": "Việc, Chuyện (～の こと: Việc, Chuyện Về ~)",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "暇",
+    "meaning": "Thời Gian Rảnh",
+    "reading": "ひま",
+    "type": "noun"
+  },
+  {
+    "japanese": "いろいろお世話になりました。",
+    "meaning": "Cám Ơn Anh/Chị Đã Giúp Đỡ Tôi (Nhiều)!",
+    "reading": "いろいろおせわになりました。",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "頑張ります",
+    "meaning": "Cố, Cố Gắng",
+    "reading": "がんばります",
+    "type": "verb"
+  },
+  {
+    "japanese": "どうぞお元気で。",
+    "meaning": "Chúc Anh/Chị Mạnh Khỏe! Anh/Chị Hãy Bảo Trọng! (Câu Nói Trước Khi Chia Tay Với Ai Đó Mà Có Lẽ Lâu Nữa Mới Gặp Lại)",
+    "reading": "どうぞおげんきで。",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "ベトナム",
+    "meaning": "Việt Nam",
+    "reading": "",
+    "type": "noun"
+  }
+]

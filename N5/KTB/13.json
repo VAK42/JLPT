@@ -1,0 +1,188 @@
+[
+  {
+    "japanese": "遊びます I",
+    "meaning": "Chơi",
+    "reading": "あそびます I",
+    "type": "verb"
+  },
+  {
+    "japanese": "泳ぎます I",
+    "meaning": "Bơi",
+    "reading": "およぎます I",
+    "type": "verb"
+  },
+  {
+    "japanese": "迎えます II",
+    "meaning": "Đón",
+    "reading": "むかえます II",
+    "type": "verb"
+  },
+  {
+    "japanese": "疲れます II",
+    "meaning": "Mệt",
+    "reading": "つかれます II",
+    "type": "verb"
+  },
+  {
+    "japanese": "結婚します III",
+    "meaning": "Kết Hôn",
+    "reading": "けっこんします III",
+    "type": "verb"
+  },
+  {
+    "japanese": "買い物します III",
+    "meaning": "Mua Sắm",
+    "reading": "かいものします III",
+    "type": "verb"
+  },
+  {
+    "japanese": "食事します III",
+    "meaning": "Ăn Cơm",
+    "reading": "しょくじします III",
+    "type": "verb"
+  },
+  {
+    "japanese": "散歩します III［公園を～］",
+    "meaning": "Đi Dạo [Ở Công Viên]",
+    "reading": "さんぽします III［こうえんを～］",
+    "type": "verb"
+  },
+  {
+    "japanese": "大変[な]",
+    "meaning": "Vất Vả, Khó Khăn",
+    "reading": "たいへん[な]",
+    "type": "adj"
+  },
+  {
+    "japanese": "欲しい",
+    "meaning": "Muốn Có",
+    "reading": "ほしい",
+    "type": "adj"
+  },
+  {
+    "japanese": "広い",
+    "meaning": "Rộng",
+    "reading": "ひろい",
+    "type": "adj"
+  },
+  {
+    "japanese": "狭い",
+    "meaning": "Chật, Hẹp",
+    "reading": "せまい",
+    "type": "adj"
+  },
+  {
+    "japanese": "プール",
+    "meaning": "Bể Bơi",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "川",
+    "meaning": "Sông",
+    "reading": "かわ",
+    "type": "noun"
+  },
+  {
+    "japanese": "美術",
+    "meaning": "Mỹ Thuật",
+    "reading": "びじゅつ",
+    "type": "noun"
+  },
+  {
+    "japanese": "釣り",
+    "meaning": "Việc Câu Cá (～を します: Câu Cá)",
+    "reading": "つり",
+    "type": "noun"
+  },
+  {
+    "japanese": "スキー",
+    "meaning": "Việc Trượt Tuyết (～を します: Trượt Tuyết)",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "週末",
+    "meaning": "Cuối Tuần",
+    "reading": "しゅうまつ",
+    "type": "noun"
+  },
+  {
+    "japanese": "お正月",
+    "meaning": "Tết",
+    "reading": "おしょうがつ",
+    "type": "noun"
+  },
+  {
+    "japanese": "～ごろ",
+    "meaning": "Khoảng ~ (Dùng Cho Thời Gian)",
+    "reading": "",
+    "type": "suffix"
+  },
+  {
+    "japanese": "何か",
+    "meaning": "Cái Gì Đó",
+    "reading": "なにか",
+    "type": "pronoun"
+  },
+  {
+    "japanese": "どこか",
+    "meaning": "Đâu Đó, Chỗ Nào Đó",
+    "reading": "",
+    "type": "pronoun"
+  },
+  {
+    "japanese": "のどが かわきます",
+    "meaning": "Khát (Khi Nói Trạng Thái Đang Khát Thì Dùng のどが かわきました)",
+    "reading": "",
+    "type": "verb"
+  },
+  {
+    "japanese": "おなかが すきます",
+    "meaning": "Đói (Khi Nói Trạng Thái Đang Đói Thì Dùng おなかが すきました)",
+    "reading": "",
+    "type": "verb"
+  },
+  {
+    "japanese": "そう しましょう。",
+    "meaning": "Nhất Trí/Hãy Làm Vậy Đi! (Nói Khi Đồng Ý Với Đề Xuất Của Ai)",
+    "reading": "",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "ご注文は？",
+    "meaning": "Anh/Chị Dùng Món Gì Ạ?",
+    "reading": "ごちゅうもんは？",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "定食",
+    "meaning": "Cơm Suất, Cơm Phần",
+    "reading": "ていしょく",
+    "type": "noun"
+  },
+  {
+    "japanese": "牛どん",
+    "meaning": "Món Cơm Với Thịt Bò Ở Trên",
+    "reading": "ぎゅうどん",
+    "type": "noun"
+  },
+  {
+    "japanese": "［少々］お待ち ください。",
+    "meaning": "Xin Anh/Chị Vui Lòng Đợi [Một Chút]!",
+    "reading": "［しょうしょう］おまち ください。",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "～で ございます。",
+    "meaning": "(Cách Nói Lịch Sự Của です)",
+    "reading": "",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "別々に",
+    "meaning": "Riêng, Riêng Ra",
+    "reading": "べつべつに",
+    "type": "adv"
+  }
+]

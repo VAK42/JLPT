@@ -1,0 +1,368 @@
+[
+  {
+    "japanese": "います II［子供が～］",
+    "meaning": "Có [Con]",
+    "reading": "います II［こどもが～］",
+    "type": "verb"
+  },
+  {
+    "japanese": "います II［日本に～］",
+    "meaning": "Ở [Nhật]",
+    "reading": "います II［にほんに～］",
+    "type": "verb"
+  },
+  {
+    "japanese": "かかります I",
+    "meaning": "Mất, Tốn (Thời Gian, Tiền Bạc)",
+    "reading": "",
+    "type": "verb"
+  },
+  {
+    "japanese": "休みます I［会社を～］",
+    "meaning": "Nghỉ [Làm Việc]",
+    "reading": "やすみます I［かいしゃを～］",
+    "type": "verb"
+  },
+  {
+    "japanese": "１つ",
+    "meaning": "Một Cái",
+    "reading": "ひとつ",
+    "type": "noun"
+  },
+  {
+    "japanese": "２つ",
+    "meaning": "Hai Cái",
+    "reading": "ふたつ",
+    "type": "noun"
+  },
+  {
+    "japanese": "３つ",
+    "meaning": "Ba Cái",
+    "reading": "みっつ",
+    "type": "noun"
+  },
+  {
+    "japanese": "４つ",
+    "meaning": "Bốn Cái",
+    "reading": "よっつ",
+    "type": "noun"
+  },
+  {
+    "japanese": "５つ",
+    "meaning": "Năm Cái",
+    "reading": "いつつ",
+    "type": "noun"
+  },
+  {
+    "japanese": "６つ",
+    "meaning": "Sáu Cái",
+    "reading": "むっつ",
+    "type": "noun"
+  },
+  {
+    "japanese": "７つ",
+    "meaning": "Bảy Cái",
+    "reading": "ななつ",
+    "type": "noun"
+  },
+  {
+    "japanese": "８つ",
+    "meaning": "Tám Cái",
+    "reading": "やっつ",
+    "type": "noun"
+  },
+  {
+    "japanese": "９つ",
+    "meaning": "Chín Cái",
+    "reading": "ここのつ",
+    "type": "noun"
+  },
+  {
+    "japanese": "１０つ",
+    "meaning": "Mười Cái",
+    "reading": "とお",
+    "type": "noun"
+  },
+  {
+    "japanese": "いくつ",
+    "meaning": "Bao Nhiêu Cái",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "１人",
+    "meaning": "Một Người",
+    "reading": "ひとり",
+    "type": "noun"
+  },
+  {
+    "japanese": "２人",
+    "meaning": "Hai Người",
+    "reading": "ふたり",
+    "type": "noun"
+  },
+  {
+    "japanese": "ー人",
+    "meaning": "- Người",
+    "reading": "ーにん",
+    "type": "suffix"
+  },
+  {
+    "japanese": "ー台",
+    "meaning": "- Cái, Chiếc (Dùng Để Đếm Máy Móc, Xe Cộ,..)",
+    "reading": "ーだい",
+    "type": "suffix"
+  },
+  {
+    "japanese": "ー枚",
+    "meaning": "- Tờ, Tấm (Dùng Để Đếm Những Vật Mỏng Như Tờ Giấy, Tem,..)",
+    "reading": "ーまい",
+    "type": "suffix"
+  },
+  {
+    "japanese": "ー回",
+    "meaning": "- Lần",
+    "reading": "ーかい",
+    "type": "suffix"
+  },
+  {
+    "japanese": "りんご",
+    "meaning": "Táo",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "みかん",
+    "meaning": "Quýt",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "サンドイッチ",
+    "meaning": "Sandwich",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "カレー［ライス］",
+    "meaning": "Món [Cơm] Cà Ri",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "アイスクリム",
+    "meaning": "Kem",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "切手",
+    "meaning": "Tem",
+    "reading": "きって",
+    "type": "noun"
+  },
+  {
+    "japanese": "はがき",
+    "meaning": "Bưu Thiếp",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "封筒",
+    "meaning": "Phong Bì",
+    "reading": "ふうとう",
+    "type": "noun"
+  },
+  {
+    "japanese": "両親",
+    "meaning": "Bố Mẹ",
+    "reading": "りょうしん",
+    "type": "noun"
+  },
+  {
+    "japanese": "兄弟",
+    "meaning": "Anh Chị Em",
+    "reading": "きょうだい",
+    "type": "noun"
+  },
+  {
+    "japanese": "兄",
+    "meaning": "Anh Trai (Mình)",
+    "reading": "あに",
+    "type": "noun"
+  },
+  {
+    "japanese": "お兄さん*",
+    "meaning": "Anh Trai (Của Người Khác)",
+    "reading": "おにいさん*",
+    "type": "noun"
+  },
+  {
+    "japanese": "姉",
+    "meaning": "Chị Gái (Mình)",
+    "reading": "あね",
+    "type": "noun"
+  },
+  {
+    "japanese": "お姉さん*",
+    "meaning": "Chị Gái (Của Người Khác)",
+    "reading": "おねえさん*",
+    "type": "noun"
+  },
+  {
+    "japanese": "弟",
+    "meaning": "Em Trai (Mình)",
+    "reading": "おとうと",
+    "type": "noun"
+  },
+  {
+    "japanese": "弟さん*",
+    "meaning": "Em Trai (Của Người Khác)",
+    "reading": "おとうとさん*",
+    "type": "noun"
+  },
+  {
+    "japanese": "妹",
+    "meaning": "Em Gái (Mình)",
+    "reading": "いもうと",
+    "type": "noun"
+  },
+  {
+    "japanese": "妹さん*",
+    "meaning": "Em Gái (Của Người Khác)",
+    "reading": "いもうとさん*",
+    "type": "noun"
+  },
+  {
+    "japanese": "外国",
+    "meaning": "Nước Ngoài",
+    "reading": "がいこく",
+    "type": "noun"
+  },
+  {
+    "japanese": "留学生",
+    "meaning": "Du Học Sinh, Sinh Viên Nước Ngoài",
+    "reading": "りゅうがくせい",
+    "type": "noun"
+  },
+  {
+    "japanese": "クラス",
+    "meaning": "Lớp Học",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "ー時間",
+    "meaning": "- Tiếng",
+    "reading": "ーじかん",
+    "type": "suffix"
+  },
+  {
+    "japanese": "ー週間",
+    "meaning": "- Tuần",
+    "reading": "ーしゅうかん",
+    "type": "suffix"
+  },
+  {
+    "japanese": "ーか月",
+    "meaning": "- Tháng",
+    "reading": "ーかげつ",
+    "type": "suffix"
+  },
+  {
+    "japanese": "ー年",
+    "meaning": "- Năm",
+    "reading": "ーねん",
+    "type": "suffix"
+  },
+  {
+    "japanese": "～ぐらい",
+    "meaning": "Khoảng ~",
+    "reading": "",
+    "type": "suffix"
+  },
+  {
+    "japanese": "どのくらい",
+    "meaning": "Bao Lâu",
+    "reading": "",
+    "type": "adv"
+  },
+  {
+    "japanese": "全部で",
+    "meaning": "Tổng Cộng",
+    "reading": "ぜんぶで",
+    "type": "adv"
+  },
+  {
+    "japanese": "みんな",
+    "meaning": "Tất Cả",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "～だけ",
+    "meaning": "Chỉ ~",
+    "reading": "",
+    "type": "suffix"
+  },
+  {
+    "japanese": "かしこまりました。",
+    "meaning": "Tôi Đã Rõ Rồi Ạ (Thưa Ông/Bà)!",
+    "reading": "",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "いいお天気ですね。",
+    "meaning": "Trời Đẹp Nhỉ!",
+    "reading": "いいおてんきですね。",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "お出かけですか。",
+    "meaning": "Anh/Chị Đi Ra Ngoài Đấy À?",
+    "reading": "おでかけですか。",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "ちょっと ～まで。",
+    "meaning": "Tôi Đi ~ Một Chút!",
+    "reading": "",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "行ってらっしゃい。",
+    "meaning": "Anh/Chị Đi Nhé! (Nguyên Nghĩa: Anh/Chị Đi Rồi Lại Về Nhé!)",
+    "reading": "いってらっしゃい",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "行ってきます。",
+    "meaning": "Tôi Đi Đây! (Nguyên Nghĩa: Tôi Đi Rồi Sẽ Về!)",
+    "reading": "いってきます。",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "船便",
+    "meaning": "(Gửi) Bằng Đường Biển",
+    "reading": "ふなびん",
+    "type": "noun"
+  },
+  {
+    "japanese": "航空便（エアメール）",
+    "meaning": "(Gửi) Bằng Đường Hàng Ko",
+    "reading": "こうくうびん（エアメール）",
+    "type": "noun"
+  },
+  {
+    "japanese": "お願いします。",
+    "meaning": "Nhờ Anh/Chị!",
+    "reading": "おねがいします。",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "オーストラリア",
+    "meaning": "Úc",
+    "reading": "",
+    "type": "noun"
+  }
+]

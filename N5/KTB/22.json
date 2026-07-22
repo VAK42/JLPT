@@ -1,0 +1,170 @@
+[
+  {
+    "japanese": "着ます II",
+    "meaning": "Mặc (Áo Sơ Mi,..)",
+    "reading": "きます II",
+    "type": "verb"
+  },
+  {
+    "japanese": "はきます I",
+    "meaning": "Đi, Mặc (Giày, Quần Âu,..)",
+    "reading": "はきます I",
+    "type": "verb"
+  },
+  {
+    "japanese": "かぶります I",
+    "meaning": "Đội (Mũ,..)",
+    "reading": "かぶります I",
+    "type": "verb"
+  },
+  {
+    "japanese": "かけます II［眼鏡を～］",
+    "meaning": "Đeo [Kính]",
+    "reading": "かけます II［めがねを～］",
+    "type": "verb"
+  },
+  {
+    "japanese": "します III［ネクタイを～］",
+    "meaning": "Đeo [Cà Vạt]",
+    "reading": "します III［ネクタイを～］",
+    "type": "verb"
+  },
+  {
+    "japanese": "生まれます II",
+    "meaning": "Sinh Ra",
+    "reading": "うまれます II",
+    "type": "verb"
+  },
+  {
+    "japanese": "わたしたち",
+    "meaning": "Chúng Tôi, Chúng Ta",
+    "reading": "",
+    "type": "pronoun"
+  },
+  {
+    "japanese": "コート",
+    "meaning": "Áo Khoác",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "セーター",
+    "meaning": "Áo Len",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "スーツ*",
+    "meaning": "Com-Lê, Vét",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "帽子",
+    "meaning": "Mũ",
+    "reading": "ぼうし",
+    "type": "noun"
+  },
+  {
+    "japanese": "眼鏡",
+    "meaning": "Kính",
+    "reading": "めがね",
+    "type": "noun"
+  },
+  {
+    "japanese": "ケーキ",
+    "meaning": "Bánh Ngọt",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "[お]弁当",
+    "meaning": "Cơm Hộp",
+    "reading": "[お]べんとう",
+    "type": "noun"
+  },
+  {
+    "japanese": "ロボット",
+    "meaning": "Rô Bốt",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "ユーモア",
+    "meaning": "Hài Hước",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "都合",
+    "meaning": "Thích Hợp",
+    "reading": "つごう",
+    "type": "noun"
+  },
+  {
+    "japanese": "よく",
+    "meaning": "Thường, Hay",
+    "reading": "",
+    "type": "adv"
+  },
+  {
+    "japanese": "えーと",
+    "meaning": "Ừ, À",
+    "reading": "",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "おめでとう [ございます]。",
+    "meaning": "Chúc Mừng! (Dùng Để Nói Trong Dịp Sinh Nhật, Lễ Cưới, Năm Mới,..)",
+    "reading": "",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "お探しですか。",
+    "meaning": "Anh/Chị Tìm ~ À?",
+    "reading": "おさがしですか。",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "では",
+    "meaning": "Thế/Vậy (Nhé)",
+    "reading": "",
+    "type": "adv"
+  },
+  {
+    "japanese": "こちら",
+    "meaning": "Đây, Cái Này (Cách Nói Lịch Sự Của これ)",
+    "reading": "",
+    "type": "pronoun"
+  },
+  {
+    "japanese": "家賃",
+    "meaning": "Tiền Thuê Nhà",
+    "reading": "やちん",
+    "type": "noun"
+  },
+  {
+    "japanese": "ダイニングキッチン",
+    "meaning": "Bếp Kèm Phòng Ăn",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "和室",
+    "meaning": "Phòng Kiểu Nhật",
+    "reading": "わしつ",
+    "type": "noun"
+  },
+  {
+    "japanese": "押し入れ",
+    "meaning": "Chỗ Để Chăn Gối, Đệm Trong 1 Căn Phòng Kiểu Nhật",
+    "reading": "おしいれ",
+    "type": "noun"
+  },
+  {
+    "japanese": "布団",
+    "meaning": "Chăn, Đệm Kiểu Nhật",
+    "reading": "ふとん",
+    "type": "noun"
+  }
+]

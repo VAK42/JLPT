@@ -1,0 +1,314 @@
+[
+  {
+    "japanese": "起きます II",
+    "meaning": "Thức Dậy",
+    "reading": "おきます II",
+    "type": "verb"
+  },
+  {
+    "japanese": "寝ます II",
+    "meaning": "Ngủ",
+    "reading": "ねます II",
+    "type": "verb"
+  },
+  {
+    "japanese": "働きます I",
+    "meaning": "Làm Việc",
+    "reading": "はたらきます I",
+    "type": "verb"
+  },
+  {
+    "japanese": "休みます I",
+    "meaning": "Nghỉ, Nghỉ Ngơi",
+    "reading": "やすみます I",
+    "type": "verb"
+  },
+  {
+    "japanese": "勉強します III",
+    "meaning": "Học",
+    "reading": "べんきょうします III",
+    "type": "verb"
+  },
+  {
+    "japanese": "終わります I",
+    "meaning": "Kết Thúc",
+    "reading": "おわります I",
+    "type": "verb"
+  },
+  {
+    "japanese": "デパート",
+    "meaning": "Bách Hóa",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "銀行",
+    "meaning": "Ngân Hàng",
+    "reading": "ぎんこう",
+    "type": "noun"
+  },
+  {
+    "japanese": "郵便局",
+    "meaning": "Bưu Điện",
+    "reading": "ゆうびんきょく",
+    "type": "noun"
+  },
+  {
+    "japanese": "図書館",
+    "meaning": "Thư Viện",
+    "reading": "としょかん",
+    "type": "noun"
+  },
+  {
+    "japanese": "美術館",
+    "meaning": "Bảo Tàng Mỹ Thuật",
+    "reading": "びじゅつかん",
+    "type": "noun"
+  },
+  {
+    "japanese": "今",
+    "meaning": "Bây Giờ",
+    "reading": "いま",
+    "type": "noun"
+  },
+  {
+    "japanese": "ー時",
+    "meaning": "- Giờ",
+    "reading": "ーじ",
+    "type": "suffix"
+  },
+  {
+    "japanese": "ー分",
+    "meaning": "- Phút",
+    "reading": "ーふん（ーぷん）",
+    "type": "suffix"
+  },
+  {
+    "japanese": "半",
+    "meaning": "Rưỡi, Nửa",
+    "reading": "はん",
+    "type": "noun"
+  },
+  {
+    "japanese": "何時",
+    "meaning": "Mấy Giờ",
+    "reading": "なんじ",
+    "type": "noun"
+  },
+  {
+    "japanese": "何分*",
+    "meaning": "Mấy Phút",
+    "reading": "なんぶん*",
+    "type": "noun"
+  },
+  {
+    "japanese": "午前",
+    "meaning": "AM",
+    "reading": "ごぜん",
+    "type": "noun"
+  },
+  {
+    "japanese": "午後",
+    "meaning": "PM",
+    "reading": "ごご",
+    "type": "noun"
+  },
+  {
+    "japanese": "朝",
+    "meaning": "Sáng",
+    "reading": "あさ",
+    "type": "noun"
+  },
+  {
+    "japanese": "昼",
+    "meaning": "Trưa",
+    "reading": "ひる",
+    "type": "noun"
+  },
+  {
+    "japanese": "晩（夜）",
+    "meaning": "Tối",
+    "reading": "ばん（よる）",
+    "type": "noun"
+  },
+  {
+    "japanese": "一昨日",
+    "meaning": "Hôm Kia",
+    "reading": "おととい",
+    "type": "noun"
+  },
+  {
+    "japanese": "昨日",
+    "meaning": "Hôm Qua",
+    "reading": "きのう",
+    "type": "noun"
+  },
+  {
+    "japanese": "今日",
+    "meaning": "Hôm Nay",
+    "reading": "きょう",
+    "type": "noun"
+  },
+  {
+    "japanese": "明日",
+    "meaning": "Ngày Mai",
+    "reading": "あした",
+    "type": "noun"
+  },
+  {
+    "japanese": "明後日",
+    "meaning": "Ngày Kia",
+    "reading": "あさって",
+    "type": "noun"
+  },
+  {
+    "japanese": "今朝",
+    "meaning": "Sáng Nay",
+    "reading": "けさ",
+    "type": "noun"
+  },
+  {
+    "japanese": "今晩",
+    "meaning": "Tối Nay",
+    "reading": "こんばん",
+    "type": "noun"
+  },
+  {
+    "japanese": "休み",
+    "meaning": "Nghỉ, Nghỉ Phép, Ngày Nghỉ",
+    "reading": "やすみ",
+    "type": "noun"
+  },
+  {
+    "japanese": "昼休み",
+    "meaning": "Nghỉ Trưa",
+    "reading": "ひるやすみ",
+    "type": "noun"
+  },
+  {
+    "japanese": "試験",
+    "meaning": "Kỳ Thi, Kiểm Tra",
+    "reading": "しけん",
+    "type": "noun"
+  },
+  {
+    "japanese": "会議",
+    "meaning": "Cuộc Họp, Hội Nghị (～をします: Tổ Chức Cuộc Họp, Hội Nghị)",
+    "reading": "かいぎ",
+    "type": "noun"
+  },
+  {
+    "japanese": "映画",
+    "meaning": "Phim",
+    "reading": "えいが",
+    "type": "noun"
+  },
+  {
+    "japanese": "毎朝",
+    "meaning": "Mỗi Sáng",
+    "reading": "まいあさ",
+    "type": "noun"
+  },
+  {
+    "japanese": "毎晩",
+    "meaning": "Mỗi Tối",
+    "reading": "まいばん",
+    "type": "noun"
+  },
+  {
+    "japanese": "毎日",
+    "meaning": "Hàng Ngày, Mỗi Ngày",
+    "reading": "まいにち",
+    "type": "noun"
+  },
+  {
+    "japanese": "月曜日",
+    "meaning": "Thứ Hai",
+    "reading": "げつようび",
+    "type": "noun"
+  },
+  {
+    "japanese": "火曜日",
+    "meaning": "Thứ Ba",
+    "reading": "かようび",
+    "type": "noun"
+  },
+  {
+    "japanese": "水曜日",
+    "meaning": "Thứ Tư",
+    "reading": "すいようび",
+    "type": "noun"
+  },
+  {
+    "japanese": "木曜日",
+    "meaning": "Thứ Năm",
+    "reading": "もくようび",
+    "type": "noun"
+  },
+  {
+    "japanese": "金曜日",
+    "meaning": "Thứ Sáu",
+    "reading": "きんようび",
+    "type": "noun"
+  },
+  {
+    "japanese": "土曜日",
+    "meaning": "Thứ Bảy",
+    "reading": "どようび",
+    "type": "noun"
+  },
+  {
+    "japanese": "日曜日",
+    "meaning": "Chủ Nhật",
+    "reading": "にちようび",
+    "type": "noun"
+  },
+  {
+    "japanese": "何曜日",
+    "meaning": "Thứ Mấy",
+    "reading": "なんようび",
+    "type": "noun"
+  },
+  {
+    "japanese": "～から",
+    "meaning": "~ Từ",
+    "reading": "",
+    "type": "suffix"
+  },
+  {
+    "japanese": "～まで",
+    "meaning": "~ Đến",
+    "reading": "",
+    "type": "suffix"
+  },
+  {
+    "japanese": "～と～",
+    "meaning": "~ Và (Dùng Để Nối Danh Từ)",
+    "reading": "",
+    "type": "suffix"
+  },
+  {
+    "japanese": "大変ですね。",
+    "meaning": "Anh/Chị Vất Vả Quá! (Dùng Để Bày Tỏ Sự Thông Cảm)",
+    "reading": "たいへんですね。",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "番号",
+    "meaning": "Số",
+    "reading": "ばんごう",
+    "type": "noun"
+  },
+  {
+    "japanese": "何番",
+    "meaning": "Số Bao Nhiêu",
+    "reading": "なんばん",
+    "type": "noun"
+  },
+  {
+    "japanese": "そちら",
+    "meaning": "Ông/Bà, Phía Ông/Phía Bà",
+    "reading": "",
+    "type": "pronoun"
+  }
+]

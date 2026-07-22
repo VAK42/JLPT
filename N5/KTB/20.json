@@ -1,0 +1,134 @@
+[
+  {
+    "japanese": "要ります I［ビザが～］",
+    "meaning": "Cần [Visa]",
+    "reading": "いります I［ビザが～］",
+    "type": "verb"
+  },
+  {
+    "japanese": "調べます II",
+    "meaning": "Tìm Hiểu, Điều Tra",
+    "reading": "しらべます II",
+    "type": "verb"
+  },
+  {
+    "japanese": "修理します III",
+    "meaning": "Sửa Chữa, Tu Sửa",
+    "reading": "しゅうりします III",
+    "type": "verb"
+  },
+  {
+    "japanese": "僕",
+    "meaning": "Tôi, Tớ (Cách Xưng Thân Mật Của わたし Được Dùng Bởi Nam Giới)",
+    "reading": "ぼく",
+    "type": "pronoun"
+  },
+  {
+    "japanese": "君*",
+    "meaning": "Cậu, Bạn (Cách Nói Thân Mật Của あなた Được Dùng Cho Người Ngang Hàng Hoặc Ít Tuổi Hơn)",
+    "reading": "きみ*",
+    "type": "pronoun"
+  },
+  {
+    "japanese": "～君",
+    "meaning": "Anh ~, Cậu ~ (Cách Nói Thân Mật Của ～さん Được Dùng Cho Người Ngang Hàng Hoặc Ít Tuổi Hơn; Thường Được Dùng Sau Tên Bé Trai)",
+    "reading": "～くん",
+    "type": "suffix"
+  },
+  {
+    "japanese": "うん",
+    "meaning": "Ừ (Cách Nói Thân Mật Của はい)",
+    "reading": "",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "ううん",
+    "meaning": "Không (Cách Nói Thân Mật Của いいえ)",
+    "reading": "",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "ことば",
+    "meaning": "Từ, Tiếng",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "着物",
+    "meaning": "Kimono (Trang Phục Truyền Thống Của Nhật Bản)",
+    "reading": "きもの",
+    "type": "noun"
+  },
+  {
+    "japanese": "ビザ",
+    "meaning": "Visa",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "初め",
+    "meaning": "Ban Đầu, Đầu Tiên",
+    "reading": "はじめ",
+    "type": "noun"
+  },
+  {
+    "japanese": "終わり",
+    "meaning": "Kết Thúc, Hết Phim",
+    "reading": "おわり",
+    "type": "noun"
+  },
+  {
+    "japanese": "こっち*",
+    "meaning": "Phía Này, Chỗ Này (Cách Nói Thân Mật Của こちら)",
+    "reading": "",
+    "type": "pronoun"
+  },
+  {
+    "japanese": "そっち",
+    "meaning": "Phía Đó, Chỗ Đó (Cách Nói Thân Mật Của そちら)",
+    "reading": "",
+    "type": "pronoun"
+  },
+  {
+    "japanese": "あっち*",
+    "meaning": "Phía Kia, Chỗ Kia (Cách Nói Thân Mật Của あちら)",
+    "reading": "",
+    "type": "pronoun"
+  },
+  {
+    "japanese": "どっち",
+    "meaning": "Cái Nào (Giữa Hai Cái), Phía Nào, Đâu (Cách Nói Thân Mật Của どちら)",
+    "reading": "",
+    "type": "pronoun"
+  },
+  {
+    "japanese": "みんなで",
+    "meaning": "Mọi Người Cùng",
+    "reading": "",
+    "type": "adv"
+  },
+  {
+    "japanese": "～けど",
+    "meaning": "~, Nhưng (Cách Nói Thân Mật Của が)",
+    "reading": "",
+    "type": "suffix"
+  },
+  {
+    "japanese": "おなかが いっぱいです",
+    "meaning": "(Tôi) No Rồi",
+    "reading": "",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "よかったら",
+    "meaning": "Nếu Anh/Chị Thích Thì",
+    "reading": "",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "いろいろ",
+    "meaning": "Nhiều Thứ",
+    "reading": "",
+    "type": "adv"
+  }
+]

@@ -1,0 +1,134 @@
+[
+  {
+    "japanese": "置きます I",
+    "meaning": "Đặt, Để",
+    "reading": "おきます I",
+    "type": "verb"
+  },
+  {
+    "japanese": "作ります、造ります I",
+    "meaning": "Làm, Chế Tạo, Sản Xuất",
+    "reading": "つくります I",
+    "type": "verb"
+  },
+  {
+    "japanese": "売ります I",
+    "meaning": "Bán",
+    "reading": "うります I",
+    "type": "verb"
+  },
+  {
+    "japanese": "知ります I",
+    "meaning": "Biết",
+    "reading": "しります I",
+    "type": "verb"
+  },
+  {
+    "japanese": "住みます I",
+    "meaning": "Sống, Ở",
+    "reading": "すみます I",
+    "type": "verb"
+  },
+  {
+    "japanese": "研究します III",
+    "meaning": "Nghiên Cứu",
+    "reading": "けんきゅうします III",
+    "type": "verb"
+  },
+  {
+    "japanese": "資料",
+    "meaning": "Tài Liệu, Tư Liệu",
+    "reading": "しりょう",
+    "type": "noun"
+  },
+  {
+    "japanese": "カタログ",
+    "meaning": "Ca-Ta-Lô",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "時刻表",
+    "meaning": "Bảng Giờ Chạy Tàu",
+    "reading": "じこくひょう",
+    "type": "noun"
+  },
+  {
+    "japanese": "服",
+    "meaning": "Quần Áo",
+    "reading": "ふく",
+    "type": "noun"
+  },
+  {
+    "japanese": "製品",
+    "meaning": "Sản Phẩm",
+    "reading": "せいひん",
+    "type": "noun"
+  },
+  {
+    "japanese": "ソフト",
+    "meaning": "Phần Mềm",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "電子辞書",
+    "meaning": "Kim Từ Điển",
+    "reading": "でんしじしょ",
+    "type": "noun"
+  },
+  {
+    "japanese": "経済",
+    "meaning": "Kinh Tế",
+    "reading": "けいざい",
+    "type": "noun"
+  },
+  {
+    "japanese": "市役所",
+    "meaning": "Tòa Thị Chính",
+    "reading": "しやくしょ",
+    "type": "noun"
+  },
+  {
+    "japanese": "高校",
+    "meaning": "Trường Trung Học Phổ Thông",
+    "reading": "こうこう",
+    "type": "noun"
+  },
+  {
+    "japanese": "歯医者",
+    "meaning": "Nha Sĩ",
+    "reading": "はいしゃ",
+    "type": "noun"
+  },
+  {
+    "japanese": "独身",
+    "meaning": "Độc Thân",
+    "reading": "どくしん",
+    "type": "noun"
+  },
+  {
+    "japanese": "すみません",
+    "meaning": "Xin Lỗi",
+    "reading": "",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "皆さん",
+    "meaning": "Các Anh Chị, Các Ông Bà, Các Bạn, Quý Vị",
+    "reading": "みなさん",
+    "type": "noun"
+  },
+  {
+    "japanese": "思い出します I",
+    "meaning": "Nhớ Lại, Hồi Tưởng Lại",
+    "reading": "おもいだします I",
+    "type": "verb"
+  },
+  {
+    "japanese": "いらっしゃいます I",
+    "meaning": "(Kính Ngữ Của います)",
+    "reading": "",
+    "type": "verb"
+  }
+]

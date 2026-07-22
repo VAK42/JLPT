@@ -1,0 +1,200 @@
+[
+  {
+    "japanese": "覚えます II",
+    "meaning": "Nhớ",
+    "reading": "おぼえます II",
+    "type": "verb"
+  },
+  {
+    "japanese": "忘れます II",
+    "meaning": "Quên",
+    "reading": "わすれます II",
+    "type": "verb"
+  },
+  {
+    "japanese": "なくします I",
+    "meaning": "Làm Mất, Đánh Mất",
+    "reading": "なくします I",
+    "type": "verb"
+  },
+  {
+    "japanese": "払います I",
+    "meaning": "Trả Tiền",
+    "reading": "はらいます I",
+    "type": "verb"
+  },
+  {
+    "japanese": "返します I",
+    "meaning": "Trả Lại",
+    "reading": "かえします I",
+    "type": "verb"
+  },
+  {
+    "japanese": "出かけます II",
+    "meaning": "Ra Ngoài",
+    "reading": "でかけます II",
+    "type": "verb"
+  },
+  {
+    "japanese": "脱ぎます I",
+    "meaning": "Cởi (Quần Áo, Giày,..)",
+    "reading": "ぬぎます I",
+    "type": "verb"
+  },
+  {
+    "japanese": "持っていきます I",
+    "meaning": "Mang Đi, Mang Theo",
+    "reading": "もっていきます I",
+    "type": "verb"
+  },
+  {
+    "japanese": "持って来ます III",
+    "meaning": "Mang Đến",
+    "reading": "もってきます III",
+    "type": "verb"
+  },
+  {
+    "japanese": "心配します III",
+    "meaning": "Lo Lắng",
+    "reading": "しんぱいします III",
+    "type": "verb"
+  },
+  {
+    "japanese": "残業します III",
+    "meaning": "Làm Thêm Giờ",
+    "reading": "ざんぎょうします III",
+    "type": "verb"
+  },
+  {
+    "japanese": "出張します III",
+    "meaning": "Đi Công Tác",
+    "reading": "しゅっちょうします III",
+    "type": "verb"
+  },
+  {
+    "japanese": "飲みます I［薬を～］",
+    "meaning": "Uống [Thuốc]",
+    "reading": "のみます I［くすりを～］",
+    "type": "verb"
+  },
+  {
+    "japanese": "入ります I［おふろに～］",
+    "meaning": "Tắm Bồn",
+    "reading": "はいります I［おふろに～］",
+    "type": "verb"
+  },
+  {
+    "japanese": "大切な",
+    "meaning": "Quan Trọng, Quý Giá",
+    "reading": "たいせつな",
+    "type": "adj"
+  },
+  {
+    "japanese": "大丈夫な",
+    "meaning": "Không Sao, Không Có Vấn Đề Gì",
+    "reading": "だいじょうぶな",
+    "type": "adj"
+  },
+  {
+    "japanese": "危ない",
+    "meaning": "Nguy Hiểm",
+    "reading": "あぶない",
+    "type": "adj"
+  },
+  {
+    "japanese": "禁煙",
+    "meaning": "Cấm Hút Thuốc",
+    "reading": "きんえん",
+    "type": "noun"
+  },
+  {
+    "japanese": "［健康］保険証",
+    "meaning": "Thẻ Bảo Hiểm [Y Tế]",
+    "reading": "［けんこう］ほけんしょう",
+    "type": "noun"
+  },
+  {
+    "japanese": "熱",
+    "meaning": "Sốt",
+    "reading": "ねつ",
+    "type": "noun"
+  },
+  {
+    "japanese": "病気",
+    "meaning": "Ốm, Bệnh",
+    "reading": "びょうき",
+    "type": "noun"
+  },
+  {
+    "japanese": "薬",
+    "meaning": "Thuốc",
+    "reading": "くすり",
+    "type": "noun"
+  },
+  {
+    "japanese": "おふろ",
+    "meaning": "Bồn Tắm",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "上着",
+    "meaning": "Áo Khoác",
+    "reading": "うわぎ",
+    "type": "noun"
+  },
+  {
+    "japanese": "下着",
+    "meaning": "Quần Áo Lót",
+    "reading": "したぎ",
+    "type": "noun"
+  },
+  {
+    "japanese": "～までに",
+    "meaning": "Trước ~, Cho Đến Trước ~ (Chỉ Giới Hạn Thời Gian)",
+    "reading": "",
+    "type": "suffix"
+  },
+  {
+    "japanese": "ですから",
+    "meaning": "Vì Thế, Vì Vậy, Do Đó",
+    "reading": "",
+    "type": "adv"
+  },
+  {
+    "japanese": "どう しましたか。",
+    "meaning": "Có Vấn Đề Gì?/ Anh/Chị Bị Làm Sao? (Cách Bác Sĩ Hỏi Bệnh Nhân)",
+    "reading": "",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "のど",
+    "meaning": "Họng",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "［～が］痛いです",
+    "meaning": "Tôi Bị Đau [~].",
+    "reading": "［～が］いたいです",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "かぜ",
+    "meaning": "Cảm, Cúm",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "それから",
+    "meaning": "Và Sau Đó",
+    "reading": "",
+    "type": "adv"
+  },
+  {
+    "japanese": "お大事に。",
+    "meaning": "Anh/Chị Nhớ Giữ Gìn Sức Khỏe! (Câu Nói Với Người Bị Ốm Hoặc Bị Bệnh)",
+    "reading": "おだいじに。",
+    "type": "kaiwa"
+  }
+]

@@ -1,0 +1,104 @@
+[
+  {
+    "japanese": "くれます II",
+    "meaning": "Cho, Tặng (Tôi)",
+    "reading": "",
+    "type": "verb"
+  },
+  {
+    "japanese": "直します I",
+    "meaning": "Sửa Chữa",
+    "reading": "なおします I",
+    "type": "verb"
+  },
+  {
+    "japanese": "連れて行きます I",
+    "meaning": "Dẫn (1 Ai Đó) Đi",
+    "reading": "つれていきます I",
+    "type": "verb"
+  },
+  {
+    "japanese": "連れて来ます III*",
+    "meaning": "Dẫn (1 Ai Đó) Đến",
+    "reading": "つれてきます III*",
+    "type": "verb"
+  },
+  {
+    "japanese": "送ります I［人を～］",
+    "meaning": "Tiễn [1 Ai Đó]",
+    "reading": "おくります I［ひとを～］",
+    "type": "verb"
+  },
+  {
+    "japanese": "紹介します III",
+    "meaning": "Giới Thiệu",
+    "reading": "しょうかいします III",
+    "type": "verb"
+  },
+  {
+    "japanese": "案内します III",
+    "meaning": "Hướng Dẫn, Giới Thiệu, Dẫn Đường",
+    "reading": "あんないします III",
+    "type": "verb"
+  },
+  {
+    "japanese": "説明します III",
+    "meaning": "Giải Thích, Trình Bày",
+    "reading": "せつめいします III",
+    "type": "verb"
+  },
+  {
+    "japanese": "おじいさん／おじいちゃん",
+    "meaning": "Ông Nội, Ông Ngoại, Ông (Cụ/Lão)",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "おばあさん／おばあちゃん",
+    "meaning": "Bà Nội, Bà Ngoại, Bà (Cụ/Lão)",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "準備",
+    "meaning": "Chuẩn Bị (～[を] します: Chuẩn Bị)",
+    "reading": "じゅんび",
+    "type": "noun"
+  },
+  {
+    "japanese": "引っ越し",
+    "meaning": "Chuyển Nhà (～[を] します: Chuyển Nhà)",
+    "reading": "ひっこし",
+    "type": "noun"
+  },
+  {
+    "japanese": "[お]菓子",
+    "meaning": "Bánh Kẹo",
+    "reading": "[お]かし",
+    "type": "noun"
+  },
+  {
+    "japanese": "ホームステイ",
+    "meaning": "Homestay",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "全部",
+    "meaning": "Toàn Bộ, Tất Cả",
+    "reading": "ぜんぶ",
+    "type": "adv"
+  },
+  {
+    "japanese": "自分で",
+    "meaning": "Tự Mình",
+    "reading": "じぶんで",
+    "type": "adv"
+  },
+  {
+    "japanese": "ほかに",
+    "meaning": "Ngoài Ra, Bên Cạnh Đó",
+    "reading": "",
+    "type": "adv"
+  }
+]

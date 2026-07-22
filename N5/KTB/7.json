@@ -1,0 +1,278 @@
+[
+  {
+    "japanese": "切ります I",
+    "meaning": "Cắt",
+    "reading": "きります I",
+    "type": "verb"
+  },
+  {
+    "japanese": "送ります I",
+    "meaning": "Gửi",
+    "reading": "おくります I",
+    "type": "verb"
+  },
+  {
+    "japanese": "あげます II",
+    "meaning": "Cho, Tặng",
+    "reading": "",
+    "type": "verb"
+  },
+  {
+    "japanese": "もらいます I",
+    "meaning": "Nhận",
+    "reading": "",
+    "type": "verb"
+  },
+  {
+    "japanese": "貸します I",
+    "meaning": "Cho Mượn, Cho Vay",
+    "reading": "かします I",
+    "type": "verb"
+  },
+  {
+    "japanese": "借ります II",
+    "meaning": "Mượn, Vay",
+    "reading": "かります II",
+    "type": "verb"
+  },
+  {
+    "japanese": "教えます II",
+    "meaning": "Dạy",
+    "reading": "おしえます II",
+    "type": "verb"
+  },
+  {
+    "japanese": "習います I",
+    "meaning": "Học, Tập",
+    "reading": "ならいます I",
+    "type": "verb"
+  },
+  {
+    "japanese": "かけます II［電話を～］",
+    "meaning": "Gọi [Điện Thoại]",
+    "reading": "[でんわを～]",
+    "type": "verb"
+  },
+  {
+    "japanese": "手",
+    "meaning": "Tay",
+    "reading": "て",
+    "type": "noun"
+  },
+  {
+    "japanese": "はし",
+    "meaning": "Đũa",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "スプーン",
+    "meaning": "Thìa",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "ナイフ",
+    "meaning": "Dao",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "フォーク",
+    "meaning": "Dĩa, Nĩa",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "はさみ",
+    "meaning": "Kéo",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "パソコン",
+    "meaning": "Máy Tính Cá Nhân",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "ケータイ",
+    "meaning": "Điện Thoại Di Động",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "メール",
+    "meaning": "Email",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "年賀状",
+    "meaning": "Thiệp Chúc Mừng Năm Mới",
+    "reading": "ねんがじょう",
+    "type": "noun"
+  },
+  {
+    "japanese": "パンチ",
+    "meaning": "Cái Đục Lỗ",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "ホッチキス",
+    "meaning": "Cái Dập Ghim",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "セロテープ",
+    "meaning": "Băng Dính",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "消しゴム",
+    "meaning": "Cái Tẩy, Cục Tẩy",
+    "reading": "けしゴム",
+    "type": "noun"
+  },
+  {
+    "japanese": "紙",
+    "meaning": "Giấy",
+    "reading": "かみ",
+    "type": "noun"
+  },
+  {
+    "japanese": "花",
+    "meaning": "Hoa",
+    "reading": "はな",
+    "type": "noun"
+  },
+  {
+    "japanese": "シャツ",
+    "meaning": "Áo Sơ Mi",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "プレゼント",
+    "meaning": "Quà Tặng",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "にもつ",
+    "meaning": "Đồ Đạc, Hành Lý",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "お金",
+    "meaning": "Tiền",
+    "reading": "おかね",
+    "type": "noun"
+  },
+  {
+    "japanese": "切符",
+    "meaning": "Vé",
+    "reading": "きっぷ",
+    "type": "noun"
+  },
+  {
+    "japanese": "クリスマス",
+    "meaning": "Giáng Sinh",
+    "reading": "",
+    "type": "noun"
+  },
+  {
+    "japanese": "父",
+    "meaning": "Bố (Dùng Khi Nói Về Bố Mình)",
+    "reading": "ちち",
+    "type": "noun"
+  },
+  {
+    "japanese": "母",
+    "meaning": "Mẹ (Dùng Khi Nói Về Mẹ Mình)",
+    "reading": "はは",
+    "type": "noun"
+  },
+  {
+    "japanese": "お父さん*",
+    "meaning": "Bố (Dùng Khi Nói Về Bố Người Khác & Dùng Khi Xưng Hô Với Bố Mình)",
+    "reading": "おとうさん*",
+    "type": "noun"
+  },
+  {
+    "japanese": "お母さん",
+    "meaning": "Mẹ (Dùng Khi Nói Về Mẹ Người Khác & Dùng Khi Xưng Hô Với Mẹ Mình)",
+    "reading": "おかあさん",
+    "type": "noun"
+  },
+  {
+    "japanese": "もう",
+    "meaning": "Đã, Rồi",
+    "reading": "",
+    "type": "adv"
+  },
+  {
+    "japanese": "まだ",
+    "meaning": "Chưa",
+    "reading": "",
+    "type": "adv"
+  },
+  {
+    "japanese": "これから",
+    "meaning": "Từ Bây Giờ, Sau Đây",
+    "reading": "",
+    "type": "adv"
+  },
+  {
+    "japanese": "［～、］すてきですね。",
+    "meaning": "[~] Hay Nhỉ/Đẹp Nhỉ!",
+    "reading": "",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "いらっしゃい。",
+    "meaning": "Rất Hoan Nghênh Anh/Chị Đã Đến Chơi - Chào Mừng Anh/Chị Đã Đến Chơi!",
+    "reading": "",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "どうぞお上がりください。",
+    "meaning": "Mời Anh/Chị Vào!",
+    "reading": "どうぞおあがりください。",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "失礼します。",
+    "meaning": "Xin Phép Tôi Vào/Xin Phép! (Dùng Khi Bước Vào Nhà Của Người Khác)",
+    "reading": "しつれいします。",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "［～は］いかがですか。",
+    "meaning": "Anh/Chị Dùng [~] Nhé? (Dùng Khi Mời Ai Đó Cái Gì)",
+    "reading": "",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "いただきます。",
+    "meaning": "Mời Anh/Chị Dùng (Cách Nói Dùng Trước Khi Ăn Hoặc Uống)",
+    "reading": "",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "ごちそうさま［でした］*。",
+    "meaning": "Xin Cám Ơn Anh/Chị Đã Đãi Tôi Bữa Ăn Ngon! (Câu Nói Dùng Sau Khi Ăn Xong)",
+    "reading": "",
+    "type": "kaiwa"
+  },
+  {
+    "japanese": "スペイン",
+    "meaning": "Tây Ban Nha",
+    "reading": "",
+    "type": "noun"
+  }
+]
