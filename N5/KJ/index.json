@@ -281,7 +281,7 @@
       },
       {
         "word": "一日",
-        "reading": "いちにし",
+        "reading": "いちにち",
         "meaning": "Một Ngày"
       },
       {
@@ -765,7 +765,7 @@
         "meaning": "Thầy Giáo, Cô Giáo"
       },
       {
-        "word": " meまれます",
+        "word": "生まれます",
         "reading": "うまれます",
         "meaning": "Được Sinh Ra"
       },
@@ -1212,7 +1212,7 @@
   },
   {
     "kanji": "昼",
-    "sino": "Trưa",
+    "sino": "Trú",
     "meaning": "Buổi Trưa, Ban Ngày",
     "vocab": [
       {
@@ -1317,8 +1317,8 @@
         "meaning": "～ Phút"
       },
       {
-        "word": " me自分で",
-        "reading": "じぶん で",
+        "word": "自分で",
+        "reading": "じぶんで",
         "meaning": "Tự Mình"
       },
       {
@@ -2423,7 +2423,7 @@
   },
   {
     "kanji": "左",
-    "sino": "Trái",
+    "sino": "Tả",
     "meaning": "Trái",
     "vocab": [
       {
@@ -2757,7 +2757,7 @@
   },
   {
     "kanji": "写",
-    "sino": "Tạ",
+    "sino": "Tả",
     "meaning": "Sao Chép, Chụp Ảnh",
     "vocab": [
       {
@@ -2993,7 +2993,7 @@
   },
   {
     "kanji": "教",
-    "sino": "Giao",
+    "sino": "Giáo",
     "meaning": "Giảng Dạy, Tôn Giáo",
     "vocab": [
       {
@@ -3301,7 +3301,7 @@
     "vocab": [
       {
         "word": "作ります",
-        "reading": "つかります",
+        "reading": "つくります",
         "meaning": "Làm, Sản Xuất, Sáng Tác, Nấu Nướng"
       },
       {
