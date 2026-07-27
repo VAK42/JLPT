@@ -149,7 +149,7 @@
           <div class="flex justify-center pt-2">
             <button id="btnRestartQuiz" onclick="restartQuiz()" class="cursor-pointer rounded bg-green-950 text-white px-8 py-3.5 text-base font-semibold hover:bg-green-900 transition flex items-center space-x-2 shadow-md">
               <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
-              <span>Restart Quiz</span>
+              <span>OK</span>
             </button>
           </div>
         </div>
@@ -195,6 +195,7 @@
     let quizIncorrectCount = 0;
     let incorrectWordsList = [];
     let isQuizIncorrectOnly = false;
+    let savedMainQuizState = null;
     let quizTimer = null;
     let timerStep = null;
     let stepTimeRemaining = 10000;
@@ -281,19 +282,25 @@
       if (isQuizAnswered || !currentQuizQuestion) return;
       isQuizAnswered = true;
       quizAnsweredCount++;
-      quizIncorrectCount++;
       const feedback = document.getElementById('quizFeedbackMsg');
       feedback.innerText = 'Incorrect';
       feedback.className = 'text-sm font-semibold text-center px-4 py-2 rounded w-full sm:w-96 border border-red-600 bg-white text-red-500 block';
       const targetWord = currentQuizQuestion.target.word;
-      if (!incorrectWordsList.some(item => item.word === targetWord)) {
-        incorrectWordsList.push({
-          word: currentQuizQuestion.target.word,
-          reading: currentQuizQuestion.target.reading,
-          meaning: currentQuizQuestion.target.meaning,
-          sino: currentQuizQuestion.target.sino
-        });
-        saveIncorrectToStorage();
+      if (isQuizIncorrectOnly) {
+        if (currentQuizQuestion.target) {
+          remainingVocabPool.push(currentQuizQuestion.target);
+        }
+      } else {
+        quizIncorrectCount++;
+        if (!incorrectWordsList.some(item => item.word === targetWord)) {
+          incorrectWordsList.push({
+            word: currentQuizQuestion.target.word,
+            reading: currentQuizQuestion.target.reading,
+            meaning: currentQuizQuestion.target.meaning,
+            sino: currentQuizQuestion.target.sino
+          });
+          saveIncorrectToStorage();
+        }
       }
       updateQuizHeaderStats();
       renderQuizOptions();
@@ -496,10 +503,21 @@
       const btn = document.getElementById('btnQuizIncorrect');
       if (isQuizIncorrectOnly) {
         btn.className = "cursor-pointer rounded border border-green-950 bg-green-950 text-white px-3 py-1.5 text-xs font-semibold transition flex items-center space-x-1 shadow-sm";
+        if (currentQuizQuestion && !isQuizAnswered && currentQuizQuestion.target) {
+          remainingVocabPool.unshift(currentQuizQuestion.target);
+        }
+        savedMainQuizState = {
+          remainingVocabPool: [...remainingVocabPool]
+        };
         remainingVocabPool = [...incorrectWordsList];
       } else {
         btn.className = "cursor-pointer rounded border border-green-950 px-3 py-1.5 text-xs font-semibold hover:bg-green-950 hover:text-white transition flex items-center space-x-1";
-        remainingVocabPool = [...allVocabPool];
+        if (savedMainQuizState) {
+          remainingVocabPool = [...savedMainQuizState.remainingVocabPool];
+          savedMainQuizState = null;
+        } else {
+          remainingVocabPool = [...allVocabPool];
+        }
       }
       newQuizQuestion();
     }
@@ -519,21 +537,28 @@
       lucide.createIcons();
     }
     function restartQuiz() {
+      savedMainQuizState = null;
       const sourcePool = isQuizIncorrectOnly ? incorrectWordsList : allVocabPool;
       remainingVocabPool = [...sourcePool];
       quizAnsweredCount = 0;
       quizCorrectCount = 0;
+      quizIncorrectCount = 0;
       document.getElementById('quizCompletedContainer').classList.add('hidden');
       document.getElementById('quizActiveContainer').classList.remove('hidden');
       newQuizQuestion();
     }
     function newQuizQuestion() {
       clearQuizTimer();
-      if (isQuizIncorrectOnly && incorrectWordsList.length === 0) {
+      if (isQuizIncorrectOnly && (incorrectWordsList.length === 0 || remainingVocabPool.length === 0)) {
         isQuizIncorrectOnly = false;
         const btn = document.getElementById('btnQuizIncorrect');
         if (btn) btn.className = "cursor-pointer rounded border border-green-950 px-3 py-1.5 text-xs font-semibold hover:bg-green-950 hover:text-white transition flex items-center space-x-1";
-        remainingVocabPool = [...allVocabPool];
+        if (savedMainQuizState) {
+          remainingVocabPool = [...savedMainQuizState.remainingVocabPool];
+          savedMainQuizState = null;
+        } else {
+          remainingVocabPool = [...allVocabPool];
+        }
       }
       const sourcePool = isQuizIncorrectOnly ? incorrectWordsList : allVocabPool;
       if (sourcePool.length === 0) return;
@@ -566,8 +591,9 @@
       const ansEl = document.getElementById('quizAnsweredCount');
       if (ansEl) ansEl.innerText = quizAnsweredCount;
       document.getElementById('quizCorrectCount').innerText = quizCorrectCount;
-      document.getElementById('quizIncorrectCount').innerText = incorrectWordsList.length;
-      document.getElementById('quizWordsLeftCount').innerText = remainingVocabPool.length;
+      document.getElementById('quizIncorrectCount').innerText = quizIncorrectCount;
+      const remainingCount = remainingVocabPool.length + (currentQuizQuestion && !isQuizAnswered ? 1 : 0);
+      document.getElementById('quizWordsLeftCount').innerText = remainingCount;
       document.getElementById('quizTotalWordsCount').innerText = sourcePool.length;
     }
     function renderQuizOptions() {
@@ -635,6 +661,9 @@
       const isBothCorrect = isReadingCorrect && isMeaningCorrect;
       if (isBothCorrect) {
         quizCorrectCount++;
+        if (isQuizIncorrectOnly) {
+          quizIncorrectCount = Math.max(0, quizIncorrectCount - 1);
+        }
         feedback.innerText = 'Correct';
         feedback.className = 'text-sm font-semibold text-center px-4 py-2 rounded w-full sm:w-96 border border-green-950 bg-green-950 text-white block';
         const targetWord = currentQuizQuestion.target.word;
@@ -648,16 +677,22 @@
           remainingVocabPool.splice(remIdx, 1);
         }
       } else {
-        quizIncorrectCount++;
-        const targetWord = currentQuizQuestion.target.word;
-        if (!incorrectWordsList.some(item => item.word === targetWord)) {
-          incorrectWordsList.push({
-            word: currentQuizQuestion.target.word,
-            reading: currentQuizQuestion.target.reading,
-            meaning: currentQuizQuestion.target.meaning,
-            sino: currentQuizQuestion.target.sino
-          });
-          saveIncorrectToStorage();
+        if (isQuizIncorrectOnly) {
+          if (currentQuizQuestion.target) {
+            remainingVocabPool.push(currentQuizQuestion.target);
+          }
+        } else {
+          quizIncorrectCount++;
+          const targetWord = currentQuizQuestion.target.word;
+          if (!incorrectWordsList.some(item => item.word === targetWord)) {
+            incorrectWordsList.push({
+              word: currentQuizQuestion.target.word,
+              reading: currentQuizQuestion.target.reading,
+              meaning: currentQuizQuestion.target.meaning,
+              sino: currentQuizQuestion.target.sino
+            });
+            saveIncorrectToStorage();
+          }
         }
         feedback.innerText = 'Incorrect';
         feedback.className = 'text-sm font-semibold text-center px-4 py-2 rounded w-full sm:w-96 border border-red-600 bg-white text-red-500 block';
