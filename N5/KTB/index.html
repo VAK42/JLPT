@@ -96,10 +96,6 @@
           class="bg-white border border-green-950/20 p-4 rounded shadow-sm flex flex-wrap items-center justify-between gap-3">
           <div class="flex flex-wrap items-center gap-2">
             <div
-              class="flex items-center space-x-1 text-xs font-semibold bg-green-950/10 px-2.5 py-1.5 rounded text-green-950">
-              <span>Answered: <strong id="quizAnsweredCount" class="font-semibold">0</strong></span>
-            </div>
-            <div
               class="flex items-center space-x-1 text-xs font-semibold bg-green-950 text-white px-2.5 py-1.5 rounded">
               <span>Correct: <strong id="quizCorrectCount" class="font-semibold">0</strong></span>
             </div>
@@ -140,11 +136,27 @@
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div id="quizReadingBox" class="bg-white border border-green-950/20 p-5 rounded shadow-sm space-y-3">
-              <h3 class="text-sm font-semibold text-green-950 border-b border-green-950/10 pb-2">Reading</h3>
+              <div class="border-b border-green-950/10 pb-2 space-y-1.5">
+                <div class="flex items-center justify-between">
+                  <h3 class="text-sm font-semibold text-green-950">Reading</h3>
+                  <span class="flex items-center space-x-1 text-xs font-semibold text-green-950"><i data-lucide="timer" class="w-3.5 h-3.5"></i><span id="readingTimerText">6.0s</span></span>
+                </div>
+                <div class="w-full bg-gray-100 h-1 rounded-full overflow-hidden">
+                  <div id="readingTimerBar" class="h-full bg-green-950 w-full transition-all duration-75"></div>
+                </div>
+              </div>
               <div id="quizReadingOptions" class="grid grid-cols-1 gap-2.5"></div>
             </div>
             <div id="quizMeaningBox" class="bg-white border border-green-950/20 p-5 rounded shadow-sm space-y-3 hidden">
-              <h3 class="text-sm font-semibold text-green-950 border-b border-green-950/10 pb-2">Meaning</h3>
+              <div class="border-b border-green-950/10 pb-2 space-y-1.5">
+                <div class="flex items-center justify-between">
+                  <h3 class="text-sm font-semibold text-green-950">Meaning</h3>
+                  <span class="flex items-center space-x-1 text-xs font-semibold text-green-950"><i data-lucide="timer" class="w-3.5 h-3.5"></i><span id="meaningTimerText">6.0s</span></span>
+                </div>
+                <div class="w-full bg-gray-100 h-1 rounded-full overflow-hidden">
+                  <div id="meaningTimerBar" class="h-full bg-green-950 w-full transition-all duration-75"></div>
+                </div>
+              </div>
               <div id="quizMeaningOptions" class="grid grid-cols-1 gap-2.5"></div>
             </div>
           </div>
@@ -162,11 +174,7 @@
             <span>Done!</span>
           </h2>
           <p id="quizCompletedMsg" class="text-base text-green-950/80 font-normal">You Have Completed All Words In This Lesson!</p>
-          <div class="grid grid-cols-3 gap-3 py-2">
-            <div class="bg-green-950/5 p-3 rounded border border-green-950/10">
-              <span class="text-xs text-green-950/60 block font-semibold">Answered</span>
-              <span id="quizDoneAnswered" class="text-xl font-semibold text-green-950">0</span>
-            </div>
+          <div class="grid grid-cols-2 gap-3 py-2">
             <div class="bg-green-950 text-white p-3 rounded">
               <span class="text-xs text-green-200 block font-semibold">Correct</span>
               <span id="quizDoneCorrect" class="text-xl font-semibold text-white">0</span>
@@ -229,6 +237,72 @@
     let quizCorrectCount = 0;
     let incorrectWordsList = [];
     let isQuizIncorrectOnly = false;
+    let quizTimer = null;
+    let timerStep = null;
+    let stepTimeRemaining = 6000;
+    const timerLimit = 6000;
+    function clearQuizTimer() {
+      if (quizTimer) {
+        clearInterval(quizTimer);
+        quizTimer = null;
+      }
+      timerStep = null;
+    }
+    function startStepTimer(step) {
+      clearQuizTimer();
+      timerStep = step;
+      stepTimeRemaining = timerLimit;
+      updateTimerUI();
+      const startTime = Date.now();
+      const targetEndTime = startTime + timerLimit;
+      quizTimer = setInterval(() => {
+        const now = Date.now();
+        stepTimeRemaining = Math.max(0, targetEndTime - now);
+        updateTimerUI();
+        if (stepTimeRemaining <= 0) {
+          clearQuizTimer();
+          handleQuizTimeout(step);
+        }
+      }, 50);
+    }
+    function updateTimerUI() {
+      const secondsStr = (stepTimeRemaining / 1000).toFixed(1) + 's';
+      const progressPct = (stepTimeRemaining / timerLimit) * 100;
+      if (timerStep === 'reading') {
+        const el = document.getElementById('readingTimerText');
+        if (el) el.innerText = secondsStr;
+        const bar = document.getElementById('readingTimerBar');
+        if (bar) bar.style.width = progressPct + '%';
+      } else if (timerStep === 'meaning') {
+        const el = document.getElementById('meaningTimerText');
+        if (el) el.innerText = secondsStr;
+        const bar = document.getElementById('meaningTimerBar');
+        if (bar) bar.style.width = progressPct + '%';
+      }
+    }
+    function handleQuizTimeout(step) {
+      if (isQuizAnswered || !currentQuizQuestion) return;
+      isQuizAnswered = true;
+      quizAnsweredCount++;
+      const feedback = document.getElementById('quizFeedbackMsg');
+      feedback.innerText = 'Incorrect';
+      feedback.className = 'text-sm font-semibold text-center px-4 py-2 rounded w-full sm:w-96 border border-red-600 bg-white text-red-500 block';
+      const targetWord = currentQuizQuestion.target.japanese;
+      if (!incorrectWordsList.some(item => (item.japanese || item.word) === targetWord)) {
+        incorrectWordsList.push({
+          japanese: currentQuizQuestion.target.japanese,
+          reading: currentQuizQuestion.target.reading || '',
+          meaning: currentQuizQuestion.target.meaning || '',
+          type: currentQuizQuestion.target.type || ''
+        });
+        saveIncorrectToStorage();
+      }
+      updateQuizHeaderStats();
+      renderQuizOptions();
+      setTimeout(() => {
+        newQuizQuestion();
+      }, 1000);
+    }
     document.addEventListener('DOMContentLoaded', () => {
       loadIncorrectFromStorage();
       renderSidebar();
@@ -333,6 +407,7 @@
       const modeLearn = document.getElementById('modeLearn');
       const modeQuiz = document.getElementById('modeQuiz');
       if (mode === 'learn') {
+        clearQuizTimer();
         tabLearn.className = "cursor-pointer rounded px-4 py-1.5 text-sm font-semibold transition flex items-center space-x-2 bg-white text-green-950 shadow-sm";
         tabQuiz.className = "cursor-pointer rounded px-4 py-1.5 text-sm font-semibold transition flex items-center space-x-2 text-green-100 hover:text-white hover:bg-green-800";
         modeLearn.classList.remove('hidden');
@@ -481,12 +556,14 @@
       newQuizQuestion();
     }
     function showQuizCompletedScreen() {
+      clearQuizTimer();
       const activeBox = document.getElementById('quizActiveContainer');
       const doneBox = document.getElementById('quizCompletedContainer');
       const sourcePool = isQuizIncorrectOnly ? incorrectWordsList : activePool;
       const lessonTitle = selectedLesson === 0 ? 'All Lessons' : 'Lesson ' + selectedLesson;
       document.getElementById('quizCompletedMsg').innerText = 'You Have Completed All ' + sourcePool.length + ' Words In ' + lessonTitle + '!';
-      document.getElementById('quizDoneAnswered').innerText = quizAnsweredCount;
+      const ansDoneEl = document.getElementById('quizDoneAnswered');
+      if (ansDoneEl) ansDoneEl.innerText = quizAnsweredCount;
       document.getElementById('quizDoneCorrect').innerText = quizCorrectCount;
       document.getElementById('quizDoneIncorrect').innerText = Math.max(0, quizAnsweredCount - quizCorrectCount);
       activeBox.classList.add('hidden');
@@ -504,6 +581,7 @@
       newQuizQuestion();
     }
     function newQuizQuestion() {
+      clearQuizTimer();
       if (isQuizIncorrectOnly && incorrectWordsList.length === 0) {
         isQuizIncorrectOnly = false;
         const btn = document.getElementById('btnQuizIncorrect');
@@ -527,13 +605,19 @@
       isQuizAnswered = false;
       document.getElementById('quizQuestionWord').innerText = target.japanese;
       document.getElementById('quizFeedbackMsg').className = 'hidden text-sm font-semibold text-center px-4 py-2 rounded w-full sm:w-96 border';
+      const rEl = document.getElementById('readingTimerText');
+      if (rEl) rEl.innerText = '6.0s';
+      const mEl = document.getElementById('meaningTimerText');
+      if (mEl) mEl.innerText = '6.0s';
       updateQuizHeaderStats();
       renderQuizOptions();
+      startStepTimer('reading');
       lucide.createIcons();
     }
     function updateQuizHeaderStats() {
       const sourcePool = isQuizIncorrectOnly ? incorrectWordsList : activePool;
-      document.getElementById('quizAnsweredCount').innerText = quizAnsweredCount;
+      const ansEl = document.getElementById('quizAnsweredCount');
+      if (ansEl) ansEl.innerText = quizAnsweredCount;
       document.getElementById('quizCorrectCount').innerText = quizCorrectCount;
       document.getElementById('quizIncorrectCount').innerText = incorrectWordsList.length;
       document.getElementById('quizWordsLeftCount').innerText = remainingVocabPool.length;
@@ -556,7 +640,7 @@
         if (selectedReadingIdx === idx) { btnStyle = 'border-green-950 bg-green-950 text-white shadow-sm'; }
         if (isQuizAnswered) {
           if (opt.isCorrect) { btnStyle = 'border-green-950 bg-green-950 text-white font-semibold'; }
-          else if (selectedReadingIdx === idx && !opt.isCorrect) { btnStyle = 'border-red-600 bg-green-950 text-red-500 font-semibold'; }
+          else if (selectedReadingIdx === idx && !opt.isCorrect) { btnStyle = 'border-red-600 bg-white text-red-500 font-semibold'; }
           else { btnStyle = 'border-gray-200 text-gray-400 opacity-60'; }
         }
         return '<button onclick="selectReading(' + idx + ')" ' + (isQuizAnswered ? 'disabled' : '') + ' class="cursor-pointer rounded border p-3 text-left font-semibold text-sm transition flex items-center justify-between ' + btnStyle + '"><span>' + opt.text + '</span>' + (selectedReadingIdx === idx ? '<i data-lucide="check-circle" class="w-4 h-4"></i>' : '') + '</button>';
@@ -566,7 +650,7 @@
         if (selectedMeaningIdx === idx) { btnStyle = 'border-green-950 bg-green-950 text-white shadow-sm'; }
         if (isQuizAnswered) {
           if (opt.isCorrect) { btnStyle = 'border-green-950 bg-green-950 text-white font-semibold'; }
-          else if (selectedMeaningIdx === idx && !opt.isCorrect) { btnStyle = 'border-red-600 bg-green-950 text-red-500 font-semibold'; }
+          else if (selectedMeaningIdx === idx && !opt.isCorrect) { btnStyle = 'border-red-600 bg-white text-red-500 font-semibold'; }
           else { btnStyle = 'border-gray-200 text-gray-400 opacity-60'; }
         }
         return '<button onclick="selectMeaning(' + idx + ')" ' + (isQuizAnswered ? 'disabled' : '') + ' class="cursor-pointer rounded border p-3 text-left font-semibold text-sm transition flex items-center justify-between ' + btnStyle + '"><span>' + opt.text + '</span>' + (selectedMeaningIdx === idx ? '<i data-lucide="check-circle" class="w-4 h-4"></i>' : '') + '</button>';
@@ -577,14 +661,19 @@
       if (isQuizAnswered) return;
       selectedReadingIdx = idx;
       renderQuizOptions();
+      if (timerStep !== 'meaning') {
+        startStepTimer('meaning');
+      }
     }
     function selectMeaning(idx) {
       if (isQuizAnswered) return;
       selectedMeaningIdx = idx;
+      clearQuizTimer();
       renderQuizOptions();
       handleQuizSubmit();
     }
     function handleQuizSubmit() {
+      clearQuizTimer();
       if (!currentQuizQuestion || isQuizAnswered) return;
       const feedback = document.getElementById('quizFeedbackMsg');
       if (selectedReadingIdx === null || selectedMeaningIdx === null) {
@@ -623,13 +712,13 @@
           saveIncorrectToStorage();
         }
         feedback.innerText = 'Incorrect';
-        feedback.className = 'text-sm font-semibold text-center px-4 py-2 rounded w-full sm:w-96 border border-red-600 bg-green-950 text-red-500 block';
+        feedback.className = 'text-sm font-semibold text-center px-4 py-2 rounded w-full sm:w-96 border border-red-600 bg-white text-red-500 block';
       }
       updateQuizHeaderStats();
       renderQuizOptions();
       setTimeout(() => {
         newQuizQuestion();
-      }, 200);
+      }, 1000);
     }
     function downloadWrongFile() {
       if (incorrectWordsList.length === 0) return;
