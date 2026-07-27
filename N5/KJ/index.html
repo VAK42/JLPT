@@ -56,33 +56,39 @@
       <div id="paginationContainer"></div>
     </section>
     <section id="modeQuiz" class="hidden space-y-6 max-w-4xl mx-auto">
-      <div class="bg-white border border-green-950/20 p-4 rounded shadow-sm flex flex-wrap items-center justify-between gap-3">
-        <div class="flex flex-wrap items-center gap-2">
+      <div class="bg-white border border-green-950/20 p-4 rounded shadow-sm flex flex-nowrap items-center justify-between gap-3 overflow-x-auto">
+        <div class="flex items-center space-x-2 shrink-0">
           <div class="flex items-center space-x-1 text-xs font-semibold bg-green-950 text-white px-2.5 py-1.5 rounded">
-            <span>Correct: <strong id="quizCorrectCount" class="font-semibold">0</strong></span>
+            <i data-lucide="check" class="w-3.5 h-3.5"></i>
+            <strong id="quizCorrectCount" class="font-semibold">0</strong>
           </div>
           <div class="flex items-center space-x-1 text-xs font-semibold bg-green-900 text-white px-2.5 py-1.5 rounded">
-            <span>Incorrect: <strong id="quizIncorrectCount" class="font-semibold">0</strong></span>
+            <i data-lucide="x" class="w-3.5 h-3.5"></i>
+            <strong id="quizIncorrectCount" class="font-semibold">0</strong>
           </div>
           <div class="flex items-center space-x-1 text-xs font-semibold bg-green-950/10 px-2.5 py-1.5 rounded text-green-950">
-            <span>Words Left: <strong id="quizWordsLeftCount" class="font-semibold">0</strong></span>
+            <span>Remaining: <strong id="quizWordsLeftCount" class="font-semibold">0</strong></span>
           </div>
           <div class="flex items-center space-x-1 text-xs font-semibold bg-green-950/10 px-2.5 py-1.5 rounded text-green-950">
-            <span>Total Words: <strong id="quizTotalWordsCount" class="font-semibold">0</strong></span>
+            <span>All: <strong id="quizTotalWordsCount" class="font-semibold">0</strong></span>
           </div>
         </div>
-        <div class="flex items-center space-x-2">
+        <div class="flex items-center space-x-2 shrink-0">
           <button id="btnQuizIncorrect" onclick="toggleQuizIncorrectOnly()" class="cursor-pointer rounded border border-green-950 px-3 py-1.5 text-xs font-semibold hover:bg-green-950 hover:text-white transition flex items-center space-x-1">
             <i data-lucide="brain" class="w-3.5 h-3.5"></i>
-            <span>Quiz Incorrect Only</span>
+            <span>Redemption</span>
           </button>
           <button id="btnIncorrectList" onclick="openIncorrectModal()" class="cursor-pointer rounded border border-green-950 px-3 py-1.5 text-xs font-semibold hover:bg-green-950 hover:text-white transition flex items-center space-x-1">
             <i data-lucide="list-x" class="w-3.5 h-3.5"></i>
-            <span>Incorrect Words</span>
+            <span>Failures</span>
           </button>
           <button onclick="newQuizQuestion()" class="cursor-pointer rounded border border-green-950 px-3 py-1.5 text-xs font-semibold hover:bg-green-950 hover:text-white transition flex items-center space-x-1">
             <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
-            <span>Change Question</span>
+            <span>Reroll</span>
+          </button>
+          <button id="btnClockPause" onclick="toggleClockPause()" class="cursor-pointer rounded border border-green-950 px-3 py-1.5 text-xs font-semibold hover:bg-green-950 hover:text-white transition flex items-center space-x-1">
+            <span id="clockPauseIcon"><i data-lucide="pause" class="w-3.5 h-3.5"></i></span>
+            <span id="clockPauseText">Pause</span>
           </button>
         </div>
       </div>
@@ -191,8 +197,36 @@
     let isQuizIncorrectOnly = false;
     let quizTimer = null;
     let timerStep = null;
-    let stepTimeRemaining = 6000;
-    const timerLimit = 6000;
+    let stepTimeRemaining = 10000;
+    const timerLimit = 10000;
+    let isTimerPaused = false;
+    function toggleClockPause() {
+      isTimerPaused = !isTimerPaused;
+      updatePauseBtnUI();
+      if (isTimerPaused) {
+        if (quizTimer) {
+          clearInterval(quizTimer);
+          quizTimer = null;
+        }
+      } else {
+        if (timerStep && !isQuizAnswered && stepTimeRemaining > 0) {
+          resumeStepTimer();
+        }
+      }
+    }
+    function updatePauseBtnUI() {
+      const icon = document.getElementById('clockPauseIcon');
+      const text = document.getElementById('clockPauseText');
+      if (!icon || !text) return;
+      if (isTimerPaused) {
+        icon.innerHTML = '<i data-lucide="play" class="w-3.5 h-3.5"></i>';
+        text.innerText = 'Resume';
+      } else {
+        icon.innerHTML = '<i data-lucide="pause" class="w-3.5 h-3.5"></i>';
+        text.innerText = 'Pause';
+      }
+      if (window.lucide) lucide.createIcons();
+    }
     function clearQuizTimer() {
       if (quizTimer) {
         clearInterval(quizTimer);
@@ -200,22 +234,33 @@
       }
       timerStep = null;
     }
-    function startStepTimer(step) {
-      clearQuizTimer();
-      timerStep = step;
-      stepTimeRemaining = timerLimit;
-      updateTimerUI();
-      const startTime = Date.now();
-      const targetEndTime = startTime + timerLimit;
+    function resumeStepTimer() {
+      if (quizTimer) {
+        clearInterval(quizTimer);
+        quizTimer = null;
+      }
+      const targetEndTime = Date.now() + stepTimeRemaining;
       quizTimer = setInterval(() => {
         const now = Date.now();
         stepTimeRemaining = Math.max(0, targetEndTime - now);
         updateTimerUI();
         if (stepTimeRemaining <= 0) {
+          const step = timerStep;
           clearQuizTimer();
           handleQuizTimeout(step);
         }
       }, 50);
+    }
+    function startStepTimer(step) {
+      if (quizTimer) {
+        clearInterval(quizTimer);
+        quizTimer = null;
+      }
+      timerStep = step;
+      stepTimeRemaining = timerLimit;
+      updateTimerUI();
+      if (isTimerPaused) return;
+      resumeStepTimer();
     }
     function updateTimerUI() {
       const secondsStr = (stepTimeRemaining / 1000).toFixed(1) + 's';
