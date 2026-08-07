@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JLPT N5</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .font-normal {
+      font-weight: 400 !important;
+    }
+    .font-medium {
+      font-weight: 500 !important;
+    }
+    .font-semibold, .font-bold, h1, h2, h3, h4, h5, h6, b, strong {
+      font-weight: 600 !important;
+    }
+    button, [role="button"], a {
+      cursor: pointer !important;
+    }
+  </style>
+</head>
+<body class="bg-white text-green-950 font-sans antialiased min-h-screen flex flex-col selection:bg-green-950 selection:text-white">
+  <header class="sticky top-0 z-40 bg-green-950 text-white shadow-md border-b border-green-900">
+    <div class="w-full px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="bg-white text-green-950 p-2 rounded flex items-center justify-center font-semibold text-xl tracking-wider">漢字</div>
+        <div>
+          <h1 class="text-lg font-semibold tracking-tight">JLPT</h1>
+          <p class="text-xs text-green-200">VAK</p>
+        </div>
+      </div>
+      <nav class="flex items-center space-x-2">
+        <button id="tabLearn" onclick="switchMode('learn')" class="cursor-pointer rounded px-4 py-1.5 text-sm font-semibold transition flex items-center space-x-2 bg-white text-green-950 shadow-sm">
+          <i data-lucide="book-open" class="w-4 h-4"></i>
+          <span>Learn</span>
+        </button>
+        <button id="tabQuiz" onclick="switchMode('quiz')" class="cursor-pointer rounded px-4 py-1.5 text-sm font-semibold transition flex items-center space-x-2 text-green-100 hover:text-white hover:bg-green-800">
+          <i data-lucide="brain-circuit" class="w-4 h-4"></i>
+          <span>Quiz</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+  <main class="flex-1 w-full px-4 sm:px-6 lg:px-8 py-6">
+    <section id="modeLearn" class="space-y-6">
+      <div class="bg-white border border-green-950/20 p-4 rounded shadow-sm flex items-center justify-between">
+        <div class="relative w-full md:w-96">
+          <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-green-950/60"></i>
+          <input type="text" id="learnSearch" oninput="handleSearch()" placeholder="Search" class="w-full pl-9 pr-4 py-2 text-sm border border-green-950/30 rounded focus:outline-none focus:ring-1 focus:ring-green-950 focus:border-green-950">
+        </div>
+        <span id="learnCountText" class="text-xs text-green-950/70 font-semibold">Showing 0 Items</span>
+      </div>
+      <div id="kanjiGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-start"></div>
+      <div id="paginationContainer"></div>
+    </section>
+    <section id="modeQuiz" class="hidden space-y-6 max-w-4xl mx-auto">
+      <div class="bg-white border border-green-950/20 p-4 rounded shadow-sm flex flex-nowrap items-center justify-between gap-3 overflow-x-auto">
+        <div class="flex items-center space-x-2 shrink-0">
+          <div class="flex items-center space-x-1 text-xs font-semibold bg-green-950 text-white px-2.5 py-1.5 rounded">
+            <i data-lucide="check" class="w-3.5 h-3.5"></i>
+            <strong id="quizCorrectCount" class="font-semibold">0</strong>
+          </div>
+          <div class="flex items-center space-x-1 text-xs font-semibold bg-green-900 text-white px-2.5 py-1.5 rounded">
+            <i data-lucide="x" class="w-3.5 h-3.5"></i>
+            <strong id="quizIncorrectCount" class="font-semibold">0</strong>
+          </div>
+          <div class="flex items-center space-x-1 text-xs font-semibold bg-green-950/10 px-2.5 py-1.5 rounded text-green-950">
+            <span>Remaining: <strong id="quizWordsLeftCount" class="font-semibold">0</strong></span>
+          </div>
+          <div class="flex items-center space-x-1 text-xs font-semibold bg-green-950/10 px-2.5 py-1.5 rounded text-green-950">
+            <span>All: <strong id="quizTotalWordsCount" class="font-semibold">0</strong></span>
+          </div>
+        </div>
+        <div class="flex items-center space-x-2 shrink-0">
+          <button id="btnQuizIncorrect" onclick="toggleQuizIncorrectOnly()" class="cursor-pointer rounded border border-green-950 px-3 py-1.5 text-xs font-semibold hover:bg-green-950 hover:text-white transition flex items-center space-x-1">
+            <i data-lucide="brain" class="w-3.5 h-3.5"></i>
+            <span>Redemption</span>
+          </button>
+          <button id="btnIncorrectList" onclick="openIncorrectModal()" class="cursor-pointer rounded border border-green-950 px-3 py-1.5 text-xs font-semibold hover:bg-green-950 hover:text-white transition flex items-center space-x-1">
+            <i data-lucide="list-x" class="w-3.5 h-3.5"></i>
+            <span>Failures</span>
+          </button>
+          <button onclick="newQuizQuestion()" class="cursor-pointer rounded border border-green-950 px-3 py-1.5 text-xs font-semibold hover:bg-green-950 hover:text-white transition flex items-center space-x-1">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+            <span>Reroll</span>
+          </button>
+          <button id="btnClockPause" onclick="toggleClockPause()" class="cursor-pointer rounded border border-green-950 px-3 py-1.5 text-xs font-semibold hover:bg-green-950 hover:text-white transition flex items-center space-x-1">
+            <span id="clockPauseIcon"><i data-lucide="pause" class="w-3.5 h-3.5"></i></span>
+            <span id="clockPauseText">Pause</span>
+          </button>
+        </div>
+      </div>
+        <div id="quizActiveContainer" class="space-y-6">
+          <div class="bg-white border-2 border-green-950 p-6 rounded shadow-sm text-center py-8">
+            <h2 id="quizQuestionWord" class="text-6xl sm:text-7xl font-normal tracking-wide text-green-950 font-serif">---</h2>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div id="quizReadingBox" class="bg-white border border-green-950/20 p-5 rounded shadow-sm space-y-3">
+              <div class="border-b border-green-950/10 pb-2 space-y-1.5">
+                <div class="flex items-center justify-between">
+                  <h3 class="text-sm font-semibold text-green-950">Reading</h3>
+                  <span class="flex items-center space-x-1 text-xs font-semibold text-green-950"><i data-lucide="timer" class="w-3.5 h-3.5"></i><span id="readingTimerText">6.0s</span></span>
+                </div>
+                <div class="w-full bg-gray-100 h-1 rounded-full overflow-hidden">
+                  <div id="readingTimerBar" class="h-full bg-green-950 w-full transition-all duration-75"></div>
+                </div>
+              </div>
+              <div id="quizReadingOptions" class="grid grid-cols-1 gap-2.5"></div>
+            </div>
+            <div id="quizMeaningBox" class="bg-white border border-green-950/20 p-5 rounded shadow-sm space-y-3 hidden">
+              <div class="border-b border-green-950/10 pb-2 space-y-1.5">
+                <div class="flex items-center justify-between">
+                  <h3 class="text-sm font-semibold text-green-950">Meaning</h3>
+                  <span class="flex items-center space-x-1 text-xs font-semibold text-green-950"><i data-lucide="timer" class="w-3.5 h-3.5"></i><span id="meaningTimerText">6.0s</span></span>
+                </div>
+                <div class="w-full bg-gray-100 h-1 rounded-full overflow-hidden">
+                  <div id="meaningTimerBar" class="h-full bg-green-950 w-full transition-all duration-75"></div>
+                </div>
+              </div>
+              <div id="quizMeaningOptions" class="grid grid-cols-1 gap-2.5"></div>
+            </div>
+          </div>
+          <div class="flex flex-col items-center justify-center space-y-3 pt-2">
+            <button id="btnNext" onclick="handleQuizSubmit()" class="cursor-pointer rounded bg-green-950 text-white px-8 py-3.5 text-base font-semibold hover:bg-green-900 focus:outline-none transition flex items-center justify-center space-x-2 w-full sm:w-64 shadow-md">
+              <span>OK</span>
+              <i data-lucide="arrow-right" class="w-5 h-5"></i>
+            </button>
+            <div id="quizFeedbackMsg" class="hidden text-sm font-semibold text-center px-4 py-2 rounded w-full sm:w-96 border"></div>
+          </div>
+        </div>
+        <div id="quizCompletedContainer" class="hidden bg-white border-2 border-green-950 p-8 rounded shadow-sm text-center max-w-xl mx-auto space-y-6">
+          <h2 class="text-3xl font-semibold text-green-950 flex items-center justify-center space-x-2">
+            <i data-lucide="check-circle-2" class="w-8 h-8 text-green-950"></i>
+            <span>Done!</span>
+          </h2>
+          <p id="quizCompletedMsg" class="text-base text-green-950/80 font-normal">You Have Completed All Words In This Quiz!</p>
+          <div class="grid grid-cols-2 gap-3 py-2">
+            <div class="bg-green-950 text-white p-3 rounded">
+              <span class="text-xs text-green-200 block font-semibold">Correct</span>
+              <span id="quizDoneCorrect" class="text-xl font-semibold text-white">0</span>
+            </div>
+            <div class="bg-green-900 text-white p-3 rounded">
+              <span class="text-xs text-green-200 block font-semibold">Incorrect</span>
+              <span id="quizDoneIncorrect" class="text-xl font-semibold text-white">0</span>
+            </div>
+          </div>
+          <div class="flex justify-center pt-2">
+            <button id="btnRestartQuiz" onclick="restartQuiz()" class="cursor-pointer rounded bg-green-950 text-white px-8 py-3.5 text-base font-semibold hover:bg-green-900 transition flex items-center space-x-2 shadow-md">
+              <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
+              <span>OK</span>
+            </button>
+          </div>
+        </div>
+    </section>
+  </main>
+  <div id="incorrectModal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+    <div class="bg-white border-2 border-green-950 rounded p-6 max-w-lg w-full max-h-[80vh] flex flex-col space-y-4 shadow-xl">
+      <div class="flex items-center justify-between border-b border-green-950/10 pb-2">
+        <h3 class="text-base font-semibold text-green-950 flex items-center space-x-2">
+          <i data-lucide="alert-circle" class="w-4 h-4"></i>
+          <span>Incorrect Words List</span>
+        </h3>
+        <div class="flex items-center space-x-2">
+          <button onclick="downloadWrongFile()" class="cursor-pointer rounded border border-green-950 px-2.5 py-1 text-xs font-semibold hover:bg-green-950 hover:text-white transition flex items-center space-x-1">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+            <span>Download</span>
+          </button>
+          <button onclick="closeIncorrectModal()" class="cursor-pointer rounded p-1 text-green-950 hover:bg-green-950/10">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+      <div id="incorrectListContainer" class="flex-1 overflow-y-auto space-y-2 pr-1"></div>
+    </div>
+  </div>
+  <footer class="bg-green-950 text-white py-4 border-t border-green-900 mt-auto">
+    <div class="w-full text-center text-xs text-green-200">JLPT</div>
+  </footer>
+  <script>
+    const kanjiData = [{"kanji": "日", "sino": "Nhật", "meaning": "Mặt Trời, Ngày", "vocab": [{"word": "日曜日", "reading": "にちようび", "meaning": "Chủ Nhật"}, {"word": "～曜日", "reading": "～ようび", "meaning": "Thứ ～"}, {"word": "今日", "reading": "きょう", "meaning": "Hôm Nay"}, {"word": "毎日", "reading": "まいにち", "meaning": "Hàng Ngày"}, {"word": "日本", "reading": "にほん", "meaning": "Nhật Bản"}, {"word": "日本人", "reading": "にほんじん", "meaning": "Người Nhật"}, {"word": "日本語", "reading": "にほんご", "meaning": "Tiếng Nhật"}, {"word": "～日", "reading": "～にち", "meaning": "～ Ngày, Ngày Mùng ～"}, {"word": "日", "reading": "ひ", "meaning": "Ngày"}]}, {"kanji": "月", "sino": "Nguyệt", "meaning": "Mặt Trăng, Tháng", "vocab": [{"word": "月曜日", "reading": "げつようび", "meaning": "Thứ Hai"}, {"word": "～月", "reading": "～がつ", "meaning": "Tháng ～"}, {"word": "～か月", "reading": "～げつ", "meaning": "～ Tháng"}, {"word": "先月", "reading": "せんげつ", "meaning": "Tháng Trc"}, {"word": "今月", "reading": "こんげつ", "meaning": "Tháng Này"}, {"word": "来月", "reading": "らいげつ", "meaning": "Tháng Sau"}, {"word": "毎月", "reading": "まいつき", "meaning": "Hàng Tháng"}, {"word": "月", "reading": "つき", "meaning": "Mặt Trăng"}]}, {"kanji": "火", "sino": "Hỏa", "meaning": "Lửa", "vocab": [{"word": "火曜日", "reading": "かようび", "meaning": "Thứ Ba"}, {"word": "火", "reading": "ひ", "meaning": "Lửa"}, {"word": "火事", "reading": "かじ", "meaning": "Cháy, Hỏa Hoạn"}]}, {"kanji": "水", "sino": "Thủy", "meaning": "Nước", "vocab": [{"word": "水曜日", "reading": "すいようび", "meaning": "Thứ Tư"}, {"word": "水", "reading": "みず", "meaning": "Nước"}, {"word": "水道", "reading": "すいどう", "meaning": "Nước Máy"}]}, {"kanji": "木", "sino": "Mộc", "meaning": "Cây, Gỗ", "vocab": [{"word": "木曜日", "reading": "もくようび", "meaning": "Thứ Năm"}, {"word": "木", "reading": "き", "meaning": "Cây, Gỗ"}]}, {"kanji": "金", "sino": "Kim", "meaning": "Vàng, Tiền", "vocab": [{"word": "金曜日", "reading": "きんようび", "meaning": "Thứ Sáu"}, {"word": "お金", "reading": "おかね", "meaning": "Tiền"}, {"word": "金", "reading": "きん", "meaning": "Vàng"}]}, {"kanji": "土", "sino": "Thổ", "meaning": "Đất, Mặt Đất", "vocab": [{"word": "土曜日", "reading": "どようび", "meaning": "Thứ Bảy"}, {"word": "土", "reading": "つち", "meaning": "Đất"}, {"word": "土地", "reading": "とち", "meaning": "Đất, Mặt Đất"}]}, {"kanji": "山", "sino": "Sơn", "meaning": "Núi", "vocab": [{"word": "山", "reading": "やま", "meaning": "Núi"}, {"word": "山田", "reading": "やまだ", "meaning": "Tên Họ Người Nhật"}, {"word": "山川", "reading": "やまかわ", "meaning": "Tên Họ Người Nhật"}]}, {"kanji": "川", "sino": "Xuyên", "meaning": "Sông, Suối", "vocab": [{"word": "川", "reading": "かわ", "meaning": "Sông, Suối"}, {"word": "山川", "reading": "やまかわ", "meaning": "Tên Họ Người Nhật"}, {"word": "中川", "reading": "なかがわ", "meaning": "Tên Họ Người Nhật"}]}, {"kanji": "田", "sino": "Điền", "meaning": "Đồng, Ruộng", "vocab": [{"word": "田中", "reading": "たなか", "meaning": "Tên Họ Người Nhật"}, {"word": "山田", "reading": "やまだ", "meaning": "Tên Họ Người Nhật"}, {"word": "田", "reading": "た", "meaning": "Đồng, Ruộng"}]}, {"kanji": "一", "sino": "Nhất", "meaning": "Một", "vocab": [{"word": "一", "reading": "いち", "meaning": "Một"}, {"word": "一日", "reading": "いちにち", "meaning": "Một Ngày"}, {"word": "一日", "reading": "ついたち", "meaning": "Ngày Mùng Một"}, {"word": "一つ", "reading": "ひとつ", "meaning": "Một Cái"}, {"word": "一人", "reading": "ひとり", "meaning": "Một Người"}, {"word": "一度", "reading": "いちど", "meaning": "Một Lần"}, {"word": "一度も", "reading": "いちども", "meaning": "Chưa Một Lần, Chưa Bao Giờ"}]}, {"kanji": "二", "sino": "Nhị", "meaning": "Hai", "vocab": [{"word": "二", "reading": "に", "meaning": "Hai"}, {"word": "二日", "reading": "ふつか", "meaning": "Ngày Mùng Hai, Hai Ngày"}, {"word": "二十日", "reading": "はつか", "meaning": "Ngày 20, 20 Ngày"}, {"word": "二つ", "reading": "ふたつ", "meaning": "Hai Cái"}, {"word": "二人", "reading": "ふたり", "meaning": "Hai Người"}]}, {"kanji": "三", "sino": "Tam", "meaning": "Ba", "vocab": [{"word": "三", "reading": "さん", "meaning": "Ba"}, {"word": "三日", "reading": "みっか", "meaning": "Ngày Mùng Ba, Ba Ngày"}, {"word": "三つ", "reading": "みっつ", "meaning": "Ba Cái"}]}, {"kanji": "四", "sino": "Tứ", "meaning": "Bốn", "vocab": [{"word": "四", "reading": "し / よん", "meaning": "Bốn"}, {"word": "四日", "reading": "よっか", "meaning": "Ngày Mùng Bốn, Bốn Ngày"}, {"word": "四つ", "reading": "よっつ", "meaning": "Bốn Cái"}]}, {"kanji": "五", "sino": "Ngũ", "meaning": "Năm", "vocab": [{"word": "五", "reading": "ご", "meaning": "Năm"}, {"word": "五日", "reading": "いつか", "meaning": "Ngày Mùng Năm, Năm Ngày"}, {"word": "五つ", "reading": "いつつ", "meaning": "Năm Cái"}]}, {"kanji": "六", "sino": "Lục", "meaning": "Sáu", "vocab": [{"word": "六", "reading": "ろく", "meaning": "Sáu"}, {"word": "六日", "reading": "むいか", "meaning": "Ngày Mùng Sáu, Sáu Ngày"}, {"word": "六つ", "reading": "むっつ", "meaning": "Sáu Cái"}]}, {"kanji": "七", "sino": "Thất", "meaning": "Bảy", "vocab": [{"word": "七", "reading": "しち / なな", "meaning": "Bảy"}, {"word": "七日", "reading": "なのか", "meaning": "Ngày Mùng Bảy, Bảy Ngày"}, {"word": "七つ", "reading": "ななつ", "meaning": "Bảy Cái"}]}, {"kanji": "八", "sino": "Bát", "meaning": "Tám", "vocab": [{"word": "八", "reading": "はち", "meaning": "Tám"}, {"word": "八日", "reading": "ようか", "meaning": "Ngày Mùng Tám, Tám Ngày"}, {"word": "八つ", "reading": "やっつ", "meaning": "Tám Cái"}]}, {"kanji": "九", "sino": "Cửu", "meaning": "Chín", "vocab": [{"word": "九", "reading": "きゅう / く", "meaning": "Chín"}, {"word": "九日", "reading": "ここのか", "meaning": "Ngày Mùng Chín, Chín Ngày"}, {"word": "九つ", "reading": "ここのつ", "meaning": "Chín Cái"}]}, {"kanji": "十", "sino": "Thập", "meaning": "Mười", "vocab": [{"word": "十", "reading": "じゅう / とお", "meaning": "Mười"}, {"word": "十日", "reading": "とおか", "meaning": "Ngày Mùng Mười, Mười Ngày"}, {"word": "二十日", "reading": "はつか", "meaning": "Ngày Hai Mươi, Hai Mươi Ngày"}, {"word": "十", "reading": "とお", "meaning": "Mười Cái"}]}, {"kanji": "百", "sino": "Bách", "meaning": "Một Trăm", "vocab": [{"word": "百", "reading": "ひゃく", "meaning": "Một Trăm"}, {"word": "二百", "reading": "にひゃく", "meaning": "Hai Trăm"}, {"word": "三百", "reading": "さんびゃく", "meaning": "Ba Trăm"}, {"word": "四百", "reading": "よんひゃく", "meaning": "Bốn Trăm"}, {"word": "五百", "reading": "ごひゃく", "meaning": "Năm Trăm"}, {"word": "六百", "reading": "ろっぴゃく", "meaning": "Sáu Trăm"}, {"word": "七百", "reading": "ななひゃく", "meaning": "Bảy Trăm"}, {"word": "八百", "reading": "はっぴゃく", "meaning": "Tám Trăm"}, {"word": "九百", "reading": "きゅうひゃく", "meaning": "Chín Trăm"}]}, {"kanji": "千", "sino": "Thiên", "meaning": "Một Nghìn", "vocab": [{"word": "千", "reading": "せん", "meaning": "Một Nghìn"}, {"word": "二千", "reading": "にせん", "meaning": "Hai Nghìn"}, {"word": "三千", "reading": "さんぜん", "meaning": "Ba Nghìn"}, {"word": "四千", "reading": "よんせん", "meaning": "Bốn Nghìn"}, {"word": "五千", "reading": "ごせん", "meaning": "Năm Nghìn"}, {"word": "六千", "reading": "ろくせん", "meaning": "Sáu Nghìn"}, {"word": "七千", "reading": "ななせん", "meaning": "Bảy Nghìn"}, {"word": "八千", "reading": "はっせん", "meaning": "Tám Nghìn"}, {"word": "九千", "reading": "きゅうせん", "meaning": "Chín Nghìn"}]}, {"kanji": "万", "sino": "Vạn", "meaning": "10 Nghìn", "vocab": [{"word": "万", "reading": "まん", "meaning": "10 Nghìn"}, {"word": "一万", "reading": "いちまん", "meaning": "10 Nghìn"}, {"word": "一万円", "reading": "いちまんえん", "meaning": "10 Nghìn Yên"}, {"word": "十万円", "reading": "じゅうまんえん", "meaning": "100 Nghìn Yên"}, {"word": "百万円", "reading": "ひゃくまんえん", "meaning": "1 Triệu Yên"}]}, {"kanji": "円", "sino": "Viên", "meaning": "Vòng Tròn, Yên", "vocab": [{"word": "～円", "reading": "～えん", "meaning": "～ Yên"}, {"word": "円高", "reading": "えんだか", "meaning": "Đồng Yên Tăng Giá"}, {"word": "円安", "reading": "えんやす", "meaning": "Đồng Yên Giảm Giá"}]}, {"kanji": "学", "sino": "Học", "meaning": "Học Tập", "vocab": [{"word": "学生", "reading": "がくせい", "meaning": "Sinh Viên"}, {"word": "学校", "reading": "がっこう", "meaning": "Trường Học"}, {"word": "大学", "reading": "だいがく", "meaning": "Đại Học"}, {"word": "小学校", "reading": "しょうがっこう", "meaning": "Trường Tiểu Học"}, {"word": "中学校", "reading": "ちゅうがっこう", "meaning": "Trường THCS"}, {"word": "小学生", "reading": "しょうがくせい", "meaning": "Học Sinh Tiểu Học"}, {"word": "中学生", "reading": "ちゅうがくせい", "meaning": "Học Sinh THCS"}, {"word": "大学生", "reading": "だいがくせい", "meaning": "Sinh Viên Đại Học"}]}, {"kanji": "生", "sino": "Sinh", "meaning": "Sinh Sống, Sinh, Ra Đời, Tươi, Người Trong Trường Học", "vocab": [{"word": "学生", "reading": "がくせい", "meaning": "Sinh Viên"}, {"word": "小学生", "reading": "しょうがくせい", "meaning": "Học Sinh Tiểu Học"}, {"word": "中学生", "reading": "ちゅうがくせい", "meaning": "Học Sinh THCS"}, {"word": "高校生", "reading": "こうこうせい", "meaning": "Học Sinh THPT"}, {"word": "大学生", "reading": "だいがくせい", "meaning": "Sinh Viên Đại Học"}, {"word": "先生", "reading": "せんせい", "meaning": "Thầy Giáo, Cô Giáo"}, {"word": "生まれます", "reading": "うまれます", "meaning": "Được Sinh Ra"}, {"word": "生ビール", "reading": "なまビール", "meaning": "Bia Tươi"}, {"word": "生ジュース", "reading": "なまジュース", "meaning": "Nước Hoa Quả Tươi"}]}, {"kanji": "先", "sino": "Tiên", "meaning": "Trc", "vocab": [{"word": "先生", "reading": "せんせい", "meaning": "Thầy Giáo, Cô Giáo"}, {"word": "先週", "reading": "せんしゅう", "meaning": "Tuần Trc"}, {"word": "先月", "reading": "せんげつ", "meaning": "Tháng Trc"}]}, {"kanji": "会", "sino": "Hội", "meaning": "Họp, Gặp Gỡ", "vocab": [{"word": "会社", "reading": "かいしゃ", "meaning": "Công Ty"}, {"word": "会社員", "reading": "かいしゃいん", "meaning": "Nhân Viên Công Ty"}, {"word": "会います", "reading": "あいます", "meaning": "Gặp"}, {"word": "社会", "reading": "しゃかい", "meaning": "Xã Hội"}, {"word": "会話", "reading": "かいわ", "meaning": "Hội Thoại"}]}, {"kanji": "社", "sino": "Xã", "meaning": "Công Ty", "vocab": [{"word": "会社", "reading": "かいしゃ", "meaning": "Công Ty"}, {"word": "会社員", "reading": "かいしゃいん", "meaning": "Nhân Viên Công Ty"}, {"word": "社会", "reading": "しゃかい", "meaning": "Xã Hội"}, {"word": "社員", "reading": "しゃいん", "meaning": "Nhân Viên Của Công Ty ～"}, {"word": "本社", "reading": "ほんしゃ", "meaning": "Trụ Sở Chính"}]}, {"kanji": "員", "sino": "Viên", "meaning": "Thành Viên", "vocab": [{"word": "会社員", "reading": "かいしゃいん", "meaning": "Nhân Viên Công Ty"}, {"word": "銀行員", "reading": "ぎんこういん", "meaning": "Nhân Viên Ngân Hàng"}, {"word": "社員", "reading": "しゃいん", "meaning": "Nhân Viên Của Công Ty ～"}]}, {"kanji": "医", "sino": "Y", "meaning": "Y Tế", "vocab": [{"word": "医者", "reading": "いしゃ", "meaning": "Bác Sỹ"}]}, {"kanji": "者", "sino": "Giả", "meaning": "Người", "vocab": [{"word": "医者", "reading": "いしゃ", "meaning": "Bác Sỹ"}]}, {"kanji": "本", "sino": "Bản", "meaning": "Sách, Chính, Sự Thật, Đích Thực", "vocab": [{"word": "本", "reading": "ほん", "meaning": "Sách"}, {"word": "本屋", "reading": "ほんや", "meaning": "Cửa Hàng Sách"}, {"word": "日本", "reading": "にほん", "meaning": "Nhật Bản"}, {"word": "日本人", "reading": "にほんじん", "meaning": "Người Nhật"}, {"word": "日本語", "reading": "にほんご", "meaning": "Tiếng Nhật"}, {"word": "古本", "reading": "ふるほん", "meaning": "Sách Cũ"}, {"word": "本社", "reading": "ほんしゃ", "meaning": "Trụ Sở Chính"}]}, {"kanji": "中", "sino": "Trung", "meaning": "Trong, Bên Trong, Trung Tâm, Giữa Chừng", "vocab": [{"word": "中", "reading": "なか", "meaning": "Trong, Bên Trong"}, {"word": "田中", "reading": "たなか", "meaning": "Tên Họ Người Nhật"}, {"word": "中川", "reading": "なかがわ", "meaning": "Tên Họ Người Nhật"}, {"word": "中国", "reading": "ちゅうごく", "meaning": "Trung Quốc"}, {"word": "中国人", "reading": "ちゅうごくじん", "meaning": "Người Trung Quốc"}, {"word": "中国語", "reading": "ちゅうごくご", "meaning": "Tiếng Trung"}, {"word": "中学校", "reading": "ちゅうがっこう", "meaning": "Trường THCS"}, {"word": "中学生", "reading": "ちゅうがくせい", "meaning": "Học Sinh THCS"}, {"word": "中東", "reading": "ちゅうとう", "meaning": "Trung Đông"}, {"word": "一日中", "reading": "いちにちじゅう", "meaning": "Cả Ngày"}, {"word": "話し中", "reading": "はなしちゅう", "meaning": "Đang Nói Chuyện"}]}, {"kanji": "国", "sino": "Quốc", "meaning": "Đất Nước, Nhà Nước", "vocab": [{"word": "国", "reading": "くに", "meaning": "Đất Nước, Nhà Nước"}, {"word": "中国", "reading": "ちゅうごく", "meaning": "Trung Quốc"}, {"word": "中国人", "reading": "ちゅうごくじん", "meaning": "Người Trung Quốc"}, {"word": "中国語", "reading": "ちゅうごくご", "meaning": "Tiếng Trung"}, {"word": "外国", "reading": "がいこく", "meaning": "Nước Ngoài"}, {"word": "外国人", "reading": "がいこくじん", "meaning": "Người Nước Ngoài"}, {"word": "外国語", "reading": "がいこくご", "meaning": "Ngoại Ngữ"}, {"word": "国内の", "reading": "こくないの", "meaning": "Trong Nước, Nội Địa"}]}, {"kanji": "人", "sino": "Nhân", "meaning": "Con Người, Dân Tộc, Dân, Người", "vocab": [{"word": "日本人", "reading": "にほんじん", "meaning": "Người Nhật"}, {"word": "中国人", "reading": "ちゅうごくじん", "meaning": "Người Trung Quốc"}, {"word": "外国人", "reading": "がいこくじん", "meaning": "Người Nước Ngoài"}, {"word": "～人", "reading": "～じん", "meaning": "Người ～"}, {"word": "人", "reading": "ひと", "meaning": "Người, Con Người"}, {"word": "男の人", "reading": "おとこのひと", "meaning": "Người Đàn Ông"}, {"word": "女の人", "reading": "おんなのひと", "meaning": "Người Đàn Bà"}, {"word": "あの人", "reading": "あのひと", "meaning": "Người Kia"}, {"word": "主人", "reading": "しゅじん", "meaning": "Chồng"}, {"word": "ご主人", "reading": "ごしゅじん", "meaning": "Chồng"}, {"word": "一人", "reading": "ひとり", "meaning": "Một Người"}, {"word": "二人", "reading": "ふたり", "meaning": "Hai Người"}, {"word": "～人", "reading": "～にん", "meaning": "～ Người"}, {"word": "大人", "reading": "おとな", "meaning": "Người Lớn"}]}, {"kanji": "今", "sino": "Kim", "meaning": "Bây Giờ, Hiện Nay, Hiện Tại", "vocab": [{"word": "今", "reading": "いま", "meaning": "Bây Giờ, Hiện Nay, Hiện Tại"}, {"word": "今日", "reading": "きょう", "meaning": "Hôm Nay"}, {"word": "今朝", "reading": "けさ", "meaning": "Sáng Nay"}, {"word": "今晩", "reading": "こんばん", "meaning": "Tối Nay"}, {"word": "今週", "reading": "こんしゅう", "meaning": "Tuần Này"}, {"word": "今月", "reading": "こんげつ", "meaning": "Tháng Này"}, {"word": "今年", "reading": "ことし", "meaning": "Năm Nay"}]}, {"kanji": "朝", "sino": "Triều", "meaning": "Buổi Sáng", "vocab": [{"word": "朝", "reading": "あさ", "meaning": "Buổi Sáng"}, {"word": "朝ごはん", "reading": "あさごはん", "meaning": "Cơm Sáng"}, {"word": "毎朝", "reading": "まいあさ", "meaning": "Hàng Sáng"}, {"word": "今朝", "reading": "けさ", "meaning": "Sáng Nay"}]}, {"kanji": "昼", "sino": "Trú", "meaning": "Buổi Trưa, Ban Ngày", "vocab": [{"word": "昼", "reading": "ひる", "meaning": "Buổi Trưa"}, {"word": "昼ごはん", "reading": "ひるごはん", "meaning": "Cơm Trưa"}, {"word": "昼休み", "reading": "ひるやすみ", "meaning": "Nghỉ Trưa"}]}, {"kanji": "晩", "sino": "Vãn", "meaning": "Buổi Tối, Đêm", "vocab": [{"word": "晩", "reading": "ばん", "meaning": "Buổi Tối, Đêm"}, {"word": "晩ごはん", "reading": "ばんごはん", "meaning": "Cơm Tối"}, {"word": "今晩", "reading": "こんばん", "meaning": "Tối Nay, Đêm Nay"}, {"word": "毎晩", "reading": "まいばん", "meaning": "Hàng Tối, Hàng Đêm"}]}, {"kanji": "時", "sino": "Thời", "meaning": "Thời Gian", "vocab": [{"word": "～時", "reading": "～じ", "meaning": "～ Giờ"}, {"word": "～時半", "reading": "～じはん", "meaning": "～ Giờ Rưỡi"}, {"word": "～時間", "reading": "～じかん", "meaning": "～ Tiếng"}, {"word": "～時間半", "reading": "～じかんはん", "meaning": "～ Tiếng Rưỡi"}, {"word": "時間", "reading": "じかん", "meaning": "Thời Gian"}, {"word": "時計", "reading": "とけい", "meaning": "Đồng Hồ"}, {"word": "時々", "reading": "ときどき", "meaning": "Thỉnh Thoảng"}, {"word": "～の時", "reading": "～のとき", "meaning": "Khi ～"}]}, {"kanji": "分", "sino": "Phân", "meaning": "Phút, Phân Chia, Bị Phân Chia, Phần", "vocab": [{"word": "～分", "reading": "～ふん / ぷん", "meaning": "～ Phút"}, {"word": "自分で", "reading": "じぶんで", "meaning": "Tự Mình"}, {"word": "半分", "reading": "はんぶん", "meaning": "Một Nửa"}]}, {"kanji": "半", "sino": "Bán", "meaning": "Một Nửa", "vocab": [{"word": "～時半", "reading": "～じはん", "meaning": "～ Giờ Rưỡi"}, {"word": "～時間半", "reading": "～じかんはん", "meaning": "～ Tiếng Rưỡi"}, {"word": "半分", "reading": "はんぶん", "meaning": "Một Nửa"}]}, {"kanji": "午", "sino": "Ngọ", "meaning": "Trưa", "vocab": [{"word": "午前", "reading": "ごぜん", "meaning": "Buổi Sáng"}, {"word": "午後", "reading": "ごご", "meaning": "Buổi Chiều"}]}, {"kanji": "前", "sino": "Tiền", "meaning": "Phía Trc, Mặt Trc, Trc, Trc Khi", "vocab": [{"word": "前", "reading": "まえ", "meaning": "Phía Trc, Mặt Trc"}, {"word": "午前", "reading": "ごぜん", "meaning": "Buổi Sáng"}, {"word": "名前", "reading": "なまえ", "meaning": "Tên"}, {"word": "～前", "reading": "～まえ", "meaning": "Trc Khi"}, {"word": "駅前", "reading": "えきまえ", "meaning": "Trc Nhà Ga"}]}, {"kanji": "後", "sino": "Hậu", "meaning": "Đằng Sau, Phía Sau, Sau, Sau Khi", "vocab": [{"word": "後ろ", "reading": "うしろ", "meaning": "Đằng Sau, Phía Sau"}, {"word": "午後", "reading": "ごご", "meaning": "Buổi Chiều"}]}, {"kanji": "休", "sino": "Hưu", "meaning": "Nghỉ Ngơi, Giải Lao, Nghỉ", "vocab": [{"word": "休み", "reading": "やすみ", "meaning": "Nghỉ Ngơi, Giải Lao, Ngày Nghỉ"}, {"word": "昼休み", "reading": "ひるやすみ", "meaning": "Nghỉ Trưa"}, {"word": "春休み", "reading": "はるやすみ", "meaning": "Kỳ Nghỉ Xuân"}, {"word": "夏休み", "reading": "なつやすみ", "meaning": "Kỳ Nghỉ Hè"}, {"word": "冬休み", "reading": "ふゆやすみ", "meaning": "Kỳ Nghỉ Đông"}, {"word": "～休み", "reading": "～やすみ", "meaning": "Nghỉ ～, Kỳ Nghỉ ～"}, {"word": "休みます", "reading": "やすみます", "meaning": "Nghỉ Ngơi"}]}, {"kanji": "毎", "sino": "Mỗi", "meaning": "Hàng, Mỗi", "vocab": [{"word": "毎日", "reading": "まいにち", "meaning": "Hàng Ngày"}, {"word": "毎週", "reading": "まいしゅう", "meaning": "Hàng Tuần"}, {"word": "毎月", "reading": "まいつき", "meaning": "Hàng Tháng"}, {"word": "毎年", "reading": "まいとし / まいねん", "meaning": "Hàng Năm"}, {"word": "毎朝", "reading": "まいあさ", "meaning": "Hàng Sáng"}, {"word": "毎晩", "reading": "まいばん", "meaning": "Hàng Tối"}]}, {"kanji": "何", "sino": "Hà", "meaning": "Cái Gì, Gì, Mấy, Bao Nhiêu", "vocab": [{"word": "何", "reading": "なに / なん", "meaning": "Cái Gì"}, {"word": "何～", "reading": "なん～", "meaning": "Mấy ～"}]}, {"kanji": "行", "sino": "Hành", "meaning": "Đi", "vocab": [{"word": "行きます", "reading": "いきます", "meaning": "Đi"}, {"word": "銀行", "reading": "ぎんこう", "meaning": "Ngân Hàng"}, {"word": "銀行員", "reading": "ぎんこういん", "meaning": "Nhân Viên Ngân Hàng"}, {"word": "旅行", "reading": "りょこう", "meaning": "Du Lịch"}, {"word": "旅行します", "reading": "りょこうします", "meaning": "Đi Du Lịch"}]}, {"kanji": "来", "sino": "Lai", "meaning": "Đến, Tới", "vocab": [{"word": "来ます", "reading": "きます", "meaning": "Đến"}, {"word": "来週", "reading": "らいしゅう", "meaning": "Tuần Tới"}, {"word": "来月", "reading": "らいげつ", "meaning": "Tháng Tới"}, {"word": "来年", "reading": "らいねん", "meaning": "Năm Tới"}, {"word": "外来語", "reading": "がいらいご", "meaning": "Từ Ngoại Lai"}]}, {"kanji": "校", "sino": "Hiệu", "meaning": "Trường Học", "vocab": [{"word": "学校", "reading": "がっこう", "meaning": "Trường Học"}, {"word": "小学校", "reading": "しょうがっこう", "meaning": "Trường Tiểu Học"}, {"word": "中学校", "reading": "ちゅうがっこう", "meaning": "Trường THCS"}, {"word": "高校", "reading": "こうこう", "meaning": "Trường THPT"}, {"word": "高校生", "reading": "こうこうせい", "meaning": "Học Sinh THPT"}]}, {"kanji": "週", "sino": "Chu", "meaning": "Tuần", "vocab": [{"word": "先週", "reading": "せんしゅう", "meaning": "Tuần Trc"}, {"word": "今週", "reading": "こんしゅう", "meaning": "Tuần Này"}, {"word": "来週", "reading": "らいしゅう", "meaning": "Tuần Tới"}, {"word": "毎週", "reading": "まいしゅう", "meaning": "Hàng Tuần"}, {"word": "～週間", "reading": "～しゅうかん", "meaning": "～ Tuần"}]}, {"kanji": "去", "sino": "Khứ", "meaning": "Rời Khỏi, Đã Qua", "vocab": [{"word": "去年", "reading": "きょねん", "meaning": "Năm Ngoái"}]}, {"kanji": "年", "sino": "Niên", "meaning": "Năm", "vocab": [{"word": "去年", "reading": "きょねん", "meaning": "Năm Ngoái"}, {"word": "今年", "reading": "ことし", "meaning": "Năm Nay"}, {"word": "来年", "reading": "らいねん", "meaning": "Năm Tới"}, {"word": "毎年", "reading": "まいとし / まいねん", "meaning": "Hàng Năm"}, {"word": "～年", "reading": "～ねん", "meaning": "～ Năm"}, {"word": "～年前", "reading": "～ねんまえ", "meaning": "～ Năm Về Trc"}]}, {"kanji": "駅", "sino": "Dịch", "meaning": "Ga", "vocab": [{"word": "駅", "reading": "えき", "meaning": "Ga"}, {"word": "～駅", "reading": "～えき", "meaning": "Ga ～"}, {"word": "駅前", "reading": "えきまえ", "meaning": "Trc Nhà Ga"}]}, {"kanji": "電", "sino": "Điện", "meaning": "Điện", "vocab": [{"word": "電車", "reading": "でんしゃ", "meaning": "Tàu Điện"}, {"word": "電気", "reading": "でんき", "meaning": "Điện"}, {"word": "電話", "reading": "でんわ", "meaning": "Điện Thoại"}, {"word": "電話します", "reading": "でんわします", "meaning": "Gọi Điện"}]}, {"kanji": "車", "sino": "Xa", "meaning": "Xe", "vocab": [{"word": "車", "reading": "くるま", "meaning": "Xe, Xe Ô Tô"}, {"word": "電車", "reading": "でんしゃ", "meaning": "Tàu Điện"}, {"word": "自転車", "reading": "じてんしゃ", "meaning": "Xe Đạp"}, {"word": "自動車", "reading": "じどうしゃ", "meaning": "Xe Ô Tô"}]}, {"kanji": "自", "sino": "Tự", "meaning": "Tự Bản Thân, Tự Động", "vocab": [{"word": "自転車", "reading": "じてんしゃ", "meaning": "Xe Đạp"}, {"word": "自動車", "reading": "じどうしゃ", "meaning": "Xe Ô Tô"}, {"word": "自分で", "reading": "じぶんで", "meaning": "Tự Mình"}]}, {"kanji": "転", "sino": "Chuyển", "meaning": "Chuyển Động Quay", "vocab": [{"word": "自転車", "reading": "じてんしゃ", "meaning": "Xe Đạp"}, {"word": "運転", "reading": "うんてん", "meaning": "Lái Xe"}, {"word": "運転します", "reading": "うんてんします", "meaning": "Lái Xe"}]}, {"kanji": "高", "sino": "Cao", "meaning": "Cao, Đắt, Nâng Cao, Tăng", "vocab": [{"word": "高い", "reading": "たかい", "meaning": "Cao"}, {"word": "高い", "reading": "たかい", "meaning": "Đắt"}, {"word": "高校", "reading": "こうこう", "meaning": "Trường THPT"}, {"word": "高校生", "reading": "こうこうせい", "meaning": "Học Sinh THPT"}, {"word": "円高", "reading": "えんだか", "meaning": "Đồng Yên Tăng Giá"}]}, {"kanji": "安", "sino": "An", "meaning": "Rẻ, Bình Yên", "vocab": [{"word": "安い", "reading": "やすい", "meaning": "Rẻ"}, {"word": "円安", "reading": "えんやす", "meaning": "Đồng Yên Giảm Giá"}]}, {"kanji": "大", "sino": "Đại", "meaning": "To Lớn, Rộng Lớn, Rất", "vocab": [{"word": "大きい", "reading": "おおきい", "meaning": "To, Lớn"}, {"word": "大学", "reading": "だいがく", "meaning": "Đại Học"}, {"word": "大学生", "reading": "だいがくせい", "meaning": "Sinh Viên Đại Học"}, {"word": "大使館", "reading": "たいしかん", "meaning": "Đại Sứ Quán"}, {"word": "大人", "reading": "おとな", "meaning": "Người Lớn"}, {"word": "大好きな", "reading": "だいすきな", "meaning": "Rất Thích"}, {"word": "大切な", "reading": "たいせつな", "meaning": "Quan Trọng"}, {"word": "大雨", "reading": "おおあめ", "meaning": "Mưa To"}]}, {"kanji": "小", "sino": "Tiểu", "meaning": "Nhỏ, Bé", "vocab": [{"word": "小さい", "reading": "ちいさい", "meaning": "Nhỏ, Bé"}, {"word": "小学校", "reading": "しょうがっこう", "meaning": "Trường Tiểu Học"}, {"word": "小学生", "reading": "しょうがくせい", "meaning": "Học Sinh Tiểu Học"}]}, {"kanji": "新", "sino": "Tân", "meaning": "Mới", "vocab": [{"word": "新しい", "reading": "あたらしい", "meaning": "Mới"}, {"word": "新聞", "reading": "しんぶん", "meaning": "Báo"}]}, {"kanji": "古", "sino": "Cổ", "meaning": "Cũ", "vocab": [{"word": "古い", "reading": "ふるい", "meaning": "Cũ"}, {"word": "古本", "reading": "ふるほん", "meaning": "Sách Cũ"}]}, {"kanji": "青", "sino": "Thanh", "meaning": "Màu Xanh", "vocab": [{"word": "青い", "reading": "あおい", "meaning": "Xanh"}, {"word": "青", "reading": "あお", "meaning": "Màu Xanh"}]}, {"kanji": "白", "sino": "Bạch", "meaning": "Màu Trắng", "vocab": [{"word": "白い", "reading": "しろい", "meaning": "Trắng"}, {"word": "白", "reading": "しろ", "meaning": "Màu Trắng"}]}, {"kanji": "赤", "sino": "Xích", "meaning": "Màu Đỏ", "vocab": [{"word": "赤い", "reading": "あかい", "meaning": "Đỏ"}, {"word": "赤", "reading": "あか", "meaning": "Màu Đỏ"}]}, {"kanji": "黒", "sino": "Hắc", "meaning": "Màu Đen", "vocab": [{"word": "黒い", "reading": "くろい", "meaning": "Đen"}, {"word": "黒", "reading": "くろ", "meaning": "Màu Đen"}]}, {"kanji": "上", "sino": "Thượng", "meaning": "Trên, Bên Trên, Tăng Lên", "vocab": [{"word": "上", "reading": "うえ", "meaning": "Trên, Bên Trên"}, {"word": "上手な", "reading": "じょうずな", "meaning": "Giỏi"}, {"word": "上着", "reading": "うわぎ", "meaning": "Áo Khoác"}]}, {"kanji": "下", "sino": "Hạ", "meaning": "Dưới, Bên Dưới, Hạ Xuống, Hạ Thấp", "vocab": [{"word": "下", "reading": "した", "meaning": "Dưới, Bên Dưới"}, {"word": "下手な", "reading": "へたな", "meaning": "Kém"}, {"word": "地下鉄", "reading": "ちかてつ", "meaning": "Tàu Điện Ngầm"}, {"word": "下ろします", "reading": "おろします", "meaning": "Hạ Xuống, Dỡ Xuống"}, {"word": "下着", "reading": "したぎ", "meaning": "Đồ Lót"}, {"word": "地下", "reading": "ちか", "meaning": "Ngầm, Hầm"}, {"word": "地下室", "reading": "ちかしつ", "meaning": "Phòng Hầm"}]}, {"kanji": "父", "sino": "Phụ", "meaning": "Bố", "vocab": [{"word": "父", "reading": "ちち", "meaning": "Bố"}, {"word": "お父さん", "reading": "おとうさん", "meaning": "Bố"}]}, {"kanji": "母", "sino": "Mẫu", "meaning": "Mẹ", "vocab": [{"word": "母", "reading": "はは", "meaning": "Mẹ"}, {"word": "お母さん", "reading": "おかあさん", "meaning": "Mẹ"}]}, {"kanji": "子", "sino": "Tử", "meaning": "Con", "vocab": [{"word": "子ども", "reading": "こども", "meaning": "Trẻ Con"}, {"word": "男の子", "reading": "おとこのこ", "meaning": "Bé Trai"}, {"word": "女の子", "reading": "おんなのこ", "meaning": "Bé Gái"}]}, {"kanji": "手", "sino": "Thủ", "meaning": "Tay, Bàn Tay, Cánh Tay", "vocab": [{"word": "手", "reading": "て", "meaning": "Tay, Bàn Tay, Cánh Tay"}, {"word": "手紙", "reading": "てがみ", "meaning": "Thư"}, {"word": "切手", "reading": "きって", "meaning": "Tem"}, {"word": "上手な", "reading": "じょうずな", "meaning": "Giỏi"}, {"word": "下手な", "reading": "へたな", "meaning": "Kém"}, {"word": "右手", "reading": "みぎて", "meaning": "Tay Phải"}, {"word": "左手", "reading": "ひだりて", "meaning": "Tay Trái"}]}, {"kanji": "好", "sino": "Hảo", "meaning": "Thích, Ưa Thích", "vocab": [{"word": "好きな", "reading": "すきな", "meaning": "Thích, Yêu"}, {"word": "大好きな", "reading": "だいすきな", "meaning": "Rất Thích, Ưa Thích"}]}, {"kanji": "主", "sino": "Chủ", "meaning": "Chính, Người Chủ", "vocab": [{"word": "主人", "reading": "しゅじん", "meaning": "Chồng"}, {"word": "ご主人", "reading": "ごしゅじん", "meaning": "Chồng"}]}, {"kanji": "肉", "sino": "Nhục", "meaning": "Thịt", "vocab": [{"word": "肉", "reading": "にく", "meaning": "Thịt"}]}, {"kanji": "魚", "sino": "Ngư", "meaning": "Cá", "vocab": [{"word": "魚", "reading": "さかな", "meaning": "Cá"}]}, {"kanji": "食", "sino": "Thực", "meaning": "Ăn", "vocab": [{"word": "食べます", "reading": "たべます", "meaning": "Ăn"}, {"word": "食べ物", "reading": "たべもの", "meaning": "Đồ Ăn"}, {"word": "食堂", "reading": "しょくどう", "meaning": "Nhà Ăn"}, {"word": "食事", "reading": "しょくじ", "meaning": "Bữa Ăn"}]}, {"kanji": "飲", "sino": "Ẩm", "meaning": "Uống", "vocab": [{"word": "飲みます", "reading": "のみます", "meaning": "Uống"}, {"word": "飲み物", "reading": "のみもの", "meaning": "Đồ Uống"}]}, {"kanji": "物", "sino": "Vật", "meaning": "Đồ Vật", "vocab": [{"word": "物", "reading": "もの", "meaning": "Đồ Vật"}, {"word": "食べ物", "reading": "たべもの", "meaning": "Đồ Ăn"}, {"word": "飲み物", "reading": "のみもの", "meaning": "Đồ Uống"}, {"word": "建物", "reading": "たてもの", "meaning": "Tòa Nhà"}, {"word": "着物", "reading": "きもの", "meaning": "Kimono"}, {"word": "買い物", "reading": "かいもの", "meaning": "Mua Sắm"}, {"word": "買い物します", "reading": "かいものします", "meaning": "Đi Mua Sắm"}, {"word": "動物", "reading": "どうぶつ", "meaning": "Động Vật"}]}, {"kanji": "近", "sino": "Cận", "meaning": "Gần, Gần Kề, Lân Cận, Gần Gũi", "vocab": [{"word": "近く", "reading": "ちかく", "meaning": "Gần Kề, Lân Cận"}, {"word": "近くの～", "reading": "ちかくの", "meaning": "Gần ～"}, {"word": "近い", "reading": "ちかい", "meaning": "Gần"}, {"word": "近道", "reading": "ちかみち", "meaning": "Đường Tắt"}]}, {"kanji": "間", "sino": "Gian", "meaning": "Không Gian, Khoảng Thời Gian, Giữa", "vocab": [{"word": "間", "reading": "あいだ", "meaning": "Khoảng Thời Gian, Giữa"}, {"word": "時間", "reading": "じかん", "meaning": "Thời Gian"}, {"word": "～時間", "reading": "～じかん", "meaning": "～ Tiếng"}, {"word": "～時間半", "reading": "～じかんはん", "meaning": "～ Tiếng Rưỡi"}, {"word": "～週間", "reading": "～しゅうかん", "meaning": "～ Tuần"}]}, {"kanji": "右", "sino": "Hữu", "meaning": "Phải", "vocab": [{"word": "右", "reading": "みぎ", "meaning": "Phải, Phía Tay Phải"}, {"word": "右手", "reading": "みぎて", "meaning": "Tay Phải"}, {"word": "右足", "reading": "みぎあし", "meaning": "Chân Phải"}]}, {"kanji": "左", "sino": "Tả", "meaning": "Trái", "vocab": [{"word": "左", "reading": "ひだり", "meaning": "Trái, Phía Tay Trái"}, {"word": "左手", "reading": "ひだりて", "meaning": "Tay Trái"}, {"word": "左足", "reading": "ひだりあし", "meaning": "Chân Trái"}]}, {"kanji": "外", "sino": "Ngoại", "meaning": "Bên Ngoài, Khác, Nước Ngoài", "vocab": [{"word": "外", "reading": "そと", "meaning": "Bên Ngoài"}, {"word": "外国", "reading": "がいこく", "meaning": "Nước Ngoài"}, {"word": "外国人", "reading": "がいこくじん", "meaning": "Người Nước Ngoài"}, {"word": "外国語", "reading": "がいこくご", "meaning": "Ngoại Ngữ"}, {"word": "外来語", "reading": "がいらいご", "meaning": "Từ Ngoại Lai"}]}, {"kanji": "男", "sino": "Nam", "meaning": "Nam Giới, Con Trai, Đàn Ông", "vocab": [{"word": "男の人", "reading": "おとこのひと", "meaning": "Người Con Trai"}, {"word": "男の子", "reading": "おとこのこ", "meaning": "Bé Trai"}]}, {"kanji": "女", "sino": "Nữ", "meaning": "Nữ Giới, Con Gái, Đàn Bà", "vocab": [{"word": "女の人", "reading": "おんなのひと", "meaning": "Người Con Gái"}, {"word": "女の子", "reading": "おんなのこ", "meaning": "Bé Gái"}]}, {"kanji": "犬", "sino": "Khuyển", "meaning": "Con Chó", "vocab": [{"word": "犬", "reading": "いぬ", "meaning": "Con Chó"}]}, {"kanji": "書", "sino": "Thư", "meaning": "Viết, Sự Viết, Sách", "vocab": [{"word": "書きます", "reading": "かきます", "meaning": "Viết"}, {"word": "書き方", "reading": "かきかた", "meaning": "Cách Viết"}, {"word": "図書館", "reading": "としょかん", "meaning": "Thư Viện"}]}, {"kanji": "聞", "sino": "Văn", "meaning": "Nghe, Hỏi", "vocab": [{"word": "聞きます", "reading": "ききます", "meaning": "Nghe, Hỏi"}, {"word": "新聞", "reading": "しんぶん", "meaning": "Báo"}, {"word": "聞こえます", "reading": "きこえます", "meaning": "Nghe Thấy"}]}, {"kanji": "読", "sino": "Độc", "meaning": "Đọc", "vocab": [{"word": "読みます", "reading": "よみます", "meaning": "Đọc"}, {"word": "読み方", "reading": "よみかた", "meaning": "Cách Đọc"}]}, {"kanji": "見", "sino": "Kiến", "meaning": "Nhìn, Xem", "vocab": [{"word": "見ます", "reading": "みます", "meaning": "Nhìn, Xem"}, {"word": "見せます", "reading": "みせます", "meaning": "Cho Xem"}, {"word": "見えます", "reading": "みえます", "meaning": "Nhìn Thấy"}, {"word": "意見", "reading": "いけん", "meaning": "Ý Kiến"}]}, {"kanji": "話", "sino": "Thoại", "meaning": "Nói Chuyện", "vocab": [{"word": "話します", "reading": "はなします", "meaning": "Nói Chuyện"}, {"word": "話", "reading": "はなし", "meaning": "Câu Chuyện"}, {"word": "電話", "reading": "でんわ", "meaning": "Điện Thoại"}, {"word": "電話します", "reading": "でんわします", "meaning": "Gọi Điện Thoại"}, {"word": "会話", "reading": "かいわ", "meaning": "Hội Thoại"}, {"word": "話し中", "reading": "はなしちゅう", "meaning": "Đang Nói Chuyện"}]}, {"kanji": "買", "sino": "Mãi", "meaning": "Mua", "vocab": [{"word": "買います", "reading": "かいます", "meaning": "Mua"}, {"word": "買い物", "reading": "かいもの", "meaning": "Mua Sắm"}, {"word": "買い物します", "reading": "かいものします", "meaning": "Đi Mua Sắm"}]}, {"kanji": "起", "sino": "Khởi", "meaning": "Thức Dậy, Xảy Ra, Đánh Thức, Gây Ra", "vocab": [{"word": "起きます", "reading": "おきます", "meaning": "Thức Dậy, Xảy Ra"}]}, {"kanji": "帰", "sino": "Quy", "meaning": "Về", "vocab": [{"word": "帰ります", "reading": "かえります", "meaning": "Về"}, {"word": "帰国します", "reading": "きこくします", "meaning": "Về Nước"}]}, {"kanji": "友", "sino": "Hữu", "meaning": "Bạn", "vocab": [{"word": "友達", "reading": "ともだち", "meaning": "Bạn"}]}, {"kanji": "達", "sino": "Đạt", "meaning": "Hậu Tố Chỉ Số Nhiều, Bạn", "vocab": [{"word": "友達", "reading": "ともだち", "meaning": "Bạn"}]}, {"kanji": "茶", "sino": "Trà", "meaning": "Trà", "vocab": [{"word": "お茶", "reading": "おちゃ", "meaning": "Trà"}, {"word": "紅茶", "reading": "こうちゃ", "meaning": "Trà Lip-Ton"}, {"word": "喫茶店", "reading": "きっさてん", "meaning": "Quán Giải Khát"}]}, {"kanji": "酒", "sino": "Tửu", "meaning": "Rượu", "vocab": [{"word": "お酒", "reading": "おさけ", "meaning": "Rượu"}]}, {"kanji": "写", "sino": "Tả", "meaning": "Sao Chép, Chụp Ảnh", "vocab": [{"word": "写真", "reading": "しゃしん", "meaning": "Ảnh Chụp"}]}, {"kanji": "真", "sino": "Chân", "meaning": "Sự Thực", "vocab": [{"word": "写真", "reading": "しゃしん", "meaning": "Ảnh Chụp"}]}, {"kanji": "紙", "sino": "Chỉ", "meaning": "Giấy", "vocab": [{"word": "紙", "reading": "かみ", "meaning": "Giấy"}, {"word": "手紙", "reading": "てがみ", "meaning": "Thư"}]}, {"kanji": "映", "sino": "Ánh", "meaning": "Chiếu, Phản Chiếu", "vocab": [{"word": "映画", "reading": "えいが", "meaning": "Phim"}, {"word": "映画館", "reading": "えいがかん", "meaning": "Rạp Chiếu Phim"}]}, {"kanji": "画", "sino": "Họa, Hoạch", "meaning": "Hình Vẽ, Tranh Vẽ, Nét", "vocab": [{"word": "映画", "reading": "えいが", "meaning": "Phim"}, {"word": "映画館", "reading": "えいがかん", "meaning": "Rạp Chiếu Phim"}, {"word": "画家", "reading": "がか", "meaning": "Họa Sỹ"}]}, {"kanji": "店", "sino": "Điếm", "meaning": "Cửa Hàng", "vocab": [{"word": "店", "reading": "みせ", "meaning": "Cửa Hàng"}, {"word": "売店", "reading": "ばいてん", "meaning": "Ki-Ốt"}, {"word": "喫茶店", "reading": "きっさてん", "meaning": "Quán Giải Khát"}]}, {"kanji": "英", "sino": "Anh", "meaning": "Nước Anh, Tiếng Anh, Tài Năng", "vocab": [{"word": "英語", "reading": "えいご", "meaning": "Tiếng Anh"}]}, {"kanji": "語", "sino": "Ngữ", "meaning": "Ngôn Ngữ, Kể Chuyện", "vocab": [{"word": "英語", "reading": "えいご", "meaning": "Tiếng Anh"}, {"word": "日本語", "reading": "にほんご", "meaning": "Tiếng Nhật"}, {"word": "中国語", "reading": "ちゅうごくご", "meaning": "Tiếng Trung"}, {"word": "外国語", "reading": "がいこくご", "meaning": "Ngoại Ngữ"}, {"word": "～語", "reading": "～ご", "meaning": "Tiếng ～"}, {"word": "外来語", "reading": "がいらいご", "meaning": "Từ Ngoại Lai"}]}, {"kanji": "送", "sino": "Tống", "meaning": "Gửi, Tiễn", "vocab": [{"word": "送ります", "reading": "おくります", "meaning": "Gửi, Tiễn"}]}, {"kanji": "切", "sino": "Thiết", "meaning": "Cắt", "vocab": [{"word": "切ります", "reading": "きります", "meaning": "Cắt"}, {"word": "切手", "reading": "きって", "meaning": "Tem"}, {"word": "親切な", "reading": "しんせつな", "meaning": "Thân Thiện, Tử Tế"}, {"word": "大切な", "reading": "たいせつな", "meaning": "Quan Trọng"}]}, {"kanji": "貸", "sino": "Thải", "meaning": "Cho Vay, Cho Mượn", "vocab": [{"word": "貸します", "reading": "かします", "meaning": "Cho Vay, Cho Mượn"}]}, {"kanji": "借", "sino": "Tá", "meaning": "Vay, Mượn", "vocab": [{"word": "借ります", "reading": "かります", "meaning": "Vay, Mượn"}]}, {"kanji": "旅", "sino": "Lữ", "meaning": "Du Lịch", "vocab": [{"word": "旅行", "reading": "りょこう", "meaning": "Du Lịch, Lữ Hành"}, {"word": "旅行します", "reading": "りょこうします", "meaning": "Đi Du Lịch"}, {"word": "旅館", "reading": "りょかん", "meaning": "Quán Trọ Kiểu Nhật"}]}, {"kanji": "教", "sino": "Giáo", "meaning": "Giảng Dạy, Tôn Giáo", "vocab": [{"word": "教えます", "reading": "おしえます", "meaning": "Dạy Học"}, {"word": "教室", "reading": "きょうしつ", "meaning": "Phòng Học"}, {"word": "教会", "reading": "きょうかい", "meaning": "Nhà Thờ"}, {"word": "キリスト教", "reading": "キリストきょう", "meaning": "Đạo Thiên Chúa"}, {"word": "イスラム教", "reading": "イスラムきょう", "meaning": "Đạo Hồi"}, {"word": "ヒンズー教", "reading": "ヒンズーきょう", "meaning": "Đạo Hindu"}, {"word": "仏教", "reading": "ぶっきょう", "meaning": "Đạo Phật"}]}, {"kanji": "習", "sino": "Tập", "meaning": "Học, Tập", "vocab": [{"word": "習います", "reading": "ならいます", "meaning": "Học, Tập"}]}, {"kanji": "勉", "sino": "Miễn", "meaning": "Cố Gắng", "vocab": [{"word": "勉強", "reading": "べんきょう", "meaning": "Học"}, {"word": "勉強します", "reading": "べんきょうします", "meaning": "Học"}]}, {"kanji": "強", "sino": "Cường", "meaning": "Mạnh, Dẻo Dai, Ép", "vocab": [{"word": "勉強", "reading": "べんきょう", "meaning": "Học"}, {"word": "勉強します", "reading": "べんきょうします", "meaning": "Học"}, {"word": "強い", "reading": "つよい", "meaning": "Mạnh, Dẻo Dai"}]}, {"kanji": "花", "sino": "Hoa", "meaning": "Hoa", "vocab": [{"word": "花", "reading": "はな", "meaning": "Hoa"}, {"word": "花火", "reading": "はなび", "meaning": "Pháo Hoa"}, {"word": "花見", "reading": "はなみ", "meaning": "Ngắm Hoa Anh Đào"}]}, {"kanji": "歩", "sino": "Bộ", "meaning": "Đi Bộ", "vocab": [{"word": "歩きます", "reading": "あるきます", "meaning": "Đi Bộ"}, {"word": "歩いて", "reading": "あるいて", "meaning": "Đi Bộ"}, {"word": "歩道", "reading": "ほどう", "meaning": "Vỉa Hè"}]}, {"kanji": "待", "sino": "Đãi", "meaning": "Đợi, Tiếp Đãi", "vocab": [{"word": "待ちます", "reading": "まちます", "meaning": "Đợi"}]}, {"kanji": "立", "sino": "Lập", "meaning": "Đứng, Thành Lập", "vocab": [{"word": "立ちます", "reading": "たちます", "meaning": "Đứng"}, {"word": "国立大学", "reading": "こくりつだいがく", "meaning": "Đại Học Quốc Gia"}, {"word": "私立大学", "reading": "しりつだいがく", "meaning": "Đại Học Tư"}, {"word": "国立病院", "reading": "こくりつびょういん", "meaning": "Bệnh Viện Quốc Gia"}, {"word": "国立図書館", "reading": "こくりつとしょかん", "meaning": "Thư Viện Quốc Gia"}]}, {"kanji": "止", "sino": "Chỉ", "meaning": "Dừng, Đỗ", "vocab": [{"word": "止めます", "reading": "とめます", "meaning": "Ngăn, Chặn, Dừng"}, {"word": "止まります", "reading": "とまります", "meaning": "Dừng, Đỗ"}]}, {"kanji": "雨", "sino": "Vũ", "meaning": "Mưa", "vocab": [{"word": "雨", "reading": "あめ", "meaning": "Mưa"}, {"word": "大雨", "reading": "おおあめ", "meaning": "Mưa To"}]}, {"kanji": "入", "sino": "Nhập", "meaning": "Vào, Đưa Vào", "vocab": [{"word": "入ります", "reading": "はいります", "meaning": "Vào"}, {"word": "入れます", "reading": "いれます", "meaning": "Đưa Vào"}, {"word": "入り口", "reading": "いりぐち", "meaning": "Lối Vào"}]}, {"kanji": "出", "sino": "Xuất", "meaning": "Ra, Đưa Ra Ngoài", "vocab": [{"word": "出ます", "reading": "でます", "meaning": "Ra, Đi Ra"}, {"word": "出します", "reading": "だします", "meaning": "Đưa Ra"}, {"word": "出かけます", "reading": "でかけます", "meaning": "Đi Ra Ngoài"}, {"word": "出口", "reading": "でぐち", "meaning": "Lối Ra"}]}, {"kanji": "売", "sino": "Mại", "meaning": "Bán", "vocab": [{"word": "売ります", "reading": "うります", "meaning": "Bán"}, {"word": "売店", "reading": "ばいてん", "meaning": "Ki-Ốt"}]}, {"kanji": "使", "sino": "Sử", "meaning": "Dùng, Sử Dụng", "vocab": [{"word": "使います", "reading": "つかいます", "meaning": "Dùng, Sử Dụng"}, {"word": "使い方", "reading": "つかいかた", "meaning": "Cách Dùng, Cách Sử Dụng"}, {"word": "大使館", "reading": "たいしかん", "meaning": "Đại Sứ Quán"}]}, {"kanji": "作", "sino": "Tác", "meaning": "Làm, Sản Xuất, Sáng Tác, Nấu Nướng", "vocab": [{"word": "作ります", "reading": "つくります", "meaning": "Làm, Sản Xuất, Sáng Tác, Nấu Nướng"}, {"word": "作家", "reading": "さっか", "meaning": "Nhà Văn"}]}, {"kanji": "明", "sino": "Minh", "meaning": "Sáng, Rõ Ràng, Trong Sạch", "vocab": [{"word": "明るい", "reading": "あかるい", "meaning": "Sáng, Sáng Sủa, Tươi Tắn, Vui Vẻ, Trong Sáng"}]}, {"kanji": "暗", "sino": "Ám", "meaning": "Tối, Ngầm", "vocab": [{"word": "暗い", "reading": "くらい", "meaning": "Tối"}]}, {"kanji": "広", "sino": "Quảng", "meaning": "Rộng", "vocab": [{"word": "広い", "reading": "ひろい", "meaning": "Rộng"}]}, {"kanji": "多", "sino": "Đa", "meaning": "Nhiều", "vocab": [{"word": "多い", "reading": "おおい", "meaning": "Nhiều"}]}, {"kanji": "少", "sino": "Thiểu", "meaning": "Ít", "vocab": [{"word": "少ない", "reading": "すくない", "meaning": "Ít"}, {"word": "少し", "reading": "すこし", "meaning": "Một Ít"}]}, {"kanji": "長", "sino": "Trường, Trưởng", "meaning": "Dài, Trưởng, Đứng Đầu", "vocab": [{"word": "長い", "reading": "ながい", "meaning": "Dài"}, {"word": "社長", "reading": "しゃちょう", "meaning": "Giám Đốc"}, {"word": "部長", "reading": "ぶちょう", "meaning": "Trưởng Phòng"}, {"word": "学長", "reading": "がくちょう", "meaning": "Hiệu Trưởng Đại Học"}, {"word": "校長", "reading": "こうちょう", "meaning": "Hiệu Trưởng"}, {"word": "駅長", "reading": "えきちょう", "meaning": "Trưởng Ga"}]}, {"kanji": "短", "sino": "Đoản", "meaning": "Ngắn", "vocab": [{"word": "短い", "reading": "みじかい", "meaning": "Ngắn"}]}, {"kanji": "悪", "sino": "Ác", "meaning": "Xấu, Nguy Hại, Lỗi, Ác", "vocab": [{"word": "悪い", "reading": "わるい", "meaning": "Xấu, Nguy Hại, Lỗi, Ác"}]}, {"kanji": "重", "sino": "Trọng", "meaning": "Nặng", "vocab": [{"word": "重い", "reading": "おもい", "meaning": "Nặng"}]}, {"kanji": "軽", "sino": "Khinh", "meaning": "Nhẹ", "vocab": [{"word": "軽い", "reading": "かるい", "meaning": "Nhẹ"}]}, {"kanji": "早", "sino": "Tảo", "meaning": "Sớm", "vocab": [{"word": "早い", "reading": "はやい", "meaning": "Sớm"}, {"word": "早く", "reading": "はやく", "meaning": "Sớm"}]}, {"kanji": "便", "sino": "Tiện", "meaning": "Tiện, Tiện Lợi, Thư, Bưu Điện", "vocab": [{"word": "便利な", "reading": "べんりな", "meaning": "Tiện, Tiện Lợi"}, {"word": "郵便局", "reading": "ゆうびんきょく", "meaning": "Bưu Điện"}]}, {"kanji": "利", "sino": "Lợi", "meaning": "Lợi, Thuận Lợi, Lời", "vocab": [{"word": "便利な", "reading": "べんりな", "meaning": "Tiện Lợi"}]}, {"kanji": "元", "sino": "Nguyên", "meaning": "Nguyên Bản", "vocab": [{"word": "元気な", "reading": "げんきな", "meaning": "Khỏe"}]}, {"kanji": "気", "sino": "Khí", "meaning": "Thể Khí, Khí Lực, Tinh Thần, Tính Khí", "vocab": [{"word": "元気な", "reading": "げんきな", "meaning": "Khỏe"}, {"word": "病気", "reading": "びょうき", "meaning": "Bệnh, Ốm"}, {"word": "病気の", "reading": "びょうきの", "meaning": "Bệnh, Ốm"}, {"word": "電気", "reading": "でんき", "meaning": "Điện"}, {"word": "天気", "reading": "てんき", "meaning": "Thời Tiết"}]}, {"kanji": "親", "sino": "Thân", "meaning": "Bố Mẹ, Thân Mật, Thân Thiết", "vocab": [{"word": "親切な", "reading": "しんせつな", "meaning": "Thân Thiện, Tử Tế"}, {"word": "親", "reading": "おや", "meaning": "Bố, Mẹ"}, {"word": "両親", "reading": "りょうしん", "meaning": "Bố Mẹ"}]}, {"kanji": "有", "sino": "Hữu", "meaning": "Có", "vocab": [{"word": "有名な", "reading": "ゆうめいな", "meaning": "Nổi Tiếng"}]}, {"kanji": "名", "sino": "Danh", "meaning": "Tên", "vocab": [{"word": "名前", "reading": "なまえ", "meaning": "Tên"}, {"word": "有名な", "reading": "ゆうめいな", "meaning": "Nổi Tiếng"}]}, {"kanji": "地", "sino": "Địa", "meaning": "Đất, Mặt Đất", "vocab": [{"word": "地下鉄", "reading": "ちかてつ", "meaning": "Tàu Điện Ngầm"}, {"word": "地図", "reading": "ちず", "meaning": "Bản Đồ"}, {"word": "地下", "reading": "ちか", "meaning": "Ngầm"}, {"word": "地下室", "reading": "ちかしつ", "meaning": "Phòng Hầm"}, {"word": "土地", "reading": "とち", "meaning": "Đất Đai"}, {"word": "地価", "reading": "ちか", "meaning": "Giá Đất"}, {"word": "地震", "reading": "じしん", "meaning": "Động Đất"}]}, {"kanji": "鉄", "sino": "Thiết", "meaning": "Sắt", "vocab": [{"word": "地下鉄", "reading": "ちかてつ", "meaning": "Tàu Điện Ngầm"}, {"word": "鉄", "reading": "てつ", "meaning": "Sắt"}]}, {"kanji": "仕", "sino": "Sĩ", "meaning": "Làm Việc, Phục Vụ", "vocab": [{"word": "仕事", "reading": "しごと", "meaning": "Việc, Công Việc"}]}, {"kanji": "事", "sino": "Sự", "meaning": "Việc, Vấn Đề", "vocab": [{"word": "仕事", "reading": "しごと", "meaning": "Việc, Công Việc"}, {"word": "家事", "reading": "かじ", "meaning": "Việc Nhà"}, {"word": "火事", "reading": "かじ", "meaning": "Hỏa Hoạn"}, {"word": "食事", "reading": "しょくじ", "meaning": "Bữa Ăn"}]}, {"kanji": "東", "sino": "Đông", "meaning": "Phía Đông", "vocab": [{"word": "東", "reading": "ひがし", "meaning": "Phía Đông"}, {"word": "東京", "reading": "とうきょう", "meaning": "Tokyo"}, {"word": "東ヨーロッパ", "reading": "ひがしヨーロッパ", "meaning": "Đông Âu"}, {"word": "東南アジア", "reading": "とうなんアジア", "meaning": "Đông Nam Á"}, {"word": "中東", "reading": "ちゅうとう", "meaning": "Trung Đông"}, {"word": "東北", "reading": "とうほく", "meaning": "Vùng Đông Bắc"}]}, {"kanji": "西", "sino": "Tây", "meaning": "Phía Tây", "vocab": [{"word": "西", "reading": "にし", "meaning": "Phía Tây"}, {"word": "西ヨーロッパ", "reading": "にしヨーロッパ", "meaning": "Tây Âu"}]}, {"kanji": "南", "sino": "Nam", "meaning": "Phía Nam", "vocab": [{"word": "南", "reading": "みなみ", "meaning": "Phía Nam"}, {"word": "南アメリカ", "reading": "みなみアメリカ", "meaning": "Nam Mỹ"}, {"word": "東南アジア", "reading": "とうなんアジア", "meaning": "Đông Nam Á"}]}, {"kanji": "北", "sino": "Bắc", "meaning": "Phía Bắc", "vocab": [{"word": "北", "reading": "きた", "meaning": "Phía Bắc"}, {"word": "北アメリカ", "reading": "きたアメリカ", "meaning": "Bắc Mỹ"}, {"word": "東北", "reading": "とうほく", "meaning": "Vùng Đông Bắc"}, {"word": "北海道", "reading": "ほっかいどう", "meaning": "Hokkaido"}]}, {"kanji": "京", "sino": "Kinh", "meaning": "Kinh Đô", "vocab": [{"word": "東京", "reading": "とうきょう", "meaning": "Tokyo"}, {"word": "京都", "reading": "きょうと", "meaning": "Kyoto"}]}, {"kanji": "夜", "sino": "Dạ", "meaning": "Đêm, Tối", "vocab": [{"word": "夜", "reading": "よる", "meaning": "Đêm, Tối"}]}, {"kanji": "料", "sino": "Liệu", "meaning": "Nguyên Vật Liệu, Tiền", "vocab": [{"word": "料理", "reading": "りょうり", "meaning": "Món Ăn"}]}, {"kanji": "理", "sino": "Lý", "meaning": "Lý Do, Lý Luận", "vocab": [{"word": "料理", "reading": "りょうり", "meaning": "Món Ăn"}]}, {"kanji": "口", "sino": "Khẩu", "meaning": "Mồm, Lối Ra, Lối Vào", "vocab": [{"word": "口", "reading": "くち", "meaning": "Mồm"}, {"word": "入り口", "reading": "いりぐち", "meaning": "Lối Vào"}, {"word": "出口", "reading": "でぐち", "meaning": "Lối Ra"}]}, {"kanji": "目", "sino": "Mục", "meaning": "Mắt", "vocab": [{"word": "目", "reading": "め", "meaning": "Mắt"}]}, {"kanji": "足", "sino": "Túc", "meaning": "Chân, Đủ, Cộng", "vocab": [{"word": "足", "reading": "あし", "meaning": "Chân"}, {"word": "右足", "reading": "みぎあし", "meaning": "Chân Phải"}, {"word": "左足", "reading": "ひだりあし", "meaning": "Chân Trái"}, {"word": "足ります", "reading": "たります", "meaning": "Đủ"}]}, {"kanji": "曜", "sino": "Diệu", "meaning": "Chỉ Sử Dụng Trong Cụm Từ", "vocab": [{"word": "～曜日", "reading": "～ようび", "meaning": "Thứ ～"}]}, {"kanji": "降", "sino": "Giáng, Hàng", "meaning": "Xuống, Thả Xuống, Dỡ Xuống, Rơi", "vocab": [{"word": "降ります", "reading": "おります", "meaning": "Xuống"}, {"word": "降ります", "reading": "ふります", "meaning": "Rơi"}, {"word": "降ろします", "reading": "おろします", "meaning": "Thả Xuống, Dỡ Xuống"}]}, {"kanji": "思", "sino": "Tư", "meaning": "Suy Nghĩ, Cho Rằng, Phỏng Đoán", "vocab": [{"word": "思います", "reading": "おもいます", "meaning": "Suy Nghĩ, Cho Rằng, Phỏng Đoán"}]}, {"kanji": "寝", "sino": "Tẩm", "meaning": "Ngủ", "vocab": [{"word": "寝ます", "reading": "ねます", "meaning": "Ngủ"}]}, {"kanji": "終", "sino": "Chung", "meaning": "Kết Thúc", "vocab": [{"word": "終わります", "reading": "おわります", "meaning": "Hết, Kết Thúc"}]}, {"kanji": "言", "sino": "Ngôn", "meaning": "Nói", "vocab": [{"word": "言います", "reading": "いいます", "meaning": "Nói"}]}, {"kanji": "知", "sino": "Tri, Trí", "meaning": "Hiểu, Biết", "vocab": [{"word": "知っています", "reading": "しっています", "meaning": "Biết"}, {"word": "知りません", "reading": "しりません", "meaning": "Không Biết"}]}, {"kanji": "動", "sino": "Động", "meaning": "Chuyển Động", "vocab": [{"word": "自動車", "reading": "じどうしゃ", "meaning": "Xe Ô Tô"}, {"word": "動物", "reading": "どうぶつ", "meaning": "Động Vật"}, {"word": "動きます", "reading": "うごきます", "meaning": "Vận Động, Chuyển Động, Động Đậy"}]}, {"kanji": "同", "sino": "Đồng", "meaning": "Giống, Cùng", "vocab": [{"word": "同じ", "reading": "おなじ", "meaning": "Giống, Cùng"}]}, {"kanji": "漢", "sino": "Hán", "meaning": "Hán", "vocab": [{"word": "漢字", "reading": "かんじ", "meaning": "Chữ Hán"}]}, {"kanji": "字", "sino": "Tự", "meaning": "Chữ", "vocab": [{"word": "漢字", "reading": "かんじ", "meaning": "Chữ Hán"}, {"word": "ローマ字", "reading": "ローマじ", "meaning": "Chữ La-Tinh"}, {"word": "字", "reading": "じ", "meaning": "Chữ"}]}, {"kanji": "方", "sino": "Phương", "meaning": "Cách, Phương Pháp, Phương Hướng, Người", "vocab": [{"word": "あの方", "reading": "あのかた", "meaning": "Người Ấy"}, {"word": "使い方", "reading": "つかいかた", "meaning": "Cách Dùng"}, {"word": "読み方", "reading": "よみかた", "meaning": "Cách Đọc"}, {"word": "書き方", "reading": "かきかた", "meaning": "Cách Viết"}, {"word": "～方", "reading": "～かた", "meaning": "Cách ～"}, {"word": "～の方", "reading": "～のほう", "meaning": "Về Hướng ～"}, {"word": "夕方", "reading": "ゆうがた", "meaning": "Chiều Muộn"}, {"word": "～の読み方", "reading": "～のよみかた", "meaning": "Cách Đọc ～"}, {"word": "～の書き方", "reading": "～のかきかた", "meaning": "Cách Viết ～"}, {"word": "～の使い方", "reading": "～のつかいかた", "meaning": "Cách Dùng ～"}, {"word": "～の作り方", "reading": "～のつくりかた", "meaning": "Cách Làm ～"}, {"word": "教え方", "reading": "おしえかた", "meaning": "Cách Dạy"}, {"word": "考え方", "reading": "かんがえかた", "meaning": "Cách Nghĩ"}, {"word": "見方", "reading": "みかた", "meaning": "Cách Nhìn, Góc Nhìn"}]}, {"kanji": "図", "sino": "Đồ", "meaning": "Sơ Đồ, Đồ Thị, Hình", "vocab": [{"word": "図書館", "reading": "としょかん", "meaning": "Thư Viện"}, {"word": "地図", "reading": "ちず", "meaning": "Bản Đồ"}]}, {"kanji": "館", "sino": "Quán", "meaning": "Tòa Nhà Lớn", "vocab": [{"word": "図書館", "reading": "としょかん", "meaning": "Thư Viện"}, {"word": "大使館", "reading": "たいしかん", "meaning": "Đại Sứ Quán"}, {"word": "映画館", "reading": "えいがかん", "meaning": "Rạp Chiếu Phim"}, {"word": "旅館", "reading": "りょかん", "meaning": "Quán Trọ Kiểu Nhật"}]}, {"kanji": "銀", "sino": "Ngân", "meaning": "Bạc", "vocab": [{"word": "銀行", "reading": "ぎんこう", "meaning": "Ngân Hàng"}, {"word": "銀行員", "reading": "ぎんこういん", "meaning": "Nhân Viên Ngân Hàng"}, {"word": "銀", "reading": "ぎん", "meaning": "Bạc"}]}, {"kanji": "町", "sino": "Đinh", "meaning": "Thị Trấn, Thị Xã", "vocab": [{"word": "町", "reading": "まち", "meaning": "Thị Trấn, Thị Xã"}]}, {"kanji": "住", "sino": "Trú, Trụ", "meaning": "Ở", "vocab": [{"word": "住んでいます", "reading": "すんでいます", "meaning": "Ở"}]}, {"kanji": "度", "sino": "Độ", "meaning": "Độ, Lần", "vocab": [{"word": "一度", "reading": "いちど", "meaning": "Một Lần"}, {"word": "一度も", "reading": "いちども", "meaning": "Chưa Một Lần, Chưa Bao Giờ"}, {"word": "～度", "reading": "～ど", "meaning": "～ Độ"}, {"word": "温度", "reading": "おんど", "meaning": "Nhiệt Độ"}]}, {"kanji": "服", "sino": "Phục", "meaning": "Quần Áo", "vocab": [{"word": "服", "reading": "ふく", "meaning": "Quần Áo"}]}, {"kanji": "着", "sino": "Trc", "meaning": "Mặc, Đến Nơi", "vocab": [{"word": "着ます", "reading": "きます", "meaning": "Mặc"}, {"word": "着物", "reading": "きもの", "meaning": "Kimono"}, {"word": "上着", "reading": "うわぎ", "meaning": "Áo Khoác"}, {"word": "下着", "reading": "したぎ", "meaning": "Đồ Lót"}, {"word": "着きます", "reading": "つきます", "meaning": "Đến Nơi"}, {"word": "着せます", "reading": "きせます", "meaning": "Mặc"}]}, {"kanji": "音", "sino": "Âm", "meaning": "Âm Thanh, Tiếng Động", "vocab": [{"word": "音楽", "reading": "おんがく", "meaning": "Âm Nhạc"}, {"word": "音", "reading": "おと", "meaning": "Âm Thanh, Tiếng Động"}]}, {"kanji": "楽", "sino": "Lạc", "meaning": "Vui, Vui Thú, Nhẹ Nhàng, Dễ Dàng", "vocab": [{"word": "音楽", "reading": "おんがく", "meaning": "Âm Nhạc"}, {"word": "楽しい", "reading": "たのしい", "meaning": "Vui"}, {"word": "楽な", "reading": "らくな", "meaning": "Nhẹ Nhàng, Dễ Dàng"}]}, {"kanji": "持", "sino": "Trì", "meaning": "Cầm, Giữ, Có", "vocab": [{"word": "持ちます", "reading": "もちます", "meaning": "Cầm, Có"}, {"word": "持っています", "reading": "もっています", "meaning": "Có"}]}, {"kanji": "春", "sino": "Xuân", "meaning": "Mùa Xuân", "vocab": [{"word": "春", "reading": "はる", "meaning": "Mùa Xuân"}, {"word": "春休み", "reading": "はるやすみ", "meaning": "Kỳ Nghỉ Xuân"}]}, {"kanji": "夏", "sino": "Hạ", "meaning": "Mùa Hè", "vocab": [{"word": "夏", "reading": "なつ", "meaning": "Mùa Hè"}, {"word": "夏休み", "reading": "なつやすみ", "meaning": "Kỳ Nghỉ Hè"}]}, {"kanji": "秋", "sino": "Thu", "meaning": "Mùa Thu", "vocab": [{"word": "秋", "reading": "あき", "meaning": "Mùa Thu"}]}, {"kanji": "冬", "sino": "Đông", "meaning": "Mùa Đông", "vocab": [{"word": "冬", "reading": "ふゆ", "meaning": "Mùa Đông"}, {"word": "冬休み", "reading": "ふゆやすみ", "meaning": "Kỳ Nghỉ Đông"}]}, {"kanji": "道", "sino": "Đạo", "meaning": "Con Đường", "vocab": [{"word": "道", "reading": "みち", "meaning": "Con Đường"}, {"word": "水道", "reading": "すいどう", "meaning": "Nước Máy"}, {"word": "北海道", "reading": "ほっかいどう", "meaning": "Hokkaido"}, {"word": "歩道", "reading": "ほどう", "meaning": "Vỉa Hè"}, {"word": "近道", "reading": "ちかみち", "meaning": "Đường Tắt"}]}, {"kanji": "堂", "sino": "Đường", "meaning": "Phòng Lớn, Hội Trường", "vocab": [{"word": "食堂", "reading": "しょくどう", "meaning": "Nhà Ăn"}]}, {"kanji": "建", "sino": "Kiến", "meaning": "Xây Dựng", "vocab": [{"word": "建物", "reading": "たてもの", "meaning": "Tòa Nhà"}]}, {"kanji": "病", "sino": "Bệnh", "meaning": "Bệnh Tật, Ốm Đau", "vocab": [{"word": "病院", "reading": "びょういん", "meaning": "Bệnh Viện"}, {"word": "病気", "reading": "びょうき", "meaning": "Bị Bệnh, Bị Ốm"}, {"word": "病気の", "reading": "びょうきの", "meaning": "Bệnh, Ốm"}, {"word": "病室", "reading": "びょうしつ", "meaning": "Phòng Bệnh"}]}, {"kanji": "院", "sino": "Viện", "meaning": "Viện", "vocab": [{"word": "病院", "reading": "びょういん", "meaning": "Bệnh Viện"}]}, {"kanji": "体", "sino": "Thể", "meaning": "Cơ Thể", "vocab": [{"word": "体", "reading": "からだ", "meaning": "Cơ Thể"}]}, {"kanji": "運", "sino": "Vận", "meaning": "Chở, Vận, Vận Mệnh, Vận May", "vocab": [{"word": "運転", "reading": "うんてん", "meaning": "Lái Xe"}, {"word": "運転します", "reading": "うんてんします", "meaning": "Lái Xe"}, {"word": "運", "reading": "うん", "meaning": "Vận, Vận Mệnh, Vận May"}]}, {"kanji": "乗", "sino": "Thừa", "meaning": "Lên Xe, Cho Đi Xe", "vocab": [{"word": "乗ります", "reading": "のります", "meaning": "Lên Xe"}]}, {"kanji": "家", "sino": "Gia", "meaning": "Nhà, Ngôi Nhà", "vocab": [{"word": "家", "reading": "いえ", "meaning": "Nhà, Ngôi Nhà"}, {"word": "家内", "reading": "かない", "meaning": "Vợ"}, {"word": "家族", "reading": "かぞく", "meaning": "Gia Đình"}, {"word": "画家", "reading": "がか", "meaning": "Họa Sỹ"}, {"word": "作家", "reading": "さっか", "meaning": "Nhà Văn"}]}, {"kanji": "内", "sino": "Nội", "meaning": "Bên Trong", "vocab": [{"word": "家内", "reading": "かない", "meaning": "Vợ"}, {"word": "国内の", "reading": "こくないの", "meaning": "Trong Nước, Nội Địa"}]}, {"kanji": "族", "sino": "Tộc", "meaning": "Dòng Họ, Gia Tộc", "vocab": [{"word": "家族", "reading": "かぞく", "meaning": "Gia Đình"}]}, {"kanji": "兄", "sino": "Huynh", "meaning": "Anh Trai", "vocab": [{"word": "兄", "reading": "あに", "meaning": "Anh Trai"}, {"word": "お兄さん", "reading": "おにいさん", "meaning": "Anh Trai"}, {"word": "兄弟", "reading": "きょうだい", "meaning": "Anh Em"}]}, {"kanji": "弟", "sino": "Đệ", "meaning": "Em Trai", "vocab": [{"word": "弟", "reading": "おとうと", "meaning": "Em Trai"}, {"word": "弟さん", "reading": "おとうとさん", "meaning": "Em Trai"}, {"word": "兄弟", "reading": "きょうだい", "meaning": "Anh Em"}]}, {"kanji": "奥", "sino": "Áo", "meaning": "Sâu, Sâu Thẳm, Vùng Sâu", "vocab": [{"word": "奥さん", "reading": "おくさん", "meaning": "Vợ"}, {"word": "奥", "reading": "おく", "meaning": "Sâu, Sâu Thẳm, Vùng Sâu"}]}, {"kanji": "姉", "sino": "Tỷ", "meaning": "Chị Gái", "vocab": [{"word": "姉", "reading": "あね", "meaning": "Chị Gái"}, {"word": "お姉さん", "reading": "おねえさん", "meaning": "Chị Gái"}]}, {"kanji": "妹", "sino": "Muội", "meaning": "Em Gái", "vocab": [{"word": "妹", "reading": "いもうと", "meaning": "Em Gái"}, {"word": "妹さん", "reading": "いもうとさん", "meaning": "Em Gái"}]}, {"kanji": "海", "sino": "Hải", "meaning": "Biển", "vocab": [{"word": "海", "reading": "うみ", "meaning": "Biển"}, {"word": "北海道", "reading": "ほっかいどう", "meaning": "Hokkaido"}]}, {"kanji": "計", "sino": "Kế", "meaning": "Mưu Đồ, Kế Hoạch, Cân, Đo", "vocab": [{"word": "時計", "reading": "とけい", "meaning": "Đồng Hồ"}, {"word": "計画", "reading": "けいかく", "meaning": "Kế Hoạch"}]}, {"kanji": "部", "sino": "Bộ", "meaning": "Bộ Phận, Phòng Ban", "vocab": [{"word": "部屋", "reading": "へや", "meaning": "Phòng"}]}, {"kanji": "屋", "sino": "Ốc", "meaning": "Cửa Hàng", "vocab": [{"word": "部屋", "reading": "へや", "meaning": "Phòng"}, {"word": "本屋", "reading": "ほんや", "meaning": "Hiệu Sách"}, {"word": "～屋", "reading": "～や", "meaning": "Cửa Hàng ～"}, {"word": "パン屋", "reading": "パンや", "meaning": "Cửa Hàng Bánh Mỳ"}, {"word": "花屋", "reading": "はなや", "meaning": "Cửa Hàng Hoa"}, {"word": "肉屋", "reading": "にくや", "meaning": "Cửa Hàng Bán Thịt"}, {"word": "魚屋", "reading": "さかなや", "meaning": "Cửa Hàng Bán Cá"}, {"word": "電気屋", "reading": "でんきや", "meaning": "Cửa Hàng Đồ Điện"}, {"word": "自転車屋", "reading": "じてんしゃや", "meaning": "Cửa Hàng Bán Xe Đạp"}, {"word": "酒屋", "reading": "さかや", "meaning": "Cửa Hàng Bán Rượu"}]}, {"kanji": "室", "sino": "Thất", "meaning": "Phòng", "vocab": [{"word": "教室", "reading": "きょうしつ", "meaning": "Phòng Học"}, {"word": "病室", "reading": "びょうしつ", "meaning": "Phòng Bệnh"}]}, {"kanji": "窓", "sino": "Song", "meaning": "Cửa Sổ", "vocab": [{"word": "窓", "reading": "まど", "meaning": "Cửa Sổ"}]}, {"kanji": "開", "sino": "Khai", "meaning": "Mở", "vocab": [{"word": "開けます", "reading": "あけます", "meaning": "Mở"}, {"word": "開きます", "reading": "あきます", "meaning": "Mở"}]}, {"kanji": "閉", "sino": "Bế", "meaning": "Đóng", "vocab": [{"word": "閉めます", "reading": "しめます", "meaning": "Đóng, Đậy, Cất"}, {"word": "閉まります", "reading": "しまります", "meaning": "Đóng"}]}, {"kanji": "歌", "sino": "Ca", "meaning": "Hát, Bài Hát", "vocab": [{"word": "歌", "reading": "うた", "meaning": "Bài Hát"}, {"word": "歌います", "reading": "うたいます", "meaning": "Hát"}]}, {"kanji": "意", "sino": "Ý", "meaning": "Ý Nghĩ, Ý Định, Ý Nghĩa", "vocab": [{"word": "意味", "reading": "いみ", "meaning": "Ý Nghĩa"}, {"word": "意見", "reading": "いけん", "meaning": "Ý Kiến"}]}, {"kanji": "味", "sino": "Vị", "meaning": "Mùi Vị", "vocab": [{"word": "意味", "reading": "いみ", "meaning": "Ý Nghĩa"}]}, {"kanji": "天", "sino": "Thiên", "meaning": "Trời", "vocab": [{"word": "天気", "reading": "てんき", "meaning": "Thời Tiết"}]}, {"kanji": "考", "sino": "Khảo", "meaning": "Suy Nghĩ", "vocab": [{"word": "考えます", "reading": "かんがえます", "meaning": "Suy Nghĩ, Đắn Đo"}]}];
+    let currentMode = 'learn';
+    let searchQuery = '';
+    let currentPage = 1;
+    const itemsPerPage = 12;
+    let allVocabPool = [];
+    let remainingVocabPool = [];
+    let currentQuizQuestion = null;
+    let selectedReadingIdx = null;
+    let selectedMeaningIdx = null;
+    let isQuizAnswered = false;
+    let quizAnsweredCount = 0;
+    let quizCorrectCount = 0;
+    let quizIncorrectCount = 0;
+    let incorrectWordsList = [];
+    let isQuizIncorrectOnly = false;
+    let savedMainQuizState = null;
+    let quizTimer = null;
+    let timerStep = null;
+    let stepTimeRemaining = 10000;
+    const timerLimit = 10000;
+    let isTimerPaused = false;
+    function toggleClockPause() {
+      isTimerPaused = !isTimerPaused;
+      updatePauseBtnUI();
+      if (isTimerPaused) {
+        if (quizTimer) {
+          clearInterval(quizTimer);
+          quizTimer = null;
+        }
+      } else {
+        if (timerStep && !isQuizAnswered && stepTimeRemaining > 0) {
+          resumeStepTimer();
+        }
+      }
+    }
+    function updatePauseBtnUI() {
+      const icon = document.getElementById('clockPauseIcon');
+      const text = document.getElementById('clockPauseText');
+      if (!icon || !text) return;
+      if (isTimerPaused) {
+        icon.innerHTML = '<i data-lucide="play" class="w-3.5 h-3.5"></i>';
+        text.innerText = 'Resume';
+      } else {
+        icon.innerHTML = '<i data-lucide="pause" class="w-3.5 h-3.5"></i>';
+        text.innerText = 'Pause';
+      }
+      if (window.lucide) lucide.createIcons();
+    }
+    function clearQuizTimer() {
+      if (quizTimer) {
+        clearInterval(quizTimer);
+        quizTimer = null;
+      }
+      timerStep = null;
+    }
+    function resumeStepTimer() {
+      if (quizTimer) {
+        clearInterval(quizTimer);
+        quizTimer = null;
+      }
+      const targetEndTime = Date.now() + stepTimeRemaining;
+      quizTimer = setInterval(() => {
+        const now = Date.now();
+        stepTimeRemaining = Math.max(0, targetEndTime - now);
+        updateTimerUI();
+        if (stepTimeRemaining <= 0) {
+          const step = timerStep;
+          clearQuizTimer();
+          handleQuizTimeout(step);
+        }
+      }, 50);
+    }
+    function startStepTimer(step) {
+      if (quizTimer) {
+        clearInterval(quizTimer);
+        quizTimer = null;
+      }
+      timerStep = step;
+      stepTimeRemaining = timerLimit;
+      updateTimerUI();
+      if (isTimerPaused) return;
+      resumeStepTimer();
+    }
+    function updateTimerUI() {
+      const secondsStr = (stepTimeRemaining / 1000).toFixed(1) + 's';
+      const progressPct = (stepTimeRemaining / timerLimit) * 100;
+      if (timerStep === 'reading') {
+        const el = document.getElementById('readingTimerText');
+        if (el) el.innerText = secondsStr;
+        const bar = document.getElementById('readingTimerBar');
+        if (bar) bar.style.width = progressPct + '%';
+      } else if (timerStep === 'meaning') {
+        const el = document.getElementById('meaningTimerText');
+        if (el) el.innerText = secondsStr;
+        const bar = document.getElementById('meaningTimerBar');
+        if (bar) bar.style.width = progressPct + '%';
+      }
+    }
+    function handleQuizTimeout(step) {
+      if (isQuizAnswered || !currentQuizQuestion) return;
+      isQuizAnswered = true;
+      quizAnsweredCount++;
+      const feedback = document.getElementById('quizFeedbackMsg');
+      feedback.innerText = 'Incorrect';
+      feedback.className = 'text-sm font-semibold text-center px-4 py-2 rounded w-full sm:w-96 border border-red-600 bg-white text-red-500 block';
+      const targetWord = currentQuizQuestion.target.word;
+      if (isQuizIncorrectOnly) {
+        if (currentQuizQuestion.target) {
+          remainingVocabPool.push(currentQuizQuestion.target);
+        }
+      } else {
+        quizIncorrectCount++;
+        if (!incorrectWordsList.some(item => item.word === targetWord)) {
+          incorrectWordsList.push({
+            word: currentQuizQuestion.target.word,
+            reading: currentQuizQuestion.target.reading,
+            meaning: currentQuizQuestion.target.meaning,
+            sino: currentQuizQuestion.target.sino
+          });
+          saveIncorrectToStorage();
+        }
+      }
+      updateQuizHeaderStats();
+      renderQuizOptions();
+      setTimeout(() => {
+        newQuizQuestion();
+      }, 1000);
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      buildVocabPool();
+      renderLearnMode();
+      lucide.createIcons();
+    });
+    function buildVocabPool() {
+      allVocabPool = [];
+      const seenWords = new Set();
+      kanjiData.forEach(kanjiItem => {
+        if (!kanjiItem.vocab || !Array.isArray(kanjiItem.vocab)) return;
+        kanjiItem.vocab.forEach(v => {
+          if (!v.word || !v.reading || !v.meaning) return;
+          const cleanWord = v.word.trim();
+          if (cleanWord && !seenWords.has(cleanWord)) {
+            seenWords.add(cleanWord);
+            allVocabPool.push({
+              word: cleanWord,
+              reading: v.reading.trim(),
+              meaning: v.meaning.trim(),
+              kanji: kanjiItem.kanji,
+              sino: kanjiItem.sino,
+              kanjiMeaning: kanjiItem.meaning,
+              len: cleanWord.replace(/[～~]/g, '').length,
+              isSingleKanji: cleanWord.length === 1
+            });
+          }
+        });
+      });
+      remainingVocabPool = [...allVocabPool];
+    }
+    function switchMode(mode) {
+      currentMode = mode;
+      const tabLearn = document.getElementById('tabLearn');
+      const tabQuiz = document.getElementById('tabQuiz');
+      const modeLearn = document.getElementById('modeLearn');
+      const modeQuiz = document.getElementById('modeQuiz');
+      if (mode === 'learn') {
+        clearQuizTimer();
+        tabLearn.className = "cursor-pointer rounded px-4 py-1.5 text-sm font-semibold transition flex items-center space-x-2 bg-white text-green-950 shadow-sm";
+        tabQuiz.className = "cursor-pointer rounded px-4 py-1.5 text-sm font-semibold transition flex items-center space-x-2 text-green-100 hover:text-white hover:bg-green-800";
+        modeLearn.classList.remove('hidden');
+        modeQuiz.classList.add('hidden');
+      } else {
+        tabQuiz.className = "cursor-pointer rounded px-4 py-1.5 text-sm font-semibold transition flex items-center space-x-2 bg-white text-green-950 shadow-sm";
+        tabLearn.className = "cursor-pointer rounded px-4 py-1.5 text-sm font-semibold transition flex items-center space-x-2 text-green-100 hover:text-white hover:bg-green-800";
+        modeQuiz.classList.remove('hidden');
+        modeLearn.classList.add('hidden');
+        if (!currentQuizQuestion) { newQuizQuestion(); }
+      }
+      lucide.createIcons();
+    }
+    function handleSearch() {
+      searchQuery = document.getElementById('learnSearch').value.trim().toLowerCase();
+      currentPage = 1;
+      renderLearnMode();
+    }
+    function changePage(page) {
+      currentPage = page;
+      renderLearnMode();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function renderLearnMode() {
+      const gridContainer = document.getElementById('kanjiGrid');
+      const paginationContainer = document.getElementById('paginationContainer');
+      const filtered = kanjiData.filter(item => {
+        return !searchQuery ||
+          (item.kanji && item.kanji.toLowerCase().includes(searchQuery)) ||
+          (item.sino && item.sino.toLowerCase().includes(searchQuery)) ||
+          (item.meaning && item.meaning.toLowerCase().includes(searchQuery)) ||
+          (item.vocab && item.vocab.some(v =>
+            (v.word && v.word.toLowerCase().includes(searchQuery)) ||
+            (v.reading && v.reading.toLowerCase().includes(searchQuery)) ||
+            (v.meaning && v.meaning.toLowerCase().includes(searchQuery))
+          ));
+      });
+      const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
+      if (currentPage > totalPages) currentPage = totalPages;
+      if (currentPage < 1) currentPage = 1;
+      document.getElementById('learnCountText').innerText = 'Showing ' + filtered.length + ' Items';
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const pageData = filtered.slice(startIndex, startIndex + itemsPerPage);
+      if (pageData.length === 0) {
+        gridContainer.innerHTML = '<div class="col-span-full py-12 text-center text-green-950/60 border border-dashed border-green-950/20 rounded"><p class="text-sm font-semibold">No Matching Kanji Found</p></div>';
+        paginationContainer.innerHTML = '';
+        return;
+      }
+      gridContainer.innerHTML = pageData.map(item => {
+        const vocabListHtml = item.vocab && item.vocab.length > 0
+          ? item.vocab.map(v => '<div class="bg-green-950/5 p-3 sm:p-4 rounded border border-green-950/10 space-y-1.5"><div class="flex flex-wrap items-baseline justify-between gap-2"><span class="font-normal text-3xl sm:text-4xl text-green-950">' + v.word + '</span><span class="text-lg sm:text-xl font-normal text-green-900">' + v.reading + '</span></div><div class="text-base sm:text-lg text-green-950/80 font-normal">意味: ' + v.meaning + '</div></div>').join('')
+          : '<p class="text-sm text-green-950/40 italic">No Vocabulary</p>';
+        return '<div class="bg-white border border-green-950/30 rounded p-5 shadow-sm hover:border-green-950 transition flex flex-col space-y-4">' +
+          '<div>' +
+          '<div class="flex items-center justify-between border-b border-green-950/10 pb-2">' +
+          '<span class="text-base sm:text-lg font-semibold text-green-900 tracking-wider">音: ' + (item.sino || '') + '</span>' +
+          '<h3 class="text-5xl sm:text-6xl font-semibold text-green-950 font-serif">' + (item.kanji || '') + '</h3>' +
+          '</div>' +
+          '<p class="text-sm sm:text-base font-semibold text-green-950/90 mt-3">意味: ' + (item.meaning || '') + '</p>' +
+          '</div>' +
+          '<div class="space-y-2 pt-2 border-t border-green-950/10">' +
+          '<span class="text-xs sm:text-sm font-semibold text-green-950/70 block tracking-wider">語彙</span>' +
+          '<div class="space-y-2.5">' + vocabListHtml + '</div>' +
+          '</div>' +
+          '</div>';
+      }).join('');
+      if (totalPages > 1) {
+        let navHtml = '<div class="mt-12 flex justify-center items-center gap-2">';
+        navHtml += '<button onclick="changePage(1)" ' + (currentPage === 1 ? 'disabled' : '') + ' class="px-3 py-2 border border-green-950 text-green-950 hover:bg-green-950 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer rounded" aria-label="First Page"><i data-lucide="chevrons-left" class="w-4 h-4"></i></button>';
+        navHtml += '<button onclick="changePage(' + (currentPage - 1) + ')" ' + (currentPage === 1 ? 'disabled' : '') + ' class="px-3 py-2 border border-green-950 text-green-950 hover:bg-green-950 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer rounded" aria-label="Previous Page"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>';
+        if (currentPage > 2) {
+          navHtml += '<span class="px-2 text-zinc-500">...</span>';
+        }
+        if (currentPage > 1) {
+          navHtml += '<button onclick="changePage(' + (currentPage - 1) + ')" class="px-4 py-2 font-medium transition-colors border bg-white text-green-950 border-green-950 hover:bg-green-950 hover:text-white cursor-pointer rounded">' + (currentPage - 1) + '</button>';
+        }
+        navHtml += '<button class="px-4 py-2 font-medium transition-colors border bg-green-950 text-white border-green-950 cursor-pointer rounded">' + currentPage + '</button>';
+        if (currentPage < totalPages) {
+          navHtml += '<button onclick="changePage(' + (currentPage + 1) + ')" class="px-4 py-2 font-medium transition-colors border bg-white text-green-950 border-green-950 hover:bg-green-950 hover:text-white cursor-pointer rounded">' + (currentPage + 1) + '</button>';
+        }
+        if (currentPage < totalPages - 1) {
+          navHtml += '<span class="px-2 text-zinc-500">...</span>';
+        }
+        navHtml += '<button onclick="changePage(' + (currentPage + 1) + ')" ' + (currentPage === totalPages ? 'disabled' : '') + ' class="px-3 py-2 border border-green-950 text-green-950 hover:bg-green-950 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer rounded" aria-label="Next Page"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>';
+        navHtml += '<button onclick="changePage(' + totalPages + ')" ' + (currentPage === totalPages ? 'disabled' : '') + ' class="px-3 py-2 border border-green-950 text-green-950 hover:bg-green-950 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer rounded" aria-label="Last Page"><i data-lucide="chevrons-right" class="w-4 h-4"></i></button>';
+        navHtml += '</div>';
+        paginationContainer.innerHTML = navHtml;
+      } else {
+        paginationContainer.innerHTML = '';
+      }
+      lucide.createIcons();
+    }
+    function getSmartDistractorOptions(targetItem) {
+      const candidates = allVocabPool.filter(v => v.word !== targetItem.word);
+      const familySet = new Set(['父', '母', '兄', '姉', '弟', '妹', '子', '親', '夫', '妻', '家族', '兄弟', '姉妹', '男', '女']);
+      const daysSet = new Set(['日', '月', '火', '水', '木', '金', '土', '年', '週', '今', '先', '来', '毎', '今日', '明日', '昨日', '今週', '来週', '先週', '今月', '来月', '日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日']);
+      const numbersSet = new Set(['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '百', '千', '万', '円']);
+      const positionsSet = new Set(['東', '西', '南', '北', '上', '下', '中', '右', '左', '前', '後', '外', '内']);
+      function inSameDomain(w1, w2) {
+        if (familySet.has(w1) && familySet.has(w2)) return true;
+        if (daysSet.has(w1) && daysSet.has(w2)) return true;
+        if (numbersSet.has(w1) && numbersSet.has(w2)) return true;
+        if (positionsSet.has(w1) && positionsSet.has(w2)) return true;
+        return false;
+      }
+      const scored = candidates.map(cand => {
+        let score = 0;
+        if (cand.len === targetItem.len) score += 40;
+        if (cand.isSingleKanji && targetItem.isSingleKanji) score += 30;
+        if (inSameDomain(cand.word, targetItem.word)) score += 50;
+        if (Math.abs(cand.reading.length - targetItem.reading.length) <= 1) score += 15;
+        if (cand.reading === targetItem.reading) score -= 100;
+        if (cand.meaning === targetItem.meaning) score -= 100;
+        score += Math.random() * 8;
+        return { cand, score };
+      });
+      scored.sort((a, b) => b.score - a.score);
+      const readingDistractors = [];
+      const usedReadings = new Set([targetItem.reading]);
+      for (let item of scored) {
+        if (!usedReadings.has(item.cand.reading)) {
+          usedReadings.add(item.cand.reading);
+          readingDistractors.push(item.cand.reading);
+          if (readingDistractors.length === 3) break;
+        }
+      }
+      const meaningDistractors = [];
+      const usedMeanings = new Set([targetItem.meaning]);
+      for (let item of scored) {
+        if (!usedMeanings.has(item.cand.meaning)) {
+          usedMeanings.add(item.cand.meaning);
+          meaningDistractors.push(item.cand.meaning);
+          if (meaningDistractors.length === 3) break;
+        }
+      }
+      return {
+        readingChoices: shuffleArray([{ text: targetItem.reading, isCorrect: true }, ...readingDistractors.map(r => ({ text: r, isCorrect: false }))]),
+        meaningChoices: shuffleArray([{ text: targetItem.meaning, isCorrect: true }, ...meaningDistractors.map(m => ({ text: m, isCorrect: false }))])
+      };
+    }
+    function shuffleArray(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+    function toggleQuizIncorrectOnly() {
+      if (!isQuizIncorrectOnly && incorrectWordsList.length === 0) {
+        alert('No Incorrect Words Saved!');
+        return;
+      }
+      isQuizIncorrectOnly = !isQuizIncorrectOnly;
+      const btn = document.getElementById('btnQuizIncorrect');
+      if (isQuizIncorrectOnly) {
+        btn.className = "cursor-pointer rounded border border-green-950 bg-green-950 text-white px-3 py-1.5 text-xs font-semibold transition flex items-center space-x-1 shadow-sm";
+        if (currentQuizQuestion && !isQuizAnswered && currentQuizQuestion.target) {
+          remainingVocabPool.unshift(currentQuizQuestion.target);
+        }
+        savedMainQuizState = {
+          remainingVocabPool: [...remainingVocabPool]
+        };
+        remainingVocabPool = [...incorrectWordsList];
+      } else {
+        btn.className = "cursor-pointer rounded border border-green-950 px-3 py-1.5 text-xs font-semibold hover:bg-green-950 hover:text-white transition flex items-center space-x-1";
+        if (savedMainQuizState) {
+          remainingVocabPool = [...savedMainQuizState.remainingVocabPool];
+          savedMainQuizState = null;
+        } else {
+          remainingVocabPool = [...allVocabPool];
+        }
+      }
+      newQuizQuestion();
+    }
+    function showQuizCompletedScreen() {
+      clearQuizTimer();
+      const activeBox = document.getElementById('quizActiveContainer');
+      const doneBox = document.getElementById('quizCompletedContainer');
+      const sourcePool = isQuizIncorrectOnly ? incorrectWordsList : allVocabPool;
+      document.getElementById('quizCompletedMsg').innerText = 'You Have Completed All ' + sourcePool.length + ' Words In This Quiz!';
+      const ansDoneEl = document.getElementById('quizDoneAnswered');
+      if (ansDoneEl) ansDoneEl.innerText = quizAnsweredCount;
+      document.getElementById('quizDoneCorrect').innerText = quizCorrectCount;
+      document.getElementById('quizDoneIncorrect').innerText = Math.max(0, quizAnsweredCount - quizCorrectCount);
+      activeBox.classList.add('hidden');
+      doneBox.classList.remove('hidden');
+      updateQuizHeaderStats();
+      lucide.createIcons();
+    }
+    function restartQuiz() {
+      savedMainQuizState = null;
+      const sourcePool = isQuizIncorrectOnly ? incorrectWordsList : allVocabPool;
+      remainingVocabPool = [...sourcePool];
+      quizAnsweredCount = 0;
+      quizCorrectCount = 0;
+      quizIncorrectCount = 0;
+      document.getElementById('quizCompletedContainer').classList.add('hidden');
+      document.getElementById('quizActiveContainer').classList.remove('hidden');
+      newQuizQuestion();
+    }
+    function newQuizQuestion() {
+      clearQuizTimer();
+      if (isQuizIncorrectOnly && (incorrectWordsList.length === 0 || remainingVocabPool.length === 0)) {
+        isQuizIncorrectOnly = false;
+        const btn = document.getElementById('btnQuizIncorrect');
+        if (btn) btn.className = "cursor-pointer rounded border border-green-950 px-3 py-1.5 text-xs font-semibold hover:bg-green-950 hover:text-white transition flex items-center space-x-1";
+        if (savedMainQuizState) {
+          remainingVocabPool = [...savedMainQuizState.remainingVocabPool];
+          savedMainQuizState = null;
+        } else {
+          remainingVocabPool = [...allVocabPool];
+        }
+      }
+      const sourcePool = isQuizIncorrectOnly ? incorrectWordsList : allVocabPool;
+      if (sourcePool.length === 0) return;
+      if (remainingVocabPool.length === 0) {
+        showQuizCompletedScreen();
+        return;
+      }
+      document.getElementById('quizCompletedContainer').classList.add('hidden');
+      document.getElementById('quizActiveContainer').classList.remove('hidden');
+      const randIdx = Math.floor(Math.random() * remainingVocabPool.length);
+      const target = remainingVocabPool.splice(randIdx, 1)[0];
+      const { readingChoices, meaningChoices } = getSmartDistractorOptions(target);
+      currentQuizQuestion = { target, readingChoices, meaningChoices };
+      selectedReadingIdx = null;
+      selectedMeaningIdx = null;
+      isQuizAnswered = false;
+      document.getElementById('quizQuestionWord').innerText = target.word;
+      document.getElementById('quizFeedbackMsg').className = 'hidden text-sm font-semibold text-center px-4 py-2 rounded w-full sm:w-96 border';
+      const rEl = document.getElementById('readingTimerText');
+      if (rEl) rEl.innerText = '6.0s';
+      const mEl = document.getElementById('meaningTimerText');
+      if (mEl) mEl.innerText = '6.0s';
+      updateQuizHeaderStats();
+      renderQuizOptions();
+      startStepTimer('reading');
+      lucide.createIcons();
+    }
+    function updateQuizHeaderStats() {
+      const sourcePool = isQuizIncorrectOnly ? incorrectWordsList : allVocabPool;
+      const ansEl = document.getElementById('quizAnsweredCount');
+      if (ansEl) ansEl.innerText = quizAnsweredCount;
+      document.getElementById('quizCorrectCount').innerText = quizCorrectCount;
+      document.getElementById('quizIncorrectCount').innerText = quizIncorrectCount;
+      const remainingCount = remainingVocabPool.length + (currentQuizQuestion && !isQuizAnswered ? 1 : 0);
+      document.getElementById('quizWordsLeftCount').innerText = remainingCount;
+      document.getElementById('quizTotalWordsCount').innerText = sourcePool.length;
+    }
+    function renderQuizOptions() {
+      if (!currentQuizQuestion) return;
+      const meaningBoxContainer = document.getElementById('quizMeaningBox');
+      if (meaningBoxContainer) {
+        if (selectedReadingIdx === null && !isQuizAnswered) {
+          meaningBoxContainer.classList.add('hidden');
+        } else {
+          meaningBoxContainer.classList.remove('hidden');
+        }
+      }
+      const readingBox = document.getElementById('quizReadingOptions');
+      const meaningBox = document.getElementById('quizMeaningOptions');
+      readingBox.innerHTML = currentQuizQuestion.readingChoices.map((opt, idx) => {
+        let btnStyle = 'border-green-950/30 text-green-950 hover:bg-green-950/5';
+        if (selectedReadingIdx === idx) { btnStyle = 'border-green-950 bg-green-950 text-white shadow-sm'; }
+        if (isQuizAnswered) {
+          if (opt.isCorrect) { btnStyle = 'border-green-950 bg-green-950 text-white font-semibold'; }
+          else if (selectedReadingIdx === idx && !opt.isCorrect) { btnStyle = 'border-red-600 bg-white text-red-500 font-semibold'; }
+          else { btnStyle = 'border-gray-200 text-gray-400 opacity-60'; }
+        }
+        return '<button onclick="selectReading(' + idx + ')" ' + (isQuizAnswered ? 'disabled' : '') + ' class="cursor-pointer rounded border p-3 text-left font-semibold text-sm transition flex items-center justify-between ' + btnStyle + '"><span>' + opt.text + '</span>' + (selectedReadingIdx === idx ? '<i data-lucide="check-circle" class="w-4 h-4"></i>' : '') + '</button>';
+      }).join('');
+      meaningBox.innerHTML = currentQuizQuestion.meaningChoices.map((opt, idx) => {
+        let btnStyle = 'border-green-950/30 text-green-950 hover:bg-green-950/5';
+        if (selectedMeaningIdx === idx) { btnStyle = 'border-green-950 bg-green-950 text-white shadow-sm'; }
+        if (isQuizAnswered) {
+          if (opt.isCorrect) { btnStyle = 'border-green-950 bg-green-950 text-white font-semibold'; }
+          else if (selectedMeaningIdx === idx && !opt.isCorrect) { btnStyle = 'border-red-600 bg-white text-red-500 font-semibold'; }
+          else { btnStyle = 'border-gray-200 text-gray-400 opacity-60'; }
+        }
+        return '<button onclick="selectMeaning(' + idx + ')" ' + (isQuizAnswered ? 'disabled' : '') + ' class="cursor-pointer rounded border p-3 text-left font-semibold text-sm transition flex items-center justify-between ' + btnStyle + '"><span>' + opt.text + '</span>' + (selectedMeaningIdx === idx ? '<i data-lucide="check-circle" class="w-4 h-4"></i>' : '') + '</button>';
+      }).join('');
+      lucide.createIcons();
+    }
+    function selectReading(idx) {
+      if (isQuizAnswered) return;
+      selectedReadingIdx = idx;
+      renderQuizOptions();
+      if (timerStep !== 'meaning') {
+        startStepTimer('meaning');
+      }
+    }
+    function selectMeaning(idx) {
+      if (isQuizAnswered) return;
+      selectedMeaningIdx = idx;
+      clearQuizTimer();
+      renderQuizOptions();
+      handleQuizSubmit();
+    }
+    function handleQuizSubmit() {
+      clearQuizTimer();
+      if (!currentQuizQuestion || isQuizAnswered) return;
+      const feedback = document.getElementById('quizFeedbackMsg');
+      if (selectedReadingIdx === null || selectedMeaningIdx === null) {
+        feedback.innerText = 'Select 1 Reading & 1 Meaning';
+        feedback.className = 'text-sm font-semibold text-center px-4 py-2 rounded w-full sm:w-96 border border-green-950 bg-green-950/10 text-green-950 block';
+        return;
+      }
+      isQuizAnswered = true;
+      quizAnsweredCount++;
+      const isReadingCorrect = currentQuizQuestion.readingChoices[selectedReadingIdx].isCorrect;
+      const isMeaningCorrect = currentQuizQuestion.meaningChoices[selectedMeaningIdx].isCorrect;
+      const isBothCorrect = isReadingCorrect && isMeaningCorrect;
+      if (isBothCorrect) {
+        quizCorrectCount++;
+        if (isQuizIncorrectOnly) {
+          quizIncorrectCount = Math.max(0, quizIncorrectCount - 1);
+        }
+        feedback.innerText = 'Correct';
+        feedback.className = 'text-sm font-semibold text-center px-4 py-2 rounded w-full sm:w-96 border border-green-950 bg-green-950 text-white block';
+        const targetWord = currentQuizQuestion.target.word;
+        const existingIdx = incorrectWordsList.findIndex(item => item.word === targetWord);
+        if (existingIdx !== -1) {
+          incorrectWordsList.splice(existingIdx, 1);
+          saveIncorrectToStorage();
+        }
+        const remIdx = remainingVocabPool.findIndex(item => item.word === targetWord);
+        if (remIdx !== -1) {
+          remainingVocabPool.splice(remIdx, 1);
+        }
+      } else {
+        if (isQuizIncorrectOnly) {
+          if (currentQuizQuestion.target) {
+            remainingVocabPool.push(currentQuizQuestion.target);
+          }
+        } else {
+          quizIncorrectCount++;
+          const targetWord = currentQuizQuestion.target.word;
+          if (!incorrectWordsList.some(item => item.word === targetWord)) {
+            incorrectWordsList.push({
+              word: currentQuizQuestion.target.word,
+              reading: currentQuizQuestion.target.reading,
+              meaning: currentQuizQuestion.target.meaning,
+              sino: currentQuizQuestion.target.sino
+            });
+            saveIncorrectToStorage();
+          }
+        }
+        feedback.innerText = 'Incorrect';
+        feedback.className = 'text-sm font-semibold text-center px-4 py-2 rounded w-full sm:w-96 border border-red-600 bg-white text-red-500 block';
+      }
+      updateQuizHeaderStats();
+      renderQuizOptions();
+      setTimeout(() => {
+        newQuizQuestion();
+      }, 1000);
+    }
+    function saveIncorrectToStorage() {
+      try {
+        localStorage.setItem('incorrect', JSON.stringify(incorrectWordsList));
+      } catch (e) { }
+    }
+    function downloadWrongFile() {
+      if (incorrectWordsList.length === 0) return;
+      const content = incorrectWordsList.map(item => item.word + ' ' + item.reading + '\n意味: ' + item.meaning + (item.sino ? '\n音: ' + item.sino : '')).join('\n---\n');
+      const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'ok';
+      link.click();
+    }
+    function openIncorrectModal() {
+      const modal = document.getElementById('incorrectModal');
+      const container = document.getElementById('incorrectListContainer');
+      if (incorrectWordsList.length === 0) {
+        container.innerHTML = '<p class="text-sm font-semibold text-green-950/60 text-center py-4">No Incorrect Words Yet</p>';
+      } else {
+        container.innerHTML = incorrectWordsList.map(item =>
+          '<div class="bg-green-950/5 border border-green-950/10 p-3 rounded space-y-1">' +
+          '<div class="flex items-center justify-between"><span class="font-semibold text-xl text-green-950">' + item.word + '</span><span class="text-base font-semibold text-green-900">' + item.reading + '</span></div>' +
+          '<div class="text-xs text-green-950/80">意味: ' + item.meaning + '</div>' +
+          (item.sino ? '<div class="text-xs text-green-950/60">音: ' + item.sino + '</div>' : '') +
+          '</div>'
+        ).join('');
+      }
+      modal.classList.remove('hidden');
+      lucide.createIcons();
+    }
+    function closeIncorrectModal() {
+      document.getElementById('incorrectModal').classList.add('hidden');
+    }
+  </script>
+</body>
+</html>
